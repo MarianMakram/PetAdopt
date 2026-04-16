@@ -6,15 +6,12 @@ export default function FavoriteNavbar({ activePage, setActivePage }) {
       <div style={navWrapperStyle}>
         <header className="flex items-center justify-between px-5 py-2.5 bg-cyan-50/70 relative">
 
-          {/* Left */}
           <LogoButton setActivePage={setActivePage} />
 
-          {/* Center */}
           <div className="hidden md:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
             <NavLinks activePage={activePage} setActivePage={setActivePage} />
           </div>
 
-          {/* Right */}
           <div className="flex items-center gap-3">
             <BellButton />
             <HeartButton />
