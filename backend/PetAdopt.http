@@ -4,3 +4,36 @@ GET {{PetAdopt_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+
+
+
+GET {{PetAdopt_HostAddress}}
+Accept: application/json
+
+###
+GET {{PetAdopt_HostAddress}}
+Accept: application/json
+
+###
+POST {{PetAdopt_HostAddress}}
+Content-Type: application/json
+
+{
+    "title":"c++ ",
+    "author":"Aaaaan",
+    "year":2020
+}
+
+###
+PUT {{PetAdopt_HostAddress}}
+Content-Type: application/json 
+
+{
+    "title":"Learn ",
+    "author":"Maria",
+    "year":2002
+}
+
+###
+DELETE {{PetAdopt_HostAddress}}
