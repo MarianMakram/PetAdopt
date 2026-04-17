@@ -1,4 +1,4 @@
-import Sidebar from "./Sidebar";
+import Sidebar from "./SidebarShared";
 import Header from "./Header";
 
 export { BellIcon, HeartIcon, SearchIcon } from "./Header";
