@@ -94,7 +94,7 @@ export default function Sidebar({ activePage, setActivePage, sidebarBottom, titl
             <button
               key={id}
               onClick={() => setActivePage(id)}
-              onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = "#bfe4e8" }}
+              onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = "#bee3ef" }}
               onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = "transparent" }}
               className="flex items-center gap-2.5 px-3 py-[9px] rounded-full text-[12px] w-full text-left transition-all"
               style={navButtonStyle(isActive)}
@@ -112,7 +112,7 @@ export default function Sidebar({ activePage, setActivePage, sidebarBottom, titl
           return (
             <button
               onClick={() => setActivePage("settings")}
-              onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = "#bfe4e8" }}
+              onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = "#bee3ef" }}
               onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = "transparent" }}
               className="flex items-center gap-2.5 px-3 py-[9px] rounded-full text-[12px] w-full text-left transition-all"
               style={navButtonStyle(isActive)}
