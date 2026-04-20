@@ -1,13 +1,88 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="light">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>My Pets | Shelter Portal</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-dim": "#005861",
+                        "on-primary-container": "#00555d",
+                        "tertiary-dim": "#624d00",
+                        "on-tertiary-fixed": "#463600",
+                        "on-secondary-fixed-variant": "#8d3416",
+                        "on-secondary-container": "#802b0d",
+                        "on-surface-variant": "#2c6370",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#00343e",
+                        "secondary": "#9b3e20",
+                        "tertiary-fixed": "#fdd34d",
+                        "surface-dim": "#8de1f8",
+                        "error": "#b31b25",
+                        "on-secondary-fixed": "#651900",
+                        "inverse-on-surface": "#70a5b4",
+                        "on-tertiary-container": "#5c4900",
+                        "on-surface": "#00343e",
+                        "primary-fixed": "#89e9f6",
+                        "on-error": "#ffefee",
+                        "secondary-dim": "#8b3315",
+                        "tertiary-container": "#fdd34d",
+                        "error-dim": "#9f0519",
+                        "surface-container": "#bff0ff",
+                        "inverse-surface": "#001115",
+                        "on-error-container": "#570008",
+                        "surface-container-high": "#adecff",
+                        "surface-container-low": "#d9f6ff",
+                        "tertiary": "#705900",
+                        "surface-container-highest": "#9be8fe",
+                        "inverse-primary": "#89e9f6",
+                        "surface-tint": "#00656f",
+                        "secondary-fixed": "#ffc4b3",
+                        "surface": "#e9f9ff",
+                        "tertiary-fixed-dim": "#eec540",
+                        "background": "#e9f9ff",
+                        "surface-bright": "#e9f9ff",
+                        "primary": "#00656f",
+                        "outline": "#4a7e8d",
+                        "on-primary-fixed-variant": "#006069",
+                        "on-tertiary": "#fff2d4",
+                        "on-primary-fixed": "#004147",
+                        "secondary-container": "#ffc4b3",
+                        "on-tertiary-fixed-variant": "#675200",
+                        "surface-variant": "#9be8fe",
+                        "primary-container": "#89e9f6",
+                        "error-container": "#fb5151",
+                        "on-primary": "#d4f9ff",
+                        "secondary-fixed-dim": "#ffb199",
+                        "on-secondary": "#ffefeb",
+                        "primary-fixed-dim": "#7adae7",
+                        "outline-variant": "#81b5c5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Be Vietnam Pro"]
+                    }
+                },
+            },
+        }
+    </script>
   </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
+  <body class="bg-surface text-on-surface min-h-screen flex">
+    <div id="root" class="w-full flex"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

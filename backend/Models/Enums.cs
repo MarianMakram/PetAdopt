@@ -18,5 +18,6 @@ public enum PetStatus
     Draft = 0,
     PendingReview = 1,
     Approved = 2,
-    Adopted = 3
+    Adopted = 3,
+    Rejected = 4
 }

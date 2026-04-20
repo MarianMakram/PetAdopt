@@ -8,32 +8,44 @@ Accept: application/json
 
 
 
-GET {{PetAdopt_HostAddress}}
+GET {{PetAdopt_HostAddress}}/api/pet
 Accept: application/json
 
 ###
-GET {{PetAdopt_HostAddress}}
+GET {{PetAdopt_HostAddress}}/api/pet/1
 Accept: application/json
 
 ###
-POST {{PetAdopt_HostAddress}}
+POST {{PetAdopt_HostAddress}}/api/pet
 Content-Type: application/json
 
 {
-    "title":"c++ ",
-    "author":"Aaaaan",
-    "year":2020
+  "ownerId": 1,
+  "name": "Cooper",
+  "breed": "Beagle",
+  "age": 2,
+  "ageUnit": 1,
+  "species": 0,
+  "gender": 0,
+  "status": 0,
+  "imageUrls": "img1.jpg"
 }
 
 ###
-PUT {{PetAdopt_HostAddress}}
+PUT {{PetAdopt_HostAddress}}/api/pet/1
 Content-Type: application/json 
 
 {
-    "title":"Learn ",
-    "author":"Maria",
-    "year":2002
+  "ownerId": 2,
+  "name": "Max",
+  "breed": "Husky",
+  "age": 3,
+  "ageUnit": 1,
+  "species": 0,
+  "gender": 1,
+  "status": 1,
+  "imageUrls": "img2.jpg"
 }
 
 ###
-DELETE {{PetAdopt_HostAddress}}
+DELETE {{PetAdopt_HostAddress}}/api/pet/1
