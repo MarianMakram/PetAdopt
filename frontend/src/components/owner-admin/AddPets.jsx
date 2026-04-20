@@ -7,7 +7,7 @@ const USER_IMG =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuCllqjBLUU_YVcBJwMclBXg2UWYjfHrFB_kaHtuQtt7ZGkYC2I3WcIe8QZupa9yyjtcorIblDvtYla67QLP_3IIRmC9G8sMT03DJz1n9oS9_3REIn1CXqnftHBgrP4s1QCheWhFDYQfZ1WHZS7KRpmaapw-B0tEkJnJj82N8BLmI5KsgK_tuTmbLUody6_1D8pj3UBhwvYHvXY9CBp0ylNWt_DhCci2bfiQVYpbcZ3vkBXHvpo8JhGTnTMKzae20duva3tbuCPLkiA";
 
 const PET_IMG =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuDh_IAWo02-mO-O-j26iRKwfKuLb4hqToH-1WtRTPU3zvsRaGYUkvBcBqiCMpyKP66Axw8PnS6kuilErAfmO9rwKXeHDy27gwF26tfP0RF-8n6qDXG5qcKkMhli5u7mCtX6GXT4lVlCbMNhGS9mST7ryjkuAahcCifKXs0NFyKcQ0wPh4kvci_vlyUsZye1IeXAua1D3pWUlErFYlol7PVO9IlgRgFpFxz_kGzjsD2aWnOzTd8Hx8ZY6oWPYJ89o2MAqUWFaNRUzZk";
+  "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80";
 
 // ── Shared Icon ──────────────────────────────────────────────────────────────
 const Icon = ({ name, size = 20, fill = 0, className = "" }) => (
@@ -83,6 +83,7 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
 
     onSubmit({
       id: initialData?.id || 0,
+      ownerId: initialData?.ownerId || 1,
       name: name,
       breed: breed,
       age: parseInt(age) || 0,
@@ -90,7 +91,7 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
       species: speciesEnum,
       gender: genderEnum,
       imageUrls: images.join(',') || PET_IMG,
-      status: initialData?.status !== undefined ? initialData.status : 0 // Default to Draft
+      status: initialData?.status !== undefined ? initialData.status : 1 // Default to PendingReview
     });
   };
 

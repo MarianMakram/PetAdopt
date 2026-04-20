@@ -25,7 +25,7 @@ export default function AdminApprovals() {
           submitterType: 'Registered User',
           dateSubmitted: 'Just now', // Ideally from a created_at field
           timeAgo: 'Recently',
-          imageUrl: pet.imageUrls || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAZ3dSehDXxgbExZnpzGI_w70_4n4DS6nP5V1rdkLQ1Kdp4_Fai9_2ovqgPUl6_y3Z2xhOsOORgfXajscpZtCZkkNa8DoIl_0yOg2paBramhJO40rS9K_oEIx4OGu0oe1s52yciOokVgYBqygUgsTfPk-3gYfa5qCmTLtmXP8sPhizTo_JKAPJsuZHzmUmTX5ZqVBXfFOTJzXiPz9VEvX8WKm5TWaVC2Bv0t26YvtnYnp0jD-tXF5jS6w4_fvM8mJbQcwYKUlc2O_o',
+          imageUrl: pet.imageUrls ? pet.imageUrls.split(',')[0] : 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80',
           badgeColor: 'primary'
         }));
         

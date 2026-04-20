@@ -66,7 +66,7 @@ export default function OwnerPets() {
               statusText = "Unknown";
           }
 
-          const imageUrl = pet.imageUrls || 'https://lh3.googleusercontent.com/aida-public/AB6AXuA7sQNWCjNug-gjgfVgROVfp2Z5EoSdSFBHfJTd9u5MzfP0vl1ZGiAam0rjGnngdabz4LVglMiyudZXxlbGVcGsFjEvi4pOf59DV2vhFR5gt1axM-9dwgBjrE_51KvUzjr-gqNGaObEb4zc20Tm4VmqgbNCX8lWjziaGOTBI_wIETg44mXbJCwwCYCKotgoIxNildk-mRK9vqR2wZWGHTFYEu6rmREa-JFGUIgX_S1KUyN2-h2hpV9IW6z9NXsXWtW2LZEUapYLhD0';
+          const imageUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80';
           const ageUnitText = pet.ageUnit === 0 ? (pet.age === 1 ? 'month' : 'months') : (pet.age === 1 ? 'year' : 'years');
 
           return {

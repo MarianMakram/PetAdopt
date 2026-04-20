@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "fhYa1/UCsu8=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\marco\\OneDrive - Faculty of Computers and Information\\Desktop\\madonnaaaaaa\\PetAdopt\\SqlRunner\\SqlRunner.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\marco\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\marco\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.2\\microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\marco\\.nuget\\packages\\mysqlconnector\\2.5.0\\mysqlconnector.2.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
