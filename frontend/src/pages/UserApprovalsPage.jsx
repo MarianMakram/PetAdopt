@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import SidebarUser from "../components/UserApprovalSiderbar";
+import Sidebar from "../components/owner-admin/Sidebar";
+import Header from "../components/owner-admin/Header";
+import BottomNav from "../components/owner-admin/BottomNav";
 
 // --- Custom Colors ---
 // Primary: #004D56 (Dark Teal)
@@ -100,8 +102,18 @@ const UserRow = ({ user, onApprove, onReject }) => {
       </td>
       <td className="p-6">
         <div className="flex items-center gap-3">
-          <Button variant="error" onClick={() => onReject(user.id)}>Reject</Button>
-          <Button variant="primary" onClick={() => onApprove(user.id)}>Approve</Button>
+          {user.status === 0 ? (
+            <>
+              <Button variant="error" onClick={() => onReject(user.id)}>Reject</Button>
+              <Button variant="primary" onClick={() => onApprove(user.id)}>Approve</Button>
+            </>
+          ) : user.status === 1 ? (
+             <span className="text-[#257F86] font-bold text-[13px]">Approved</span>
+          ) : user.status === 2 ? (
+             <span className="text-[#FF6B6B] font-bold text-[13px]">Rejected</span>
+          ) : (
+             <span className="text-[#5A8C98] font-bold text-[13px]">Unknown</span>
+          )}
         </div>
       </td>
     </tr>
@@ -180,7 +192,7 @@ const AwaitingReviewCard = () => (
 );
 
 export default function UserApprovalsPage() {
-  const [activePage, setActivePage] = useState("approvals");
+  const [viewMode, setViewMode] = useState("pending");
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -190,7 +202,8 @@ export default function UserApprovalsPage() {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const response = await fetch("/api/adminusers/pending-user", {
+        const endpoint = viewMode === "all" ? "/api/adminusers/users" : "/api/adminusers/pending-user";
+        const response = await fetch(endpoint, {
           method: "GET",
           headers: {
             "Accept": "application/json"
@@ -219,7 +232,7 @@ export default function UserApprovalsPage() {
     };
 
     fetchUsers();
-  }, []);
+  }, [viewMode]);
 
   const showToast = (message, type) => {
     setToast({ message, type });
@@ -280,12 +293,13 @@ export default function UserApprovalsPage() {
   });
 
   return (
-    <div className="flex min-h-screen bg-[#F4FBFC] font-[Be_Vietnam_Pro]">
-      {/* Use the provided SidebarUser Component */}
-      <SidebarUser activePage={activePage} setActivePage={setActivePage} />
+    <>
+      <Sidebar activeTab="Approvals" />
 
-      {/* Main Content */}
-      <main className="flex-1 px-10 py-12 overflow-y-auto max-w-[1200px]">
+      <main className="flex-1 min-h-screen pb-24 md:pb-12 overflow-y-auto bg-[#F4FBFC] font-[Be_Vietnam_Pro] w-full relative">
+        <Header />
+
+        <div className="max-w-[1200px] mx-auto px-6 md:px-10 py-12">
         {toast && (
           <div className={`fixed top-8 right-8 px-5 py-3 rounded-xl shadow-lg z-50 text-white font-bold text-[14px] transition-all duration-300 animate-fade-in-down ${toast.type === "success" ? "bg-[#257F86]" : "bg-[#FF6B6B]"}`}>
             {toast.message}
@@ -303,7 +317,7 @@ export default function UserApprovalsPage() {
             </p>
           </div>
           <div className="flex gap-4">
-            <StatCard title="PENDING" count={users.length > 0 ? users.length + 11 : 14} countColor="text-[#004D56]" />
+            <StatCard title={viewMode === "all" ? "TOTAL USERS" : "PENDING"} count={users.length} countColor="text-[#004D56]" />
             <StatCard title="FLAGGED" count={3} countColor="text-[#FF6B6B]" />
           </div>
         </div>
@@ -312,8 +326,8 @@ export default function UserApprovalsPage() {
         <div className="flex justify-between items-center mb-8">
           <SearchBar search={search} setSearch={setSearch} />
           <div className="flex items-center gap-3">
-            <Button variant="outline">All Roles</Button>
-            <Button variant="outline">Latest First</Button>
+            <Button variant={viewMode === "all" ? "primary" : "outline"} onClick={() => setViewMode("all")}>All Users</Button>
+            <Button variant={viewMode === "pending" ? "primary" : "outline"} onClick={() => setViewMode("pending")}>Pending Only</Button>
           </div>
         </div>
 
@@ -325,7 +339,10 @@ export default function UserApprovalsPage() {
           <TrustScoreCard />
           <AwaitingReviewCard />
         </div>
+        </div>
       </main>
-    </div>
+
+      <BottomNav activeTab="Approvals" />
+    </>
   );
 }
