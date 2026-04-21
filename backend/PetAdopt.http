@@ -32,7 +32,7 @@ Content-Type: application/json
 }
 
 ###
-PUT {{PetAdopt_HostAddress}}/api/pet/1
+PUT {{PetAdopt_HostAddress}}/api/pet/2
 Content-Type: application/json 
 
 {
