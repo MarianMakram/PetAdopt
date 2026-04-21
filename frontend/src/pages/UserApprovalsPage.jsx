@@ -250,7 +250,7 @@ export default function UserApprovalsPage() {
       });
 
       if (!response.ok) {
-         throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       setUsers(users.filter((user) => user.id !== id));
@@ -272,7 +272,7 @@ export default function UserApprovalsPage() {
       });
 
       if (!response.ok) {
-         throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       setUsers(users.filter((user) => user.id !== id));

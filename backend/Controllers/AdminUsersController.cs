@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetAdopt.Models;
+using PetAdopt.Data;
 
 namespace PetAdopt.Controllers
 {
@@ -113,3 +114,5 @@ namespace PetAdopt.Controllers
     }
     
 }
+        // }
+
