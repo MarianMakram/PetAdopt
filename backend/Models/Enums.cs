@@ -1,4 +1,3 @@
-
 public enum Species
 {
     Dog = 0,
@@ -20,4 +19,16 @@ public enum PetStatus
     Approved = 2,
     Adopted = 3,
     Rejected = 4
+}
+
+public enum Role{
+    Admin=0,
+    Shelter=1,
+    Adopter=2
+}
+
+public enum Status{
+    Pending=0,
+    Approved=1,
+    Rejected=2
 }
