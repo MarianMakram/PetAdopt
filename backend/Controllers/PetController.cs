@@ -19,6 +19,7 @@ namespace PetAdopt.Controllers
         // GET /api/pet  (public - returns only Approved pets with optional filters)
         [HttpGet]
         public async Task<IActionResult> GetAll(
+            [FromQuery] string? status,
             [FromQuery] string? species,
             [FromQuery] string? breed,
             [FromQuery] string? gender,
@@ -31,8 +32,18 @@ namespace PetAdopt.Controllers
         {
             var query = _context.Pets.AsQueryable();
 
-            // Only show approved pets for public browsing
-            query = query.Where(p => p.Status == PetStatus.Approved);
+            if (!string.IsNullOrEmpty(status) && status.ToLower() != "all")
+            {
+                if (Enum.TryParse<PetStatus>(status, true, out var statusEnum))
+                {
+                    query = query.Where(p => p.Status == statusEnum);
+                }
+            }
+            else if (string.IsNullOrEmpty(status))
+            {
+                // Default public view: only approved pets
+                query = query.Where(p => p.Status == PetStatus.Approved);
+            }
 
             // Filter by species
             if (!string.IsNullOrEmpty(species) && Enum.TryParse<Species>(species, true, out var speciesEnum))
@@ -90,7 +101,7 @@ namespace PetAdopt.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Pet pet)
         {
-            pet.Status = PetStatus.Draft;
+            pet.Status = PetStatus.PendingReview;
             _context.Pets.Add(pet);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = pet.Id }, pet);

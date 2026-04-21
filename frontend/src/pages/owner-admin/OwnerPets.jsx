@@ -39,21 +39,19 @@ export default function OwnerPets() {
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const data = await apiClient.get('/api/Pet');
-        const mappedPets = (data.data || data)
-          .filter(pet => pet.status !== 4)
+        const data = await apiClient.get('/api/Pet?status=all');
+        const petList = data.data || data;
+        const mappedPets = petList
+          .filter(pet => pet.status >= 1 && pet.status <= 4)
           .map(pet => {
-            let statusText = "Draft";
+            let statusText = "Pending";
             let isAdopted = false;
             let isPending = false;
             let isRejected = false;
 
             switch (pet.status) {
-              case 0:
-                statusText = "Draft";
-                break;
               case 1:
-                statusText = "Pending Admin";
+                statusText = "Pending";
                 isPending = true;
                 break;
               case 2:
@@ -62,6 +60,10 @@ export default function OwnerPets() {
               case 3:
                 statusText = "Adopted";
                 isAdopted = true;
+                break;
+              case 4:
+                statusText = "Rejected";
+                isRejected = true;
                 break;
               default:
                 statusText = "Unknown";
