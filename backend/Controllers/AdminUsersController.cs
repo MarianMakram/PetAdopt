@@ -4,8 +4,8 @@ using PetAdopt.Models;
 
 namespace PetAdopt.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class AdminUsersController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -55,5 +55,61 @@ namespace PetAdopt.Controllers
 
             return Ok(new { Message = $"Pet {id} rejected" });
         }
+        [HttpGet("pending-user")]
+        public async Task<IActionResult> GetPendingUsers(){
+            var pendingUser = await _context.Users
+                                .Where(u => u.account_status == Status.Pending)
+                                .ToListAsync();
+            return Ok(pendingUser);
+        }
+        [HttpPatch("approve-user/{id}")]
+        public async Task<IActionResult> ApprovedUser(int id){
+            var user = await _context.Users.FindAsync(id);
+            if(user == null){
+                return NotFound(new{Message = $"User is not found"});
+            }
+            user.account_status = Status.Approved;
+            await _context.SaveChangesAsync();
+            return Ok(new{Message=$"User {id} is approved"});
+        }
+        [HttpPatch("reject-user/{id}")]
+        public async Task<IActionResult> RejectedUser(int id){
+            var user = await _context.Users.FindAsync(id);
+            if(user == null){
+                return NotFound(new{Message = $"User is not found"});
+            }
+            user.account_status = Status.Rejected;
+            await _context.SaveChangesAsync();
+            return Ok(new{Message=$"User {id} is rejected"});
+        }
+        // It can be removed for testing only to get all user in DB , edit to test
+        [HttpGet("users")]
+        public async Task<ActionResult<List<User>>> GetAll(){
+            return Ok(await _context.Users.ToListAsync());
+        }
+        //[HttpPut("{id}")]
+        // public async Task<IActionResult> Update(int id, User updatedUser)
+        // {
+        //     var user = await _context.Users.FindAsync(id);
+        //     if (user == null)
+        //         return NotFound();
+
+        //     user.email = updatedUser.email;
+        //     user.password_hash = updatedUser.password_hash;
+        //     user.role = updatedUser.role;
+        //     user.account_status = updatedUser.account_status;
+        //     user.first_name = updatedUser.first_name;
+        //     user.last_name = updatedUser.last_name;
+        //     user.phone = updatedUser.phone;
+        //     user.city = updatedUser.city;
+        //     user.country = updatedUser.country;
+        //     user.created_at = updatedUser.created_at;
+        //     user.updated_at = updatedUser.updated_at;
+
+
+        //     await _context.SaveChangesAsync();
+        //     return NoContent();
+        // }
     }
+    
 }

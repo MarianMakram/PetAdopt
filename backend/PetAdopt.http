@@ -49,3 +49,22 @@ Content-Type: application/json
 
 ###
 DELETE {{PetAdopt_HostAddress}}/api/pet/1
+
+###
+GET {{PetAdopt_HostAddress}}/api/adminusers/pending-user
+Accept: application/json
+
+
+###
+PATCH {{PetAdopt_HostAddress}}/api/adminusers/approve-user/4
+Accept: application/json
+
+
+###
+PATCH {{PetAdopt_HostAddress}}/api/adminusers/reject-user/1
+Accept: application/json
+
+
+###
+GET {{PetAdopt_HostAddress}}/api/adminusers/users
+Accept: application/json
