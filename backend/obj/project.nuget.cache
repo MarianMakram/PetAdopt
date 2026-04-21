@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ivPshBgKl/8=",
+  "dgSpecHash": "cQf0xR1E3lI=",
   "success": true,
-  "projectFilePath": "C:\\Users\\marco\\OneDrive - Faculty of Computers and Information\\Desktop\\madonnaaaaaa\\PetAdopt\\backend\\PetAdopt.csproj",
+  "projectFilePath": "C:\\Users\\marco\\Downloads\\pet\\backend\\PetAdopt.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\marco\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\marco\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.5\\microsoft.aspnetcore.openapi.10.0.5.nupkg.sha512",

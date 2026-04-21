@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\marco\\OneDrive - Faculty of Computers and Information\\Desktop\\madonnaaaaaa\\PetAdopt\\backend\\PetAdopt.csproj": {}
+    "C:\\Users\\marco\\Downloads\\pet\\backend\\PetAdopt.csproj": {}
   },
   "projects": {
-    "C:\\Users\\marco\\OneDrive - Faculty of Computers and Information\\Desktop\\madonnaaaaaa\\PetAdopt\\backend\\PetAdopt.csproj": {
+    "C:\\Users\\marco\\Downloads\\pet\\backend\\PetAdopt.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\marco\\OneDrive - Faculty of Computers and Information\\Desktop\\madonnaaaaaa\\PetAdopt\\backend\\PetAdopt.csproj",
+        "projectUniqueName": "C:\\Users\\marco\\Downloads\\pet\\backend\\PetAdopt.csproj",
         "projectName": "PetAdopt",
-        "projectPath": "C:\\Users\\marco\\OneDrive - Faculty of Computers and Information\\Desktop\\madonnaaaaaa\\PetAdopt\\backend\\PetAdopt.csproj",
+        "projectPath": "C:\\Users\\marco\\Downloads\\pet\\backend\\PetAdopt.csproj",
         "packagesPath": "C:\\Users\\marco\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\marco\\OneDrive - Faculty of Computers and Information\\Desktop\\madonnaaaaaa\\PetAdopt\\backend\\obj\\",
+        "outputPath": "C:\\Users\\marco\\Downloads\\pet\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\marco\\AppData\\Roaming\\NuGet\\NuGet.Config"
