@@ -5,6 +5,7 @@ import ApprovalHeader from '../../components/owner-admin/ApprovalHeader';
 import ApprovalList from '../../components/owner-admin/ApprovalList';
 import BottomNav from '../../components/owner-admin/BottomNav';
 import { apiClient } from '../../services/apiClient';
+import BackToHomeLink from '../../components/shared/BackToHomeLink';
 
 export default function AdminApprovals() {
   const [approvals, setApprovals] = useState([]);
@@ -15,7 +16,7 @@ export default function AdminApprovals() {
     const fetchPendingPets = async () => {
       try {
         const data = await apiClient.get('/api/AdminUsers/pending-pets');
-        
+
         // Map backend model to the format expected by the UI
         const mappedData = data.map(pet => ({
           id: pet.id,
@@ -28,7 +29,7 @@ export default function AdminApprovals() {
           imageUrl: pet.imageUrls ? pet.imageUrls.split(',')[0] : 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80',
           badgeColor: 'primary'
         }));
-        
+
         setApprovals(mappedData);
       } catch (err) {
         console.error("Failed to fetch pending pets", err);
@@ -84,7 +85,7 @@ export default function AdminApprovals() {
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex bg-surface-container-high rounded-full px-4 py-1.5 items-center gap-2">
               <span className="material-symbols-outlined text-on-surface-variant text-sm">search</span>
-              <input className="bg-transparent border-none focus:ring-0 text-sm w-48 text-on-surface" placeholder="Search approvals..." type="text"/>
+              <input className="bg-transparent border-none focus:ring-0 text-sm w-48 text-on-surface" placeholder="Search approvals..." type="text" />
             </div>
             <button className="p-2 text-cyan-700/70 hover:text-cyan-900 transition-all active:scale-90">
               <span className="material-symbols-outlined">notifications</span>
@@ -100,34 +101,35 @@ export default function AdminApprovals() {
         {/* Dashboard Canvas */}
         <div className="flex-1 overflow-y-auto p-4 md:p-12 pb-32">
           <ApprovalHeader count={approvals.length} />
-          
+
           {loading ? (
             <div className="p-8 text-center text-cyan-800">Loading pending approvals...</div>
           ) : error ? (
             <div className="p-8 text-center text-error">{error}</div>
           ) : (
-            <ApprovalList 
-              approvals={approvals} 
-              onApprove={handleApprove} 
-              onReject={handleReject} 
+            <ApprovalList
+              approvals={approvals}
+              onApprove={handleApprove}
+              onReject={handleReject}
             />
           )}
-          
+
           {/* Emotional Pull Quote Footer */}
           <div className="max-w-4xl mx-auto text-center mt-24 mb-12">
             <p className="text-2xl md:text-3xl font-headline italic text-secondary leading-relaxed">
-                "Every approved listing is a bridge built between a lonely heart and a forever home."
+              "Every approved listing is a bridge built between a lonely heart and a forever home."
             </p>
             <div className="mt-4 flex items-center justify-center gap-2">
-                <div className="h-[1px] w-12 bg-outline-variant/50"></div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">The PetAdopt Mission</span>
-                <div className="h-[1px] w-12 bg-outline-variant/50"></div>
+              <div className="h-[1px] w-12 bg-outline-variant/50"></div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">The PetAdopt Mission</span>
+              <div className="h-[1px] w-12 bg-outline-variant/50"></div>
             </div>
           </div>
         </div>
       </main>
 
       <BottomNav activeTab="Approvals" />
+      <BackToHomeLink />
     </>
   );
 }

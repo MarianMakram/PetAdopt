@@ -4,12 +4,17 @@ import OwnerPets from './pages/owner-admin/OwnerPets';
 import AdminApprovals from './pages/owner-admin/AdminApprovals';
 import AddEditPet from './pages/owner-admin/AddEditPet';
 import UserApprovalsPage from './pages/UserApprovalsPage';
+import HomePage from './pages/HomePage';
+import BrowsePetsPage from './pages/BrowsePetsPage';
+import PetDetailsPage from './pages/PetDetailsPage';
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/owner/pets" replace />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/pets" element={<BrowsePetsPage />} />
+        <Route path="/pets/:id" element={<PetDetailsPage />} />
         <Route path="/owner/pets" element={<OwnerPets />} />
         <Route path="/owner/pets/add" element={<AddEditPet />} />
         <Route path="/owner/pets/edit/:id" element={<AddEditPet />} />

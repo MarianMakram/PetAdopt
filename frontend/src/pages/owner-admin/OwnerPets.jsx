@@ -7,6 +7,7 @@ import PetGrid from '../../components/owner-admin/PetGrid';
 import PullQuote from '../../components/owner-admin/PullQuote';
 import BottomNav from '../../components/owner-admin/BottomNav';
 import { apiClient } from '../../services/apiClient';
+import BackToHomeLink from '../../components/shared/BackToHomeLink';
 
 export default function OwnerPets() {
   const [pets, setPets] = useState([]);
@@ -39,48 +40,48 @@ export default function OwnerPets() {
     const fetchPets = async () => {
       try {
         const data = await apiClient.get('/api/Pet');
-        const mappedPets = data
+        const mappedPets = (data.data || data)
           .filter(pet => pet.status !== 4)
           .map(pet => {
-          let statusText = "Draft";
-          let isAdopted = false;
-          let isPending = false;
-          let isRejected = false;
+            let statusText = "Draft";
+            let isAdopted = false;
+            let isPending = false;
+            let isRejected = false;
 
-          switch (pet.status) {
-            case 0:
-              statusText = "Draft";
-              break;
-            case 1:
-              statusText = "Pending Admin";
-              isPending = true;
-              break;
-            case 2:
-              statusText = "Approved";
-              break;
-            case 3:
-              statusText = "Adopted";
-              isAdopted = true;
-              break;
-            default:
-              statusText = "Unknown";
-          }
+            switch (pet.status) {
+              case 0:
+                statusText = "Draft";
+                break;
+              case 1:
+                statusText = "Pending Admin";
+                isPending = true;
+                break;
+              case 2:
+                statusText = "Approved";
+                break;
+              case 3:
+                statusText = "Adopted";
+                isAdopted = true;
+                break;
+              default:
+                statusText = "Unknown";
+            }
 
-          const imageUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80';
-          const ageUnitText = pet.ageUnit === 0 ? (pet.age === 1 ? 'month' : 'months') : (pet.age === 1 ? 'year' : 'years');
+            const imageUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80';
+            const ageUnitText = pet.ageUnit === 0 ? (pet.age === 1 ? 'month' : 'months') : (pet.age === 1 ? 'year' : 'years');
 
-          return {
-            id: pet.id,
-            name: pet.name || 'Unknown',
-            breed: pet.breed || 'Unknown',
-            age: `${pet.age} ${ageUnitText} old`,
-            status: statusText,
-            imageUrl: imageUrl,
-            isAdopted,
-            isRejected,
-            isPending
-          };
-        });
+            return {
+              id: pet.id,
+              name: pet.name || 'Unknown',
+              breed: pet.breed || 'Unknown',
+              age: `${pet.age} ${ageUnitText} old`,
+              status: statusText,
+              imageUrl: imageUrl,
+              isAdopted,
+              isRejected,
+              isPending
+            };
+          });
 
         setPets(mappedPets);
       } catch (err) {
@@ -130,6 +131,7 @@ export default function OwnerPets() {
       </main>
 
       <BottomNav activeTab="Home" />
+      <BackToHomeLink />
     </>
   );
 }

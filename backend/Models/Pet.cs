@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace PetAdopt.Models
@@ -13,12 +14,16 @@ namespace PetAdopt.Models
         public string? Breed { get; set; }
 
         public int Age { get; set; }
-
         public int AgeUnit { get; set; }
+        public int AgeMonths { get; set; }
 
         public Species Species { get; set; }
         public Gender Gender { get; set; }
         public PetStatus Status { get; set; }
+
+        public string? Description { get; set; }
+        public string? Location { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         public string? ImageUrls { get; set; }
     }

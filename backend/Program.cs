@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using PetAdopt.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
