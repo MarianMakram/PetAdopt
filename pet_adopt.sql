@@ -150,6 +150,8 @@ DROP TABLE IF EXISTS `pets`;
 ;
 /*!50503 SET character_set_client = utf8mb4 */
 ;
+DROP TABLE IF EXISTS `pets`;
+
 CREATE TABLE `pets` (
     `Id` int NOT NULL AUTO_INCREMENT,
     `OwnerId` int NOT NULL,
@@ -157,17 +159,22 @@ CREATE TABLE `pets` (
     `Breed` varchar(100) DEFAULT NULL,
     `Age` int NOT NULL,
     `AgeUnit` int NOT NULL,
+
     `Species` int NOT NULL,
     `Gender` int NOT NULL,
     `Status` int NOT NULL,
+
+    `AgeMonths` int NOT NULL DEFAULT 0,
+    `Description` text DEFAULT NULL,
+    `Location` varchar(255) DEFAULT NULL,
+    `CreatedAt` datetime DEFAULT CURRENT_TIMESTAMP,
+
     `ImageUrls` text DEFAULT NULL,
+
     PRIMARY KEY (`Id`),
     KEY `OwnerId_idx` (`OwnerId`),
     CONSTRAINT `owner_id` FOREIGN KEY (`OwnerId`) REFERENCES `users` (`id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */
-;
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 --
 -- Dumping data for table `pets`
 --
@@ -175,20 +182,18 @@ CREATE TABLE `pets` (
 LOCK TABLES `pets` WRITE;
 /*!40000 ALTER TABLE `pets` DISABLE KEYS */
 ;
-INSERT INTO
-    `pets`
+INSERT INTO `pets`
+(Id, OwnerId, Name, Breed, Age, AgeUnit, Species, Gender, Status, AgeMonths, Description, Location, ImageUrls)
 VALUES 
-    (1, 1, 'Max', 'Golden Retriever', 3, 1, 0, 0, 2, NULL),
-    (2, 1, 'Bella', 'Labrador', 2, 1, 0, 1, 2, NULL),
-    (3, 1, 'Charlie', 'German Shepherd', 4, 1, 0, 0, 2, NULL),
-    (4, 2, 'Whiskers', 'Persian', 2, 1, 1, 1, 2, NULL),
-    (5, 2, 'Mittens', 'Tabby', 1, 1, 1, 0, 2, NULL),
-    (6, 2, 'Smokey', 'Siamese', 3, 1, 1, 0, 2, NULL),
-    (7, 3, 'Tweety', 'Budgie', 1, 1, 2, 0, 2, NULL),
-    (8, 3, 'Rainbow', 'Parrot', 5, 1, 2, 1, 2, NULL),
-    (9, 4, 'Fluffy', 'Holland Lop', 2, 1, 3, 1, 2, NULL),
-/*!40000 ALTER TABLE `pets` ENABLE KEYS */
-;
+(1, 1, 'Max', 'Golden Retriever', 3, 1, 0, 0, 2, 0, NULL, NULL, NULL),
+(2, 1, 'Bella', 'Labrador', 2, 1, 0, 1, 2, 0, NULL, NULL, NULL),
+(3, 1, 'Charlie', 'German Shepherd', 4, 1, 0, 0, 2, 0, NULL, NULL, NULL),
+(4, 2, 'Whiskers', 'Persian', 2, 1, 1, 1, 2, 0, NULL, NULL, NULL),
+(5, 2, 'Mittens', 'Tabby', 1, 1, 1, 0, 2, 0, NULL, NULL, NULL),
+(6, 2, 'Smokey', 'Siamese', 3, 1, 1, 0, 2, 0, NULL, NULL, NULL),
+(7, 3, 'Tweety', 'Budgie', 1, 1, 2, 0, 2, 0, NULL, NULL, NULL),
+(8, 3, 'Rainbow', 'Parrot', 5, 1, 2, 1, 2, 0, NULL, NULL, NULL),
+(9, 4, 'Fluffy', 'Holland Lop', 2, 1, 3, 1, 2, 0, NULL, NULL, NULL);
 UNLOCK TABLES;
 
 --

@@ -15,7 +15,6 @@ namespace PetAdopt.Models
 
         public int Age { get; set; }
         public int AgeUnit { get; set; }
-        public int AgeMonths { get; set; }
 
         public Species Species { get; set; }
         public Gender Gender { get; set; }

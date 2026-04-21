@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\PetAdopt\\PetAdopt\\backend\\PetAdopt.csproj": {}
+    "C:\\Users\\marco\\Music\\PetAdopt\\backend\\PetAdopt.csproj": {}
   },
   "projects": {
-    "D:\\PetAdopt\\PetAdopt\\backend\\PetAdopt.csproj": {
+    "C:\\Users\\marco\\Music\\PetAdopt\\backend\\PetAdopt.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\PetAdopt\\PetAdopt\\backend\\PetAdopt.csproj",
+        "projectUniqueName": "C:\\Users\\marco\\Music\\PetAdopt\\backend\\PetAdopt.csproj",
         "projectName": "PetAdopt",
-        "projectPath": "D:\\PetAdopt\\PetAdopt\\backend\\PetAdopt.csproj",
-        "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-        "outputPath": "D:\\PetAdopt\\PetAdopt\\backend\\obj\\",
+        "projectPath": "C:\\Users\\marco\\Music\\PetAdopt\\backend\\PetAdopt.csproj",
+        "packagesPath": "C:\\Users\\marco\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\marco\\Music\\PetAdopt\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\marco\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -92,7 +92,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

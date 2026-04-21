@@ -52,20 +52,11 @@ namespace PetAdopt.Controllers
                 query = query.Where(p => p.Gender == genderEnum);
             }
 
-            // Filter by age range
-            if (minAge.HasValue)
-            {
-                query = query.Where(p => p.AgeMonths >= minAge.Value);
-            }
-            if (maxAge.HasValue)
-            {
-                query = query.Where(p => p.AgeMonths <= maxAge.Value);
-            }
+           
 
             // Filter by location
             if (!string.IsNullOrEmpty(location))
             {
-                query = query.Where(p => p.Location != null && p.Location.ToLower().Contains(location.ToLower()));
             }
 
             // Search by name or description
@@ -73,14 +64,12 @@ namespace PetAdopt.Controllers
             {
                 query = query.Where(p =>
                     (p.Name != null && p.Name.ToLower().Contains(search.ToLower())) ||
-                    (p.Description != null && p.Description.ToLower().Contains(search.ToLower())) ||
                     (p.Breed != null && p.Breed.ToLower().Contains(search.ToLower()))
                 );
             }
 
             var total = await query.CountAsync();
             var pets = await query
-                .OrderByDescending(p => p.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -101,7 +90,6 @@ namespace PetAdopt.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Pet pet)
         {
-            pet.CreatedAt = DateTime.UtcNow;
             pet.Status = PetStatus.Draft;
             _context.Pets.Add(pet);
             await _context.SaveChangesAsync();
@@ -118,10 +106,7 @@ namespace PetAdopt.Controllers
             pet.Name = updatedPet.Name;
             pet.Species = updatedPet.Species;
             pet.Breed = updatedPet.Breed;
-            pet.AgeMonths = updatedPet.AgeMonths;
             pet.Gender = updatedPet.Gender;
-            pet.Description = updatedPet.Description;
-            pet.Location = updatedPet.Location;
             pet.ImageUrls = updatedPet.ImageUrls;
 
             await _context.SaveChangesAsync();
@@ -161,4 +146,4 @@ namespace PetAdopt.Controllers
     {
         public string Status { get; set; } = "";
     }
-}
+}   

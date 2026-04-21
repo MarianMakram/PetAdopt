@@ -36,9 +36,9 @@ const inputCls =
 export default function AddPets({ initialData, onSubmit, onCancel, isEditMode }) {
   const [name, setName] = useState(initialData?.name || "");
   const [animalType, setAnimalType] = useState(
-    initialData?.species === 1 ? "Cat" : 
-    initialData?.species === 2 ? "Bird" : 
-    initialData?.species === 3 ? "Rabbit" : "Dog"
+    initialData?.species === 1 ? "Cat" :
+      initialData?.species === 2 ? "Bird" :
+        initialData?.species === 3 ? "Rabbit" : "Dog"
   );
   const [breed, setBreed] = useState(initialData?.breed || "");
   const [age, setAge] = useState(initialData?.age || "");
@@ -68,7 +68,7 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Map to backend Species enum
     let speciesEnum = 0; // Dog
     if (animalType === "Cat") speciesEnum = 1;
@@ -77,7 +77,7 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
 
     // Map to backend Gender enum
     const genderEnum = gender === "female" ? 1 : 0;
-    
+
     // Map to backend AgeUnit enum
     const ageUnitEnum = ageUnit === "Months" ? 0 : 1;
 
@@ -106,7 +106,7 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
           -webkit-font-smoothing: antialiased; vertical-align: middle;
         }
       `}</style>
-      
+
       {/* Header */}
       <header className="sticky top-0 z-40 bg-[#e9f9ff]/80 backdrop-blur-xl px-8 py-4 flex items-center justify-between border-b border-[#81b5c5]/20">
         <div>
@@ -152,10 +152,10 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
 
                 <Field label="Image URL">
                   <div className="flex gap-2 mb-4">
-                    <input 
-                      className={`${inputCls}`} 
-                      placeholder="https://..." 
-                      type="text" 
+                    <input
+                      className={`${inputCls}`}
+                      placeholder="https://..."
+                      type="text"
                       value={newImageUrl}
                       onChange={(e) => setNewImageUrl(e.target.value)}
                       onKeyDown={(e) => {
@@ -165,8 +165,8 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
                         }
                       }}
                     />
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       onClick={handleAddImage}
                       className="px-4 py-2 rounded-xl border border-[#00656f] text-[#00656f] font-bold text-xs hover:bg-[#00656f]/5 transition-colors whitespace-nowrap"
                     >
@@ -247,11 +247,10 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
                     <div className="flex gap-2">
                       {["Male", "Female"].map((g) => (
                         <button key={g} type="button" onClick={() => setGender(g.toLowerCase())}
-                          className={`flex-1 py-4 rounded-lg text-sm font-bold transition-colors ${
-                            gender === g.toLowerCase()
+                          className={`flex-1 py-4 rounded-lg text-sm font-bold transition-colors ${gender === g.toLowerCase()
                               ? "bg-[#00656f]/20 border border-[#00656f]/30 text-[#00656f]"
                               : "bg-[#adecff] text-[#2c6370] hover:bg-[#00656f]/10"
-                          }`}>
+                            }`}>
                           {g}
                         </button>
                       ))}
@@ -270,11 +269,10 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
                     <div className="flex flex-wrap gap-2 mt-1">
                       {["Vaccinated", "Neutered", "Microchipped", "Dewormed"].map((tag) => (
                         <button key={tag} type="button" onClick={() => toggleHealth(tag)}
-                          className={`px-3 py-1.5 mb-3 rounded-full text-xs font-bold border flex items-center gap-1 transition-colors ${
-                            health.includes(tag)
+                          className={`px-3 py-1.5 mb-3 rounded-full text-xs font-bold border flex items-center gap-1 transition-colors ${health.includes(tag)
                               ? "bg-white border-[#81b5c5]/30 text-[#00343e]"
                               : "bg-white/50 border-[#81b5c5]/20 text-[#2c6370]"
-                          }`}>
+                            }`}>
                           {health.includes(tag)
                             ? <Icon name="check_circle" size={14} className="text-green-600" fill={1} />
                             : <Icon name="add" size={14} className="text-[#00656f]" />}
