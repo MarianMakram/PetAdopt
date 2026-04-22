@@ -32,9 +32,8 @@ namespace PetAdopt.Models
 
     public enum Status
     {
-        Pending = 1,
-        Approved = 2,
-        Adopted = 3,
-        Rejected = 4
+        Pending = 0,
+        Approved = 1,
+        Rejected = 2
     }
 }

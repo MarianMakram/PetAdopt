@@ -11,11 +11,16 @@ import FavoritesPage from './pages/FavoritesPage';
 import AdopterRequestsPage from './pages/AdopterRequestsPage';
 
 import RequestsDashboard from './pages/owner-admin/RequestsDashboard';
+import LoginForm from './pages/Login';
+import Register from './pages/Register';
+
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/pets" element={<BrowsePetsPage />} />
         <Route path="/pets/:id" element={<PetDetailsPage />} />
