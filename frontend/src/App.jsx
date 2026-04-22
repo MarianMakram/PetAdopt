@@ -7,11 +7,15 @@ import UserApprovalsPage from './pages/UserApprovalsPage';
 import HomePage from './pages/HomePage';
 import BrowsePetsPage from './pages/BrowsePetsPage';
 import PetDetailsPage from './pages/PetDetailsPage';
+import LoginForm from './pages/Login';
+import Register from './pages/Register';
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/pets" element={<BrowsePetsPage />} />
         <Route path="/pets/:id" element={<PetDetailsPage />} />
