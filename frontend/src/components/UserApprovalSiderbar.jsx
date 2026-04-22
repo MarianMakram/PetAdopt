@@ -4,7 +4,7 @@ import {
   RequestsIcon,
   ApprovalsIcon,
   SettingsIcon
-} from "./Sidebar";
+} from "./SidebarShared";
 
 const menuItems = [
   { id: "dashboard", label: "Dashboard", Icon: DashboardIcon },
