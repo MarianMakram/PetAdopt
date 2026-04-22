@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DELL\\Documents\\.NET_proj\\PetAdopt\\backend\\PetAdopt.csproj": {}
+    "C:\\Users\\marco\\Music\\PetAdopt\\backend\\PetAdopt.csproj": {}
   },
   "projects": {
-    "D:\\DELL\\Documents\\.NET_proj\\PetAdopt\\backend\\PetAdopt.csproj": {
+    "C:\\Users\\marco\\Music\\PetAdopt\\backend\\PetAdopt.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DELL\\Documents\\.NET_proj\\PetAdopt\\backend\\PetAdopt.csproj",
+        "projectUniqueName": "C:\\Users\\marco\\Music\\PetAdopt\\backend\\PetAdopt.csproj",
         "projectName": "PetAdopt",
-        "projectPath": "D:\\DELL\\Documents\\.NET_proj\\PetAdopt\\backend\\PetAdopt.csproj",
-        "packagesPath": "C:\\Users\\Martina Wageh\\.nuget\\packages\\",
-        "outputPath": "D:\\DELL\\Documents\\.NET_proj\\PetAdopt\\backend\\obj\\",
+        "projectPath": "C:\\Users\\marco\\Music\\PetAdopt\\backend\\PetAdopt.csproj",
+        "packagesPath": "C:\\Users\\marco\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\marco\\Music\\PetAdopt\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Martina Wageh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\marco\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -55,6 +55,10 @@
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Relational": {
               "target": "Package",
               "version": "[9.0.0, )"
             },
