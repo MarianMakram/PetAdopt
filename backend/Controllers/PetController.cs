@@ -16,88 +16,35 @@ namespace PetAdopt.Controllers
             _context = context;
         }
 
-        // GET /api/pet  (public - returns only Approved pets with optional filters)
+
+        // GET /api/pet?status=all  (owner - list all pets)
         [HttpGet]
-        public async Task<IActionResult> GetAll(
-            [FromQuery] string? status,
-            [FromQuery] string? species,
-            [FromQuery] string? breed,
-            [FromQuery] string? gender,
-            [FromQuery] int? minAge,
-            [FromQuery] int? maxAge,
-            [FromQuery] string? location,
-            [FromQuery] string? search,
-            [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 12)
+        public async Task<IActionResult> GetAll([FromQuery] string status = "approved")
         {
             var query = _context.Pets.AsQueryable();
-
-            if (!string.IsNullOrEmpty(status) && status.ToLower() != "all")
+            if (status != "all")
             {
-                if (Enum.TryParse<PetStatus>(status, true, out var statusEnum))
+                if (Enum.TryParse<PetStatus>(status, true, out var petStatus))
                 {
-                    query = query.Where(p => p.Status == statusEnum);
+                    query = query.Where(p => p.Status == petStatus);
+                }
+                else
+                {
+                    query = query.Where(p => p.Status == PetStatus.Approved);
                 }
             }
-            else if (string.IsNullOrEmpty(status))
-            {
-                // Default public view: only approved pets
-                query = query.Where(p => p.Status == PetStatus.Approved);
-            }
-
-            // Filter by species
-            if (!string.IsNullOrEmpty(species) && Enum.TryParse<Species>(species, true, out var speciesEnum))
-            {
-                query = query.Where(p => p.Species == speciesEnum);
-            }
-
-            // Filter by breed
-            if (!string.IsNullOrEmpty(breed))
-            {
-                query = query.Where(p => p.Breed != null && p.Breed.ToLower().Contains(breed.ToLower()));
-            }
-
-            // Filter by gender
-            if (!string.IsNullOrEmpty(gender) && Enum.TryParse<Gender>(gender, true, out var genderEnum))
-            {
-                query = query.Where(p => p.Gender == genderEnum);
-            }
-
-           
-
-            // Filter by location
-            if (!string.IsNullOrEmpty(location))
-            {
-            }
-
-            // Search by name or description
-            if (!string.IsNullOrEmpty(search))
-            {
-                query = query.Where(p =>
-                    (p.Name != null && p.Name.ToLower().Contains(search.ToLower())) ||
-                    (p.Breed != null && p.Breed.ToLower().Contains(search.ToLower()))
-                );
-            }
-
-            var total = await query.CountAsync();
-            var pets = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            return Ok(new { total, page, pageSize, data = pets });
+            var pets = await query.ToListAsync();
+            return Ok(pets);
         }
 
-        // GET /api/pet/{id}  (public - returns pet details)
+        // GET /api/pet/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var pet = await _context.Pets.FindAsync(id);
-            if (pet == null) return NotFound(new { message = "Pet not found" });
+            if (pet == null) return NotFound();
             return Ok(pet);
         }
-
-        // POST /api/pet  (owner - create a pet)
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Pet pet)
         {

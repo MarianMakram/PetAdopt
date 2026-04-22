@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Sidebar from '../../components/owner-admin/Sidebar';
 import Header from '../../components/owner-admin/Header';
 import ApprovalHeader from '../../components/owner-admin/ApprovalHeader';
@@ -76,9 +77,9 @@ export default function AdminApprovals() {
           <div className="flex items-center gap-8">
             <span className="text-2xl font-bold tracking-tighter text-cyan-900 dark:text-cyan-50 md:hidden">PetAdopt</span>
             <nav className="hidden md:flex gap-6 font-plus-jakarta text-sm tracking-tight">
-              <a className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors" href="#">Browse</a>
-              <a className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors" href="#">Shelters</a>
-              <a className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors" href="#">Stories</a>
+              <Link className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors" to="/pets">Browse</Link>
+              <Link className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors" to="/shelters">Shelters</Link>
+              <Link className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors" to="/stories">Stories</Link>
             </nav>
           </div>
 
