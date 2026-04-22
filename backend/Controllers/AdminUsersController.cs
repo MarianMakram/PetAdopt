@@ -73,7 +73,10 @@ namespace PetAdopt.Controllers
             await _context.SaveChangesAsync();
             return Ok(new { message = "User rejected" });
         }
-
+        [HttpGet("users")]
+        public async Task<ActionResult<List<User>>> GetAll(){
+            return Ok(await _context.Users.ToListAsync());
+        }
         public class RejectRequest
         {
             public string Reason { get; set; } = "";
