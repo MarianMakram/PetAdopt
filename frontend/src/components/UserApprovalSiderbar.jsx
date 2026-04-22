@@ -8,10 +8,10 @@ import {
 
 const menuItems = [
   { id: "dashboard", label: "Dashboard", Icon: DashboardIcon },
-  { id: "my-pets",   label: "My Pets",   Icon: MyPetsIcon },
-  { id: "requests",  label: "Requests",  Icon: RequestsIcon },
+  { id: "my-pets", label: "My Pets", Icon: MyPetsIcon },
+  { id: "requests", label: "Requests", Icon: RequestsIcon },
   { id: "approvals", label: "Approvals", Icon: ApprovalsIcon },
-  { id: "settings",  label: "Settings",  Icon: SettingsIcon },
+  { id: "settings", label: "Settings", Icon: SettingsIcon },
 ];
 
 export default function SidebarUser({ activePage, setActivePage }) {
@@ -63,7 +63,7 @@ export default function SidebarUser({ activePage, setActivePage }) {
             className="w-8 h-8 rounded-full flex items-center justify-center"
             style={{ backgroundColor: "#1A1A2E" }}
           >
-            <img alt="User profile" className="w-10 h-10 rounded-full object-cover border-2 border-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBX53yyc6CWBKQnOEUIvc_FE9jK5dKaEHs-TTbcbHZsUE3rBHKmYsftQFDKro5kTjsfsfJbpFJkiRekNrWcf-lDQ7WvX4T5ok_9xdeNm6yZDEbepen9nr7oI1CHDT91ctGbRLdc1Js5AHtYv5FjPpJiSZseq0kJQv4LdhvuxGxN_E_lBZAbD8J_eIU2vZyvAT3d1O-vJe_PSA6wRos0GWuRaQUILT33Y1-2cWuo_xu-Prq-Bhrwk0JjdHfmcIfnJC8ERfBHpGls-4"/>
+            <img alt="User profile" className="w-10 h-10 rounded-full object-cover border-2 border-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBX53yyc6CWBKQnOEUIvc_FE9jK5dKaEHs-TTbcbHZsUE3rBHKmYsftQFDKro5kTjsfsfJbpFJkiRekNrWcf-lDQ7WvX4T5ok_9xdeNm6yZDEbepen9nr7oI1CHDT91ctGbRLdc1Js5AHtYv5FjPpJiSZseq0kJQv4LdhvuxGxN_E_lBZAbD8J_eIU2vZyvAT3d1O-vJe_PSA6wRos0GWuRaQUILT33Y1-2cWuo_xu-Prq-Bhrwk0JjdHfmcIfnJC8ERfBHpGls-4" />
           </div>
           <div>
             <p className="text-[11px] font-semibold" style={{ color: "#003F47" }}>

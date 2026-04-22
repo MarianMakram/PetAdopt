@@ -2498,19 +2498,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\marco\\.nuget\\packages\\": {}
+    "C:\\Users\\Martina Wageh\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\marco\\OneDrive - Faculty of Computers and Information\\Desktop\\madonnaaaaaa\\PetAdopt\\backend\\PetAdopt.csproj",
+      "projectUniqueName": "D:\\DELL\\Documents\\.NET_proj\\PetAdopt\\backend\\PetAdopt.csproj",
       "projectName": "PetAdopt",
-      "projectPath": "C:\\Users\\marco\\OneDrive - Faculty of Computers and Information\\Desktop\\madonnaaaaaa\\PetAdopt\\backend\\PetAdopt.csproj",
-      "packagesPath": "C:\\Users\\marco\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\marco\\OneDrive - Faculty of Computers and Information\\Desktop\\madonnaaaaaa\\PetAdopt\\backend\\obj\\",
+      "projectPath": "D:\\DELL\\Documents\\.NET_proj\\PetAdopt\\backend\\PetAdopt.csproj",
+      "packagesPath": "C:\\Users\\Martina Wageh\\.nuget\\packages\\",
+      "outputPath": "D:\\DELL\\Documents\\.NET_proj\\PetAdopt\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\marco\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Martina Wageh\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -3005,5 +3005,13 @@
         }
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file D:\\DELL\\Documents\\.NET_proj\\PetAdopt\\backend\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0."
+    }
+  ]
 }

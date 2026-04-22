@@ -1,11 +1,50 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetAdopt.Models;
-public class AppDbContext : DbContext
-{
-    public AppDbContext(DbContextOptions<AppDbContext> options)
-        : base(options)
-    {
-    }
 
-    public DbSet<Pet> Pets { get; set; }
+namespace PetAdopt.Data
+{
+    public class AppDbContext : DbContext
+    {
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<Pet> Pets { get; set; }
+        public DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            var statusConverter = new ValueConverter<Status, string>(
+                v => v.ToString().ToLower(),
+                v => (Status)Enum.Parse(typeof(Status), v, true));
+
+            var roleConverter = new ValueConverter<Role, string>(
+                v => v == Role.Shelter ? "shelter_owner" : v.ToString().ToLower(),
+                v => v == "shelter_owner" ? Role.Shelter : (Role)Enum.Parse(typeof(Role), v, true));
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Property(e => e.first_name).HasColumnName("first_name");
+                entity.Property(e => e.last_name).HasColumnName("last_name");
+                entity.Property(e => e.email).HasColumnName("email");
+                entity.Property(e => e.password_hash).HasColumnName("password_hash");
+
+                entity.Property(e => e.role)
+                      .HasColumnName("role")
+                      .HasConversion(roleConverter);
+
+                entity.Property(e => e.account_status)
+                      .HasColumnName("account_status")
+                      .HasConversion(statusConverter);
+
+                entity.Property(e => e.phone).HasColumnName("phone");
+                entity.Property(e => e.city).HasColumnName("city");
+                entity.Property(e => e.country).HasColumnName("country");
+                entity.Property(e => e.created_at).HasColumnName("created_at");
+                entity.Property(e => e.updated_at).HasColumnName("updated_at");
+            });
+        }
+    }
 }

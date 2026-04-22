@@ -4,3 +4,67 @@ GET {{PetAdopt_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+
+
+
+GET {{PetAdopt_HostAddress}}/api/pet
+Accept: application/json
+
+###
+GET {{PetAdopt_HostAddress}}/api/pet/1
+Accept: application/json
+
+###
+POST {{PetAdopt_HostAddress}}/api/pet
+Content-Type: application/json
+
+{
+  "ownerId": 1,
+  "name": "Cooper",
+  "breed": "Beagle",
+  "age": 2,
+  "ageUnit": 1,
+  "species": 0,
+  "gender": 0,
+  "status": 0,
+  "imageUrls": "img1.jpg"
+}
+
+###
+PUT {{PetAdopt_HostAddress}}/api/pet/2
+Content-Type: application/json 
+
+{
+  "ownerId": 2,
+  "name": "Max",
+  "breed": "Husky",
+  "age": 3,
+  "ageUnit": 1,
+  "species": 0,
+  "gender": 1,
+  "status": 1,
+  "imageUrls": "img2.jpg"
+}
+
+###
+DELETE {{PetAdopt_HostAddress}}/api/pet/1
+
+###
+GET {{PetAdopt_HostAddress}}/api/adminusers/pending-user
+Accept: application/json
+
+
+###
+PATCH {{PetAdopt_HostAddress}}/api/adminusers/approve-user/4
+Accept: application/json
+
+
+###
+PATCH {{PetAdopt_HostAddress}}/api/adminusers/reject-user/1
+Accept: application/json
+
+
+###
+GET {{PetAdopt_HostAddress}}/api/adminusers/users
+Accept: application/json
