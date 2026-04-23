@@ -24,6 +24,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         new MySqlServerVersion(new Version(8, 0, 0))
     )
 );
+<<<<<<< HEAD
+=======
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        builder => builder.WithOrigins("http://localhost:5173")
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
+
+>>>>>>> 4054b8c0664a2fe1971e1d5003228c4a9d2222ad
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -43,6 +54,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+<<<<<<< HEAD
 
 //
 builder.Services.AddCors(options =>
@@ -53,6 +65,8 @@ builder.Services.AddCors(options =>
                           .AllowAnyHeader());
 });
 //
+=======
+>>>>>>> 4054b8c0664a2fe1971e1d5003228c4a9d2222ad
 builder.Services.AddOpenApi();
 
 var app = builder.Build();

@@ -16,6 +16,7 @@ namespace PetAdopt.Models
 
         public Pet? Pet { get; set; }
         public User? Adopter { get; set; }
+        public DateTime RequestedAt { get; set; } = DateTime.Now;
     }
 
     public enum RequestStatus

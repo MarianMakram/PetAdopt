@@ -7,11 +7,21 @@ import UserApprovalsPage from './pages/UserApprovalsPage';
 import HomePage from './pages/HomePage';
 import BrowsePetsPage from './pages/BrowsePetsPage';
 import PetDetailsPage from './pages/PetDetailsPage';
+<<<<<<< HEAD
 import LoginForm from './pages/Login';
 import Register from './pages/Register';
+=======
+>>>>>>> 4054b8c0664a2fe1971e1d5003228c4a9d2222ad
 import FavoritesPage from './pages/FavoritesPage';
 import AdopterRequestsPage from './pages/AdopterRequestsPage';
 import RequestsDashboard from './pages/owner-admin/RequestsDashboard';
+<<<<<<< HEAD
+=======
+import LoginForm from './pages/Login';
+import Register from './pages/Register';
+import ProfilePage from './pages/Profile';
+
+>>>>>>> 4054b8c0664a2fe1971e1d5003228c4a9d2222ad
 
 export default function App() {
   return (
@@ -24,6 +34,7 @@ export default function App() {
         <Route path="/pets/:id" element={<PetDetailsPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/requests" element={<AdopterRequestsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/owner/pets" element={<OwnerPets />} />
         <Route path="/owner/pets/add" element={<AddEditPet />} />
         <Route path="/owner/pets/edit/:id" element={<AddEditPet />} />

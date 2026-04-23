@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const DOG = "https://lh3.googleusercontent.com/aida-public/AB6AXuCYrBgva3qz5JP6OvDs5-xnorvTdlZtHezyO3tS4E99_jOIqztOQeXOjnuVs5Z1ukbLD_Pbtcdqd6B5Ayk5m5vr3r7n2A5KtuNZy0eyhu1Hw2394Avd1IYWfo5EAappZlVoC45t7PcNfGQ_nHuawGTJrD8CYSEVdlGuYtYo9vGwCtqm4cff1E3tu-kTc4hy27ICVKkq0Vu7qXfoVMKxKlDFmZhGfhW3WusR4TcuIcZIZh_9sj_ZxkaMTBfLNMp-ZIH4CmQJzClEqWQ";
 const AVA = "https://lh3.googleusercontent.com/aida-public/AB6AXuBTiaJGy13lMMVJaoDrDbspWrjIrXbpfvwufVAG8H5HIpw4XbATaosT_Umdkhdi_pVXoojgvOWPVQzqsXNXb6IaU3QSTVG9W5Dnkghsp1ta89op4VVlRqYg5Bmc0oprELM7ShQkPsIt2urxKw6KW23Y9ERAOAPA37BqKm9yeIFYx1uHrEHzOR9zOJmEqnwOve7s2VkoiKYk1_u7V714CZ20RR3qdTtWa00BLFopb2wnbgkTC2MamcYyed8IBoAjBCN9RzhPyX6yzbQ";
@@ -63,6 +64,7 @@ function Snackbar({ snack, onClose }) {
 
 // ── Main Component ─────────────────────────────────────────────────────────
 export default function PetAdoptRegister() {
+  const navigate = useNavigate();
   const [role, setRole] = useState("adopter");
   const [showPw, setShowPw] = useState(false);
   const [agreed, setAgreed] = useState(false);
@@ -133,6 +135,7 @@ export default function PetAdoptRegister() {
         );
         setForm({ name: "", email: "", phone: "", location: "", password: "" });
         setAgreed(false);
+        navigate("/login");
       } else {
         const text = await res.text();
         showSnack(text || "Registration failed. Please try again.", "error");
@@ -185,7 +188,9 @@ export default function PetAdoptRegister() {
         <div className="flex-1 flex flex-col justify-start items-center px-8 overflow-y-auto py-8 px-20" style={{ backgroundColor: "#e9f9ff" }}>
           <div className="w-[650px]">
             <h2 className="text-2xl font-extrabold mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: "#00343e" }}>Begin your journey</h2>
-            <p className="text-xs mb-5" style={{ color: "#2c6370" }}>
+            <p 
+              onClick={() => navigate("/login")}
+              className="text-xs mb-5" style={{ color: "#2c6370" }}>
               Already have an account?{" "}
               <a href="#" className="font-semibold" style={{ color: "#00656f", textDecoration: "none" }}>Sign in</a>
             </p>
