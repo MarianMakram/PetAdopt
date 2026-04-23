@@ -42,13 +42,6 @@ export const ApprovalsIcon = ({ color, isActive }) => (
   </svg>
 );
 
-export const SettingsIcon = ({ color, isActive }) => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill={color}>
-    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-    <circle cx="12" cy="12" r="3" fill={isActive ? "#006770" : "white"} />
-  </svg>
-);
-
 export const PlusIcon = () => (
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
     <line x1="12" y1="5" x2="12" y2="19" />
@@ -73,7 +66,7 @@ const navButtonStyle = (isActive) => ({
 
 export default function Sidebar({ activePage, setActivePage, sidebarBottom, title, subtitle }) {
   return (
-    <aside className="flex flex-col w-[200px] h-fit shrink-0 bg-cyan-50">
+    <aside className="flex flex-col w-[200px] h-100 shrink-0 bg-cyan-50">
 
       <div className="px-5 pt-5 pb-4">
         <p
@@ -107,24 +100,9 @@ export default function Sidebar({ activePage, setActivePage, sidebarBottom, titl
           );
         })}
 
-        {(() => {
-          const isActive = activePage === "settings";
-          return (
-            <button
-              onClick={() => setActivePage("settings")}
-              onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = "#bee3ef" }}
-              onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = "transparent" }}
-              className="flex items-center gap-2.5 px-3 py-[9px] rounded-full text-[12px] w-full text-left transition-all"
-              style={navButtonStyle(isActive)}
-            >
-              <div className="flex items-center justify-center w-[24px] h-[24px] rounded-full shrink-0">
-                <SettingsIcon color={isActive ? "white" : "#00818d"} isActive={isActive} />
-              </div>
-              Settings
-            </button>
-          );
-        })()}
-
+  <div className="mt-[420px] mb-2">
+    {sidebarBottom}
+  </div>
         <button
           className="flex items-center justify-center gap-1.5 w-full mt-2 py-[9px] rounded-full text-[12px] font-semibold text-white transition-all"
           style={{ background: "#007984" }}
@@ -135,7 +113,20 @@ export default function Sidebar({ activePage, setActivePage, sidebarBottom, titl
           Add New Pet
         </button>
 
-        {sidebarBottom}
+        {(() => {
+          const isActive = activePage === "logout";
+          return (
+            <button
+              onClick={() => setActivePage("logout")}
+              onMouseEnter={e => e.currentTarget.style.background = "#c44545"}
+              onMouseLeave={e => e.currentTarget.style.background = "#d27070"}
+              className="flex items-center gap-2.5 px-3 py-[9px] rounded-full text-[18px] w-full h-[40px] text-white text-left transition-all pl-14 mt-3 mb-2" 
+              style={{background:"#d27070"}}
+            >
+              Logout
+            </button>
+          );
+        })()}
       </div>
     </aside>
   );
