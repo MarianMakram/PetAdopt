@@ -66,7 +66,7 @@ const navButtonStyle = (isActive) => ({
 
 export default function Sidebar({ activePage, setActivePage, sidebarBottom, title, subtitle }) {
   return (
-    <aside className="flex flex-col w-[200px] h-100 shrink-0 bg-cyan-50">
+    <aside className="flex flex-col w-[200px] h-fit shrink-0 bg-cyan-50">
 
       <div className="px-5 pt-5 pb-4">
         <p
