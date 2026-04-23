@@ -13,6 +13,7 @@ import AdopterRequestsPage from './pages/AdopterRequestsPage';
 import RequestsDashboard from './pages/owner-admin/RequestsDashboard';
 import LoginForm from './pages/Login';
 import Register from './pages/Register';
+import ProfilePage from './pages/Profile';
 
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="/pets/:id" element={<PetDetailsPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/requests" element={<AdopterRequestsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/owner/pets" element={<OwnerPets />} />
         <Route path="/owner/pets/add" element={<AddEditPet />} />
         <Route path="/owner/pets/edit/:id" element={<AddEditPet />} />

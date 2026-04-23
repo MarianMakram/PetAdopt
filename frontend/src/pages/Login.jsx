@@ -133,15 +133,12 @@ export default function LoginForm() {
 
       if (res.ok) {
         const token = await res.text();
-        // حفظ التوكن
         if (form.stay) {
           localStorage.setItem("token", token);
         } else {
           sessionStorage.setItem("token", token);
         }
         showSnack("Welcome back! 🐾 You're now logged in.", "success");
-        // هنا تقدري تعملي redirect بعد شوية
-        // setTimeout(() => navigate("/dashboard"), 1500);
       } else {
         const text = await res.text();
         showSnack(text || "Invalid email or password.", "error");
