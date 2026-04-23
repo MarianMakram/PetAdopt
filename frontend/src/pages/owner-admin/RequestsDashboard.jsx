@@ -5,6 +5,7 @@ import Sidebar from '../../components/owner-admin/Sidebar';
 export default function RequestsDashboard() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [hasNotification, setHasNotification] = useState(false);
 
   const fetchRequests = () => {
     fetch('http://localhost:5251/api/shelter/requests')
@@ -28,7 +29,11 @@ export default function RequestsDashboard() {
       method: 'PATCH'
     })
     .then(res => res.json())
-    .then(() => fetchRequests())
+    .then(() => {
+      fetchRequests();
+      setHasNotification(true);
+      alert("Adoption approved! A notification has been sent to the adopter.");
+    })
     .catch(err => console.error("Error accepting:", err));
   };
 
@@ -57,7 +62,10 @@ export default function RequestsDashboard() {
               <Link className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors" to="/stories">Stories</Link>
             </div>
             <div className="flex items-center gap-4 text-cyan-800 dark:text-cyan-100">
-              <span className="material-symbols-outlined cursor-pointer hover:scale-110 duration-200">notifications</span>
+              <div className="relative flex items-center justify-center">
+                <span className="material-symbols-outlined cursor-pointer hover:scale-110 duration-200" onClick={() => setHasNotification(false)}>notifications</span>
+                {hasNotification && <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border border-white"></span>}
+              </div>
               <span className="material-symbols-outlined cursor-pointer hover:scale-110 duration-200">favorite</span>
               <div className="flex items-center gap-2 pl-4 border-l border-cyan-200/50">
                 <img className="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIfohqwvv6uC5tx-WYqqegSGX8ywuxbJ054PEKUchyK_uQtFD2zUXcFUpqPz8Jll2om-1zE7QKWwibM1ckfPfO8KxMX4VNBfjBOu-OqqjYetNZXS0fru53QGO2xmzivAVwT9gD1bdggjPq_brK-S6gIsXgWH8D1vFFvPLC3ZwZCJbNQv4m6v3AAMKCQ4xDN7zVwOXRmGLi5LEtab2PbGVVycEgbCK7GPFYxLJCzsFXg9evLB7-JKm8CmEvKhcM-_WXMPAayy9Dlq4" alt="Profile" />

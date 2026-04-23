@@ -16,6 +16,7 @@ namespace PetAdopt.Data
         public DbSet<AdoptionRequest> AdoptionRequests { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +27,16 @@ namespace PetAdopt.Data
             var roleConverter = new ValueConverter<Role, string>(
                 v => v == Role.Shelter ? "shelter_owner" : v.ToString().ToLower(),
                 v => v == "shelter_owner" ? Role.Shelter : (Role)Enum.Parse(typeof(Role), v, true));
+
+            var requestStatusConverter = new ValueConverter<RequestStatus, string>(
+                v => v.ToString().ToLower(),
+                v => (RequestStatus)Enum.Parse(typeof(RequestStatus), v, true));
+
+            modelBuilder.Entity<AdoptionRequest>(entity =>
+            {
+                entity.Property(e => e.Status)
+                      .HasConversion(requestStatusConverter);
+            });
 
             modelBuilder.Entity<User>(entity =>
             {

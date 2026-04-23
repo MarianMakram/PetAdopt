@@ -35,10 +35,10 @@ namespace PetAdopt.Controllers
             {
                 PetId = dto.PetId,
                 AdopterId = mockAdopterId,
+                OwnerId = pet.OwnerId,
                 Message = dto.Message,
-                WhyThisPet = dto.WhyThisPet,
                 Status = RequestStatus.Pending,
-                RequestedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow
             };
 
             _context.AdoptionRequests.Add(request);
@@ -57,7 +57,7 @@ namespace PetAdopt.Controllers
             var requests = await _context.AdoptionRequests
                 .Include(r => r.Pet)
                 .Where(r => r.AdopterId == mockAdopterId)
-                .OrderByDescending(r => r.RequestedAt)
+                .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
 
             return Ok(requests);
@@ -67,7 +67,6 @@ namespace PetAdopt.Controllers
     public class AdoptionRequestDto
     {
         public int PetId { get; set; }
-        public string Message { get; set; }
-        public string WhyThisPet { get; set; }
+        public string? Message { get; set; }
     }
 }

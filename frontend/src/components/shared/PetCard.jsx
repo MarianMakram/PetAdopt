@@ -37,9 +37,9 @@ export default function PetCard({ pet, onDelete }) {
         </div>
         <div className="flex gap-2">
           {isAdopted ? (
-            <button className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
+            <Link to={`/pets/${id}`} className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
               <span className="material-symbols-outlined text-[20px]">visibility</span>
-            </button>
+            </Link>
           ) : isRejected ? (
             <>
               <button className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors" title="Check Feedback">

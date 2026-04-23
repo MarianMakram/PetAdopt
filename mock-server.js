@@ -36,9 +36,31 @@ const server = http.createServer((req, res) => {
   if (path === '/api/pets' && req.method === 'GET') {
     const search = url.searchParams.get('search')?.toLowerCase();
     const species = url.searchParams.get('species');
+    const location = url.searchParams.get('location')?.toLowerCase();
+    const breed = url.searchParams.get('breed')?.toLowerCase();
+    const ageMin = url.searchParams.get('ageMin');
+    const ageMax = url.searchParams.get('ageMax');
+
     let filtered = mockPets.filter(p => p.status === 2); // Only approved
+    
     if (search) filtered = filtered.filter(p => p.name.toLowerCase().includes(search) || p.breed.toLowerCase().includes(search));
     if (species) filtered = filtered.filter(p => p.species === parseInt(species));
+    if (location) filtered = filtered.filter(p => p.location && p.location.toLowerCase().includes(location));
+    if (breed) filtered = filtered.filter(p => p.breed && p.breed.toLowerCase().includes(breed));
+    
+    if (ageMin) {
+      filtered = filtered.filter(p => {
+         let ageYears = p.ageUnit === 0 ? p.age / 12 : p.age;
+         return ageYears >= parseInt(ageMin);
+      });
+    }
+    if (ageMax) {
+      filtered = filtered.filter(p => {
+         let ageYears = p.ageUnit === 0 ? p.age / 12 : p.age;
+         return ageYears <= parseInt(ageMax);
+      });
+    }
+
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ total: filtered.length, data: filtered }));
   } 

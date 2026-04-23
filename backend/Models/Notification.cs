@@ -4,24 +4,28 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PetAdopt.Models
 {
-    [Table("favorites")]
-    public class Favorite
+    [Table("notifications")]
+    public class Notification
     {
         [Key]
         [Column("id")]
         public int Id { get; set; }
 
-        [Column("adopter_id")]
+        [Column("user_id")]
         public int UserId { get; set; }
 
-        [Column("pet_id")]
-        public int PetId { get; set; }
+        [Column("title")]
+        public string Title { get; set; } = null!;
 
-        [Column("added_at")]
+        [Column("message")]
+        public string Message { get; set; } = null!;
+
+        [Column("is_read")]
+        public bool IsRead { get; set; } = false;
+
+        [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        // Navigation properties
         public User? User { get; set; }
-        public Pet? Pet { get; set; }
     }
 }

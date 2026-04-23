@@ -4,17 +4,27 @@ import { Link, useSearchParams } from 'react-router-dom';
 export default function BrowsePetsPage() {
   const [searchParams] = useSearchParams();
   const [pets, setPets] = useState([]);
+  const [favorites, setFavorites] = useState(new Set());
   
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
+    location: searchParams.get('location') || '',
     species: searchParams.get('species') || 'All Species',
     ageRange: 'Any Age'
   });
 
   useEffect(() => {
+    fetch('http://localhost:5251/api/favorites')
+      .then(res => res.json())
+      .then(data => setFavorites(new Set(data.map(f => f.petId))))
+      .catch(err => console.error("Error fetching favorites:", err));
+  }, []);
+
+  useEffect(() => {
     // Determine API query params
     const query = new URLSearchParams();
     if (filters.search) query.append('search', filters.search);
+    if (filters.location) query.append('location', filters.location);
     if (filters.species && filters.species !== 'All Species') query.append('species', filters.species);
     
     if (filters.ageRange !== 'Any Age') {
@@ -32,6 +42,31 @@ export default function BrowsePetsPage() {
       })
       .catch(err => console.error("Error fetching pets:", err));
   }, [filters]);
+
+  const toggleFavorite = (e, petId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const isFav = favorites.has(petId);
+    if (isFav) {
+      fetch(`http://localhost:5251/api/favorites/${petId}`, { method: 'DELETE' })
+        .then(() => {
+          const next = new Set(favorites);
+          next.delete(petId);
+          setFavorites(next);
+        });
+    } else {
+      fetch('http://localhost:5251/api/favorites', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ petId })
+      }).then(() => {
+        const next = new Set(favorites);
+        next.add(petId);
+        setFavorites(next);
+      });
+    }
+  };
 
   return (
     <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body selection:bg-[#89e9f6] selection:text-[#00555d]">
@@ -72,6 +107,16 @@ export default function BrowsePetsPage() {
               className="w-full bg-[#f4fbfc] border-none rounded-md px-4 py-3 text-sm focus:ring-2 focus:ring-[#00656f]/40" 
               value={filters.search}
               onChange={e => setFilters({...filters, search: e.target.value})}
+            />
+          </div>
+          <div className="flex-1">
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-[#2c6370] mb-2">Location</label>
+            <input 
+              type="text" 
+              placeholder="City, State..." 
+              className="w-full bg-[#f4fbfc] border-none rounded-md px-4 py-3 text-sm focus:ring-2 focus:ring-[#00656f]/40" 
+              value={filters.location}
+              onChange={e => setFilters({...filters, location: e.target.value})}
             />
           </div>
           <div className="w-full md:w-48">
@@ -115,8 +160,11 @@ export default function BrowsePetsPage() {
             <Link to={`/pets/${pet.id}`} key={pet.id} className="group cursor-pointer">
               <div className="relative overflow-hidden rounded-t-xl rounded-b-md">
                 <img className="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110" src={imgUrl} alt={pet.name} />
-                <button className="absolute top-4 right-4 w-12 h-12 bg-[#ffffff]/80 backdrop-blur-md rounded-full flex items-center justify-center text-[#00343e] shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="material-symbols-outlined">favorite</span>
+                <button 
+                  onClick={(e) => toggleFavorite(e, pet.id)}
+                  className={`absolute top-4 right-4 w-12 h-12 bg-[#ffffff]/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg transition-all ${favorites.has(pet.id) ? 'text-red-500 opacity-100 scale-110' : 'text-[#00343e] opacity-0 group-hover:opacity-100'}`}
+                >
+                  <span className="material-symbols-outlined" style={{ fontVariationSettings: favorites.has(pet.id) ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
                 </button>
               </div>
               <div className="bg-[#ffffff] p-8 rounded-b-md shadow-sm mt-0.5 border border-[#81b5c5]/5">
