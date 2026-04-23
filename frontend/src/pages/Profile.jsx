@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+const API_BASE = "/api"; 
 
 // ── Icons ──────────────────────────────────────────────────────────────────
 const ShieldIcon = () => (
@@ -71,18 +74,64 @@ const NavItem = ({ icon, label, active = false }) => (
 
 // ── Main Component ─────────────────────────────────────────────────────────
 export default function ProfilePage() {
+  const navigate = useNavigate();
+
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [activeNav, setActiveNav] = useState("profile");
 
-  // Static user data — replace with real API data as needed
-  const user = {
-    initials: "JD",
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com",
-    phone: "+1 (555) 000-0000",
-    city: "Portland",
-    country: "USA",
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token =
+        localStorage.getItem("token") ||
+        sessionStorage.getItem("token");
+
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/users/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error();
+        }
+
+        const data = await res.json();
+        setUser(data);
+      } catch {
+        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
+        navigate("/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [navigate]);
+
+  // logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
+    navigate("/");
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center text-xl">
+        Loading...
+      </div>
+    );
+  }
+  const initials =
+  `${user?.firstName?.charAt(0) || ""}${user?.lastName?.charAt(0) || ""}`.toUpperCase();
 
   return (
     <div
@@ -91,11 +140,15 @@ export default function ProfilePage() {
       {/* ── Top App Bar ── */}
       <header className="fixed top-0 left-0 w-full z-50 bg-[#E0F7FA]/80 border-b border-teal-100 backdrop-blur-md">
         <div className="flex justify-between items-center w-full px-6 py-4">
-          <p className="text-2xl font-black text-[#006064] font-['Plus_Jakarta_Sans'] m-0">
-            PetAdopt
-          </p>
+      <p
+        onClick={() => navigate("/")}
+        className="text-2xl font-black text-[#006064] font-['Plus_Jakarta_Sans'] m-0 cursor-pointer hover:opacity-80 transition"
+      >
+        PetAdopt
+      </p>
 
           <button
+            onClick={handleLogout}
             type="button"
             className="flex items-center gap-2 text-[#006064] font-bold text-[14px] bg-transparent border-none cursor-pointer hover:opacity-70 transition-opacity"
           >
@@ -116,7 +169,7 @@ export default function ProfilePage() {
               style={{ boxShadow: "0 10px 20px rgba(0,0,0,0.08)" }}
             >
               <span className="text-[48px] font-extrabold tracking-tight leading-none">
-                {user.initials}
+                {initials}
               </span>
             </div>
             {/* Verified badge */}

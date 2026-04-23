@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const API_BASE = "/api"; 
 
@@ -97,6 +98,7 @@ const FieldLabel = ({ children }) => (
 
 // ── Main Component ─────────────────────────────────────────────────────────
 export default function LoginForm() {
+  const navigate = useNavigate();
   const [activeRole, setActiveRole] = useState("adopter");
   const [form, setForm]             = useState({ email: "", password: "", stay: false });
   const [showPass, setShowPass]     = useState(false);
@@ -139,6 +141,7 @@ export default function LoginForm() {
           sessionStorage.setItem("token", token);
         }
         showSnack("Welcome back! 🐾 You're now logged in.", "success");
+        navigate("/");
       } else {
         const text = await res.text();
         showSnack(text || "Invalid email or password.", "error");
@@ -240,9 +243,6 @@ export default function LoginForm() {
                 className="w-4 h-4 accent-[#00656f] rounded" />
               <span className="text-[13px] font-medium text-[#2c6370]">Stay signed in</span>
             </label>
-            <button type="button" className="text-[13px] font-bold text-[#00656f] bg-transparent border-none cursor-pointer hover:underline">
-              Forgot Password?
-            </button>
           </div>
 
           {/* Submit */}
@@ -270,7 +270,9 @@ export default function LoginForm() {
 
           <p className="mt-10 text-center text-[13px] text-[#2c6370] font-medium">
             New to PetAdopt?{" "}
-            <button className="bg-transparent border-none cursor-pointer text-[#9b3e20] font-bold text-[13px] font-inherit hover:underline">
+            <button 
+              onClick={() => navigate("/register")}
+              className="bg-transparent border-none cursor-pointer text-[#9b3e20] font-bold text-[13px] font-inherit hover:underline">
               Create an account
             </button>
           </p>
