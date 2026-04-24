@@ -39,7 +39,7 @@ export default function PetDetailsPage() {
   const fetchReviews = async () => {
     try {
       const data = await apiClient.get(`/reviews/pet/${id}`);
-      if (Array.isArray(data)) setReviews(data);
+      if(Array.isArray(data)) setReviews(data);
     } catch (err) {
       console.error("Error fetching reviews:", err);
     }
@@ -48,7 +48,7 @@ export default function PetDetailsPage() {
   const checkFavorite = async () => {
     try {
       const data = await apiClient.get(`/favorites`);
-      if (Array.isArray(data)) {
+      if(Array.isArray(data)) {
         setIsFavorite(data.some(f => f.petId === parseInt(id)));
       }
     } catch (err) {
@@ -98,10 +98,10 @@ export default function PetDetailsPage() {
     if (!user) { navigate('/login'); return; }
     setSubmittingReview(true);
     try {
-      const data = await apiClient.post(`/reviews`, {
-        petId: parseInt(id),
-        rating: newReview.rating,
-        comment: newReview.comment
+      const data = await apiClient.post(`/reviews`, { 
+        petId: parseInt(id), 
+        rating: newReview.rating, 
+        comment: newReview.comment 
       });
       setReviews([data, ...reviews]);
       setNewReview({ rating: 5, comment: '' });
@@ -119,16 +119,31 @@ export default function PetDetailsPage() {
 
   return (
     <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body">
-      <main className="pt-10 pb-24 px-8 max-w-7xl mx-auto">
+      <nav className="fixed top-0 w-full z-50 bg-cyan-50/70 backdrop-blur-xl flex items-center justify-between px-8 py-4 border-b border-[#bff0ff]/50">
+        <Link to="/" className="text-2xl font-bold text-cyan-900">PetAdopt</Link>
+        <div className="flex gap-6">
+          <Link to="/pets" className="text-cyan-700 font-medium">Browse</Link>
+          {user ? (
+            <>
+              <Link to="/favorites" className="text-cyan-700 font-medium">Favorites</Link>
+              <Link to="/my-requests" className="text-cyan-700 font-medium">My Requests</Link>
+            </>
+          ) : (
+            <Link to="/login" className="text-cyan-700 font-medium">Login</Link>
+          )}
+        </div>
+      </nav>
+
+      <main className="pt-32 pb-24 px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div className="space-y-6">
             <div className="relative h-[600px] rounded-3xl overflow-hidden shadow-sm">
               <img src={images[0]} alt={pet.name} className="w-full h-full object-cover" />
-              <button
+              <button 
                 onClick={toggleFavorite}
                 className="absolute top-6 right-6 w-14 h-14 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-[#9f0519] shadow-lg"
               >
-                <span className="material-symbols-outlined text-3xl" style={isFavorite ? { fontVariationSettings: "'FILL' 1" } : {}}>favorite</span>
+                <span className="material-symbols-outlined text-3xl" style={isFavorite ? {fontVariationSettings: "'FILL' 1"} : {}}>favorite</span>
               </button>
             </div>
           </div>
@@ -138,7 +153,7 @@ export default function PetDetailsPage() {
             <p className="text-2xl text-[#00656f] font-medium mb-8">{pet.breed || 'Mixed Breed'}</p>
             <p className="text-[#2c6370] text-lg leading-relaxed mb-10">{pet.description}</p>
 
-            <button
+            <button 
               onClick={() => setIsAdoptModalOpen(true)}
               className="bg-[#00343e] text-[#e9f9ff] px-10 py-5 rounded-full font-bold shadow-lg w-fit"
             >
@@ -153,14 +168,14 @@ export default function PetDetailsPage() {
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#bff0ff]/50 mb-12">
               <h3 className="text-xl font-bold mb-4 text-[#00555d]">Leave a Review</h3>
               <form onSubmit={submitReview} className="space-y-4">
-                <textarea
+                <textarea 
                   className="w-full bg-[#f4fbfc] border-none rounded-xl px-4 py-3 min-h-[100px]"
                   placeholder={`Share your experience...`}
                   value={newReview.comment}
-                  onChange={e => setNewReview({ ...newReview, comment: e.target.value })}
+                  onChange={e => setNewReview({...newReview, comment: e.target.value})}
                   required
                 />
-                <button
+                <button 
                   disabled={submittingReview}
                   className="bg-[#00656f] text-[#d4f9ff] px-8 py-3 rounded-full font-bold"
                 >
@@ -197,7 +212,7 @@ export default function PetDetailsPage() {
               </div>
             ) : (
               <form onSubmit={handleAdoptSubmit}>
-                <textarea
+                <textarea 
                   required
                   value={adoptMessage}
                   onChange={e => setAdoptMessage(e.target.value)}

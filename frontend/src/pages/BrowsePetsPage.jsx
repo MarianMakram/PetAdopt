@@ -37,7 +37,20 @@ export default function BrowsePetsPage() {
 
   return (
     <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body selection:bg-[#89e9f6] selection:text-[#00555d]">
-      <main className="pt-10 pb-24 px-8 max-w-7xl mx-auto">
+      <nav className="fixed top-0 w-full z-50 bg-cyan-50/70 backdrop-blur-xl flex items-center justify-between px-8 py-4 max-w-full font-headline text-sm tracking-tight shadow-none border-b border-[#bff0ff]/50">
+        <div className="flex items-center gap-12">
+          <Link to="/" className="text-2xl font-bold tracking-tighter text-cyan-900">PetAdopt</Link>
+          <div className="hidden md:flex items-center gap-8">
+            <Link to="/pets" className="text-cyan-900 font-bold border-b-2 border-cyan-800 pb-1">Browse</Link>
+            <Link to="/favorites" className="text-cyan-700/70 hover:text-cyan-900">Favorites</Link>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+           <Link to="/login" className="bg-[#00656f] text-white px-6 py-2 rounded-full font-bold">Profile</Link>
+        </div>
+      </nav>
+
+      <main className="pt-32 pb-24 px-8 max-w-7xl mx-auto">
         <header className="mb-16">
           <h1 className="text-5xl md:text-6xl font-headline font-extrabold text-[#00343e] mb-4">
             Meet the <span className="text-[#00656f] italic">Residents</span>

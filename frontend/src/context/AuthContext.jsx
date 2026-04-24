@@ -16,8 +16,11 @@ export const AuthProvider = ({ children }) => {
         const currentTime = Date.now() / 1000;
         if (decoded.exp > currentTime) {
           // Token is valid
-          const storedUser = JSON.parse(localStorage.getItem('user'));
-          setUser({ ...storedUser, role: decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded.role });
+          const userJson = localStorage.getItem('user');
+          if (userJson) {
+            const storedUser = JSON.parse(userJson);
+            setUser({ ...storedUser, role: decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded.role });
+          }
         } else {
           // Token expired, let interceptor handle it or clear
           localStorage.removeItem('accessToken');

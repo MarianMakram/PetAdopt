@@ -51,7 +51,17 @@ namespace PetAdopt.Services
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken.Token,
-                User = user
+                User = new AuthenticatedUserDto
+                {
+                    Id = user.id,
+                    Email = user.email,
+                    FirstName = user.first_name,
+                    LastName = user.last_name,
+                    Role = user.role.ToString(),
+                    Phone = _encryptionService.Decrypt(user.phone ?? ""),
+                    City = user.city,
+                    Country = user.country
+                }
             };
         }
 
@@ -78,7 +88,17 @@ namespace PetAdopt.Services
             {
                 AccessToken = accessToken,
                 RefreshToken = newRefreshToken.Token,
-                User = user
+                User = new AuthenticatedUserDto
+                {
+                    Id = user.id,
+                    Email = user.email,
+                    FirstName = user.first_name,
+                    LastName = user.last_name,
+                    Role = user.role.ToString(),
+                    Phone = _encryptionService.Decrypt(user.phone ?? ""),
+                    City = user.city,
+                    Country = user.country
+                }
             };
         }
 
@@ -92,7 +112,7 @@ namespace PetAdopt.Services
             return true;
         }
 
-        public async Task<User?> RegisterAsync(RegisterDto request)
+        public async Task<AuthenticatedUserDto?> RegisterAsync(RegisterDto request)
         {
             if (await _context.Users.AnyAsync(u => u.email == request.Email)) return null;
 
@@ -124,7 +144,17 @@ namespace PetAdopt.Services
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return user;
+            return new AuthenticatedUserDto
+            {
+                Id = user.id,
+                Email = user.email,
+                FirstName = user.first_name,
+                LastName = user.last_name,
+                Role = user.role.ToString(),
+                Phone = _encryptionService.Decrypt(user.phone ?? ""),
+                City = user.city,
+                Country = user.country
+            };
         }
 
         public async Task<ProfileDto?> GetUserAsync(string userId)

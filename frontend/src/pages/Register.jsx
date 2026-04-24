@@ -79,7 +79,6 @@ export default function PetAdoptRegister() {
   };
 
   const handleSubmit = async () => {
-    // ── Client-side validation ──
     if (!form.name.trim() || !form.email.trim() || !form.password.trim()) {
       showSnack("Please fill in all required fields.", "error");
       return;
@@ -93,17 +92,14 @@ export default function PetAdoptRegister() {
       return;
     }
 
-    // ── Parse name into first/last ──
     const nameParts = form.name.trim().split(" ");
     const firstName = nameParts[0] || "";
     const lastName = nameParts.slice(1).join(" ") || "";
 
-    // ── Parse location into city/country ──
     const locParts = form.location.split(",").map((s) => s.trim());
     const city = locParts[0] || "";
     const country = locParts[1] || "";
 
-    // ── Map role to backend enum ──
     const payload = {
       email: form.email,
       password: form.password,
@@ -126,19 +122,9 @@ export default function PetAdoptRegister() {
           : "Account created successfully! 🐾 Welcome to PetAdopt — you can now log in.",
         "success"
       );
-      setForm({ name: "", email: "", phone: "", location: "", password: "" });
-      setAgreed(false);
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
-      let errorMsg = "Registration failed. Please try again.";
-      if (err.response?.data) {
-        if (typeof err.response.data === 'string') {
-          errorMsg = err.response.data;
-        } else if (typeof err.response.data === 'object') {
-          errorMsg = err.response.data.message || err.response.data.title || JSON.stringify(err.response.data);
-        }
-      }
-      showSnack(errorMsg, "error");
+      showSnack(err.response?.data || "Registration failed. Please try again.", "error");
     } finally {
       setLoading(false);
     }
@@ -185,11 +171,11 @@ export default function PetAdoptRegister() {
         <div className="flex-1 flex flex-col justify-start items-center px-8 overflow-y-auto py-8 px-20" style={{ backgroundColor: "#e9f9ff" }}>
           <div className="w-[650px]">
             <h2 className="text-2xl font-extrabold mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: "#00343e" }}>Begin your journey</h2>
-            <p
+            <p 
               onClick={() => navigate("/login")}
-              className="text-xs mb-5" style={{ color: "#2c6370" }}>
+              className="text-xs mb-5 cursor-pointer" style={{ color: "#2c6370" }}>
               Already have an account?{" "}
-              <a href="#" className="font-semibold" style={{ color: "#00656f", textDecoration: "none" }}>Sign in</a>
+              <span className="font-semibold" style={{ color: "#00656f", textDecoration: "none" }}>Sign in</span>
             </p>
 
             {/* Roles */}
@@ -266,9 +252,9 @@ export default function PetAdoptRegister() {
               </div>
               <p className="text-xs leading-relaxed" style={{ color: "#2c6370" }}>
                 I agree to the{" "}
-                <a href="#" onClick={e => e.stopPropagation()} className="font-bold" style={{ color: "#00656f", textDecoration: "none" }}>Terms of Service</a>
+                <span className="font-bold" style={{ color: "#00656f" }}>Terms of Service</span>
                 {" "}and{" "}
-                <a href="#" onClick={e => e.stopPropagation()} className="font-bold" style={{ color: "#00656f", textDecoration: "none" }}>Privacy Policy</a>
+                <span className="font-bold" style={{ color: "#00656f" }}>Privacy Policy</span>
                 , and consent to receiving updates about my adoption requests.
               </p>
             </div>
@@ -292,17 +278,11 @@ export default function PetAdoptRegister() {
                 <>
                   <span style={{ display: "inline-block", width: 16, height: 16, border: "2px solid #d4f9ff", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
                   Creating Account…
-                  <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
                 </>
               ) : (
                 <>Create Account <Icon name="arrow_forward" size={18} className="text-[#d4f9ff]" /></>
               )}
             </button>
-
-            <div className="text-center mt-5 pt-4 border-t border-[#81b5c5]/30">
-              <p className="text-xs" style={{ color: "#2c6370" }}>Need help? Contact our support team at</p>
-              <a href="mailto:hello@petadopt.com" className="font-bold text-xs" style={{ color: "#00656f", textDecoration: "none" }}>hello@petadopt.com</a>
-            </div>
           </div>
         </div>
       </div>
