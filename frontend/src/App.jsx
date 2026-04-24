@@ -7,42 +7,84 @@ import UserApprovalsPage from './pages/UserApprovalsPage';
 import HomePage from './pages/HomePage';
 import BrowsePetsPage from './pages/BrowsePetsPage';
 import PetDetailsPage from './pages/PetDetailsPage';
-<<<<<<< HEAD
-import LoginForm from './pages/Login';
-import Register from './pages/Register';
-=======
->>>>>>> 4054b8c0664a2fe1971e1d5003228c4a9d2222ad
 import FavoritesPage from './pages/FavoritesPage';
 import AdopterRequestsPage from './pages/AdopterRequestsPage';
 import RequestsDashboard from './pages/owner-admin/RequestsDashboard';
-<<<<<<< HEAD
-=======
 import LoginForm from './pages/Login';
 import Register from './pages/Register';
 import ProfilePage from './pages/Profile';
-
->>>>>>> 4054b8c0664a2fe1971e1d5003228c4a9d2222ad
+import ProtectedRoute from './components/shared/ProtectedRoute';
+import Navbar from './components/shared/Navbar';
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
+      <Navbar />
+      <div className="pt-20"> {/* Add padding to account for fixed navbar */}
+        <Routes>
+        {/* PUBLIC ROUTES */}
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/register/shelter" element={<Register />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/pets" element={<BrowsePetsPage />} />
         <Route path="/pets/:id" element={<PetDetailsPage />} />
-        <Route path="/favorites" element={<FavoritesPage />} />
-        <Route path="/requests" element={<AdopterRequestsPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/owner/pets" element={<OwnerPets />} />
-        <Route path="/owner/pets/add" element={<AddEditPet />} />
-        <Route path="/owner/pets/edit/:id" element={<AddEditPet />} />
-        <Route path="/owner/requests" element={<RequestsDashboard />} />
-        <Route path="/admin/approvals" element={<AdminApprovals />} />
-        <Route path="/admin/users/pending" element={<UserApprovalsPage />} />
+        <Route path="/unauthorized" element={<div className="p-12 text-center text-xl font-bold">Unauthorized Access</div>} />
+
+        {/* ADOPTER ROUTES */}
+        <Route path="/favorites" element={
+          <ProtectedRoute requiredRole="Adopter">
+            <FavoritesPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/my-requests" element={
+          <ProtectedRoute requiredRole="Adopter">
+            <AdopterRequestsPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        } />
+
+        {/* SHELTER ROUTES */}
+        <Route path="/shelter/pets" element={
+          <ProtectedRoute requiredRole="Shelter">
+            <OwnerPets />
+          </ProtectedRoute>
+        } />
+        <Route path="/shelter/pets/new" element={
+          <ProtectedRoute requiredRole="Shelter">
+            <AddEditPet />
+          </ProtectedRoute>
+        } />
+        <Route path="/shelter/pets/:id/edit" element={
+          <ProtectedRoute requiredRole="Shelter">
+            <AddEditPet />
+          </ProtectedRoute>
+        } />
+        <Route path="/shelter/requests" element={
+          <ProtectedRoute requiredRole="Shelter">
+            <RequestsDashboard />
+          </ProtectedRoute>
+        } />
+
+        {/* ADMIN ROUTES */}
+        <Route path="/admin/users" element={
+          <ProtectedRoute requiredRole="Admin">
+            <UserApprovalsPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/pets" element={
+          <ProtectedRoute requiredRole="Admin">
+            <AdminApprovals />
+          </ProtectedRoute>
+        } />
+
         <Route path="*" element={<div className="p-12 text-center text-xl font-bold">Page Not Found</div>} />
       </Routes>
+      </div>
     </BrowserRouter>
   );
 }

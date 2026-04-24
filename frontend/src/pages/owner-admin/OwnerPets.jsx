@@ -6,7 +6,7 @@ import DashboardStats from '../../components/owner-admin/DashboardStats';
 import PetGrid from '../../components/owner-admin/PetGrid';
 import PullQuote from '../../components/owner-admin/PullQuote';
 import BottomNav from '../../components/owner-admin/BottomNav';
-import { apiClient } from '../../services/apiClient';
+import apiClient from '../../services/apiClient';
 import BackToHomeLink from '../../components/shared/BackToHomeLink';
 
 export default function OwnerPets() {
@@ -39,7 +39,7 @@ export default function OwnerPets() {
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const data = await apiClient.get('/api/Pet?status=all');
+        const data = await apiClient.get('/shelter/pets');
         const petList = data.data || data;
         const mappedPets = petList
           .filter(pet => pet.status >= 1 && pet.status <= 4)

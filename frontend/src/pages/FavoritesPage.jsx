@@ -1,40 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import apiClient from '../services/apiClient';
 
 export default function FavoritesPage() {
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5251/api/favorites')
-      .then(res => res.json())
-      .then(data => {
-        setFavorites(data);
+    apiClient.get('/favorites')
+      .then(response => {
+        setFavorites(response.data);
       })
       .catch(err => console.error("Error fetching favorites:", err));
   }, []);
 
-  const removeFavorite = (petId) => {
-    fetch(`http://localhost:5251/api/favorites/${petId}`, { method: 'DELETE' })
-      .then(() => {
-        setFavorites(favorites.filter(f => f.petId !== petId));
-      })
-      .catch(err => console.error("Error removing favorite:", err));
+  const removeFavorite = async (petId) => {
+    try {
+      await apiClient.delete(`/favorites/${petId}`);
+      setFavorites(favorites.filter(f => f.petId !== petId));
+    } catch (err) {
+      console.error("Error removing favorite:", err);
+    }
   };
 
   return (
     <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body selection:bg-[#89e9f6] selection:text-[#00555d]">
-      <nav className="fixed top-0 w-full z-50 bg-cyan-50/70 dark:bg-cyan-950/70 backdrop-blur-xl flex items-center justify-between px-8 py-4 max-w-full font-headline text-sm tracking-tight shadow-none border-b border-[#bff0ff]/50">
-        <div className="flex items-center gap-12">
-          <Link to="/" className="text-2xl font-bold tracking-tighter text-cyan-900 dark:text-cyan-50">PetAdopt</Link>
-          <div className="hidden md:flex items-center gap-8">
-            <Link to="/pets" className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200">Browse</Link>
-            <Link to="/favorites" className="text-cyan-900 dark:text-cyan-50 font-bold border-b-2 border-cyan-800 dark:border-cyan-200 pb-1 transition-colors">Favorites</Link>
-            <Link to="/requests" className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200">My Requests</Link>
-          </div>
-        </div>
-      </nav>
-
-      <main className="pt-32 pb-24 px-8 max-w-7xl mx-auto">
+      <main className="pt-10 pb-24 px-8 max-w-7xl mx-auto">
         <header className="mb-12 border-b border-[#bff0ff] pb-8">
           <h1 className="text-4xl md:text-5xl font-headline font-extrabold text-[#00343e] mb-4">
             My <span className="text-[#00656f] italic">Favorites</span>

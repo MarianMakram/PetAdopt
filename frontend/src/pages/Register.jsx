@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import apiClient from "../services/apiClient";
 
 const DOG = "https://lh3.googleusercontent.com/aida-public/AB6AXuCYrBgva3qz5JP6OvDs5-xnorvTdlZtHezyO3tS4E99_jOIqztOQeXOjnuVs5Z1ukbLD_Pbtcdqd6B5Ayk5m5vr3r7n2A5KtuNZy0eyhu1Hw2394Avd1IYWfo5EAappZlVoC45t7PcNfGQ_nHuawGTJrD8CYSEVdlGuYtYo9vGwCtqm4cff1E3tu-kTc4hy27ICVKkq0Vu7qXfoVMKxKlDFmZhGfhW3WusR4TcuIcZIZh_9sj_ZxkaMTBfLNMp-ZIH4CmQJzClEqWQ";
 const AVA = "https://lh3.googleusercontent.com/aida-public/AB6AXuBTiaJGy13lMMVJaoDrDbspWrjIrXbpfvwufVAG8H5HIpw4XbATaosT_Umdkhdi_pVXoojgvOWPVQzqsXNXb6IaU3QSTVG9W5Dnkghsp1ta89op4VVlRqYg5Bmc0oprELM7ShQkPsIt2urxKw6KW23Y9ERAOAPA37BqKm9yeIFYx1uHrEHzOR9zOJmEqnwOve7s2VkoiKYk1_u7V714CZ20RR3qdTtWa00BLFopb2wnbgkTC2MamcYyed8IBoAjBCN9RzhPyX6yzbQ";
-
-const API_BASE = "/api"; 
 
 const Icon = ({ name, size = 20, fill = 0, className = "" }) => (
   <span
@@ -105,8 +104,6 @@ export default function PetAdoptRegister() {
     const country = locParts[1] || "";
 
     // ── Map role to backend enum ──
-    const roleMap = { adopter: 2, shelter: 1 };
-
     const payload = {
       email: form.email,
       password: form.password,
@@ -115,33 +112,33 @@ export default function PetAdoptRegister() {
       phone: form.phone,
       city,
       country,
-      role: roleMap[role],
     };
+
+    const endpoint = role === "shelter" ? "/auth/register/shelter" : "/auth/register";
 
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE}/users/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      await apiClient.post(endpoint, payload);
 
-      if (res.ok) {
-        showSnack(
-          role === "shelter"
-            ? "Account created! 🎉 Your shelter account is pending Admin approval — this usually takes 24–48 hours."
-            : "Account created successfully! 🐾 Welcome to PetAdopt — you can now log in.",
-          "success"
-        );
-        setForm({ name: "", email: "", phone: "", location: "", password: "" });
-        setAgreed(false);
-        navigate("/login");
-      } else {
-        const text = await res.text();
-        showSnack(text || "Registration failed. Please try again.", "error");
+      showSnack(
+        role === "shelter"
+          ? "Account created! 🎉 Your shelter account is pending Admin approval — this usually takes 24–48 hours."
+          : "Account created successfully! 🐾 Welcome to PetAdopt — you can now log in.",
+        "success"
+      );
+      setForm({ name: "", email: "", phone: "", location: "", password: "" });
+      setAgreed(false);
+      setTimeout(() => navigate("/login"), 2000);
+    } catch (err) {
+      let errorMsg = "Registration failed. Please try again.";
+      if (err.response?.data) {
+        if (typeof err.response.data === 'string') {
+          errorMsg = err.response.data;
+        } else if (typeof err.response.data === 'object') {
+          errorMsg = err.response.data.message || err.response.data.title || JSON.stringify(err.response.data);
+        }
       }
-    } catch {
-      showSnack("Could not connect to the server. Please check your connection.", "error");
+      showSnack(errorMsg, "error");
     } finally {
       setLoading(false);
     }
@@ -188,7 +185,7 @@ export default function PetAdoptRegister() {
         <div className="flex-1 flex flex-col justify-start items-center px-8 overflow-y-auto py-8 px-20" style={{ backgroundColor: "#e9f9ff" }}>
           <div className="w-[650px]">
             <h2 className="text-2xl font-extrabold mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: "#00343e" }}>Begin your journey</h2>
-            <p 
+            <p
               onClick={() => navigate("/login")}
               className="text-xs mb-5" style={{ color: "#2c6370" }}>
               Already have an account?{" "}

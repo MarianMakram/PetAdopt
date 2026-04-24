@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import apiClient from "../services/apiClient";
+import { useAuth } from "../context/AuthContext";
 
-const API_BASE = "/api"; 
+const API_BASE = ""; 
 
 // ── Icons ──────────────────────────────────────────────────────────────────
 const ShieldIcon = () => (
@@ -75,6 +77,7 @@ const NavItem = ({ icon, label, active = false }) => (
 // ── Main Component ─────────────────────────────────────────────────────────
 export default function ProfilePage() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -82,31 +85,11 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const token =
-        localStorage.getItem("token") ||
-        sessionStorage.getItem("token");
-
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-
       try {
-        const res = await fetch(`${API_BASE}/users/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error();
-        }
-
-        const data = await res.json();
-        setUser(data);
-      } catch {
-        localStorage.removeItem("token");
-        sessionStorage.removeItem("token");
+        const response = await apiClient.get('/auth/me');
+        setUser(response.data);
+      } catch (err) {
+        console.error("Profile fetch failed", err);
         navigate("/login");
       } finally {
         setLoading(false);
@@ -118,8 +101,7 @@ export default function ProfilePage() {
 
   // logout
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    sessionStorage.removeItem("token");
+    logout();
     navigate("/");
   };
 

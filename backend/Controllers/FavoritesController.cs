@@ -1,87 +1,56 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetAdopt.Data;
 using PetAdopt.Models;
+using System.Security.Claims;
 
 namespace PetAdopt.Controllers
 {
+    [Authorize(Roles = "Adopter")]
     [ApiController]
-    [Route("api/[controller]")]
-    public class FavoritesController : ControllerBase
+    [Route("api/favorites")]
+    public class FavoritesController(AppDbContext context) : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private int GetCurrentUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-        public FavoritesController(AppDbContext context)
-        {
-            _context = context;
-        }
-
-        // GET /api/favorites
         [HttpGet]
         public async Task<IActionResult> GetFavorites()
         {
-            // Mock AdopterId
-            int mockUserId = 2;
-
-            var favorites = await _context.Favorites
+            var userId = GetCurrentUserId();
+            var favorites = await context.Favorites
                 .Include(f => f.Pet)
-                .Where(f => f.UserId == mockUserId)
+                .Where(f => f.UserId == userId)
                 .OrderByDescending(f => f.CreatedAt)
                 .ToListAsync();
-
             return Ok(favorites);
         }
 
-        // POST /api/favorites
         [HttpPost]
         public async Task<IActionResult> AddFavorite([FromBody] FavoriteDto dto)
         {
-            var pet = await _context.Pets.FindAsync(dto.PetId);
-            if (pet == null) return NotFound(new { message = "Pet not found" });
+            var userId = GetCurrentUserId();
+            var existing = await context.Favorites.FirstOrDefaultAsync(f => f.PetId == dto.PetId && f.UserId == userId);
+            if (existing != null) return BadRequest("Already in favorites");
 
-            int mockUserId = 2;
-
-            var existing = await _context.Favorites
-                .FirstOrDefaultAsync(f => f.PetId == dto.PetId && f.UserId == mockUserId);
-            
-            if (existing != null)
-            {
-                return BadRequest(new { message = "Pet already in favorites" });
-            }
-
-            var favorite = new Favorite
-            {
-                PetId = dto.PetId,
-                UserId = mockUserId,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            _context.Favorites.Add(favorite);
-            await _context.SaveChangesAsync();
-
+            var favorite = new Favorite { PetId = dto.PetId, UserId = userId, CreatedAt = DateTime.UtcNow };
+            context.Favorites.Add(favorite);
+            await context.SaveChangesAsync();
             return Ok(favorite);
         }
 
-        // DELETE /api/favorites/{petId}
         [HttpDelete("{petId}")]
         public async Task<IActionResult> RemoveFavorite(int petId)
         {
-            int mockUserId = 2;
+            var userId = GetCurrentUserId();
+            var favorite = await context.Favorites.FirstOrDefaultAsync(f => f.PetId == petId && f.UserId == userId);
+            if (favorite == null) return NotFound();
 
-            var favorite = await _context.Favorites
-                .FirstOrDefaultAsync(f => f.PetId == petId && f.UserId == mockUserId);
-
-            if (favorite == null) return NotFound(new { message = "Favorite not found" });
-
-            _context.Favorites.Remove(favorite);
-            await _context.SaveChangesAsync();
-
+            context.Favorites.Remove(favorite);
+            await context.SaveChangesAsync();
             return NoContent();
         }
     }
 
-    public class FavoriteDto
-    {
-        public int PetId { get; set; }
-    }
+    public class FavoriteDto { public int PetId { get; set; } }
 }

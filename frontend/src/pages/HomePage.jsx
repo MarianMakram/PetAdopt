@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import apiClient from '../services/apiClient';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -11,11 +12,13 @@ export default function HomePage() {
   const [featuredPets, setFeaturedPets] = useState([]);
 
   useEffect(() => {
-    fetch('/api/pets?page=1&pageSize=3')
-      .then(res => res.json())
-      .then(data => {
+    apiClient.get('/pets', { params: { pageSize: 3 } })
+      .then(response => {
+        const data = response.data;
         if (data && data.data) {
           setFeaturedPets(data.data);
+        } else if (Array.isArray(data)) {
+          setFeaturedPets(data.slice(0, 3));
         }
       })
       .catch(err => console.error("Error fetching pets:", err));
@@ -35,25 +38,7 @@ export default function HomePage() {
 
   return (
     <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body selection:bg-[#89e9f6] selection:text-[#00555d]">
-      <nav className="fixed top-0 w-full z-50 bg-cyan-50/70 dark:bg-cyan-950/70 backdrop-blur-xl flex items-center justify-between px-8 py-4 max-w-full font-headline text-sm tracking-tight shadow-none">
-        <div className="flex items-center gap-12">
-          <Link to="/" className="text-2xl font-bold tracking-tighter text-cyan-900 dark:text-cyan-50">PetAdopt</Link>
-          <div className="hidden md:flex items-center gap-8">
-            <Link to="/pets" className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200">Browse</Link>
-            <Link to="/owner/pets" className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200">Shelters</Link>
-            <Link to="/" className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200">Stories</Link>
-          </div>
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-4 text-cyan-800 dark:text-cyan-100">
-            <button className="material-symbols-outlined hover:text-cyan-900 transition-colors" data-icon="notifications">notifications</button>
-            <button className="material-symbols-outlined hover:text-cyan-900 transition-colors" data-icon="favorite">favorite</button>
-          </div>
-          <button className="bg-gradient-to-br from-[#00656f] to-[#89e9f6] text-[#d4f9ff] px-6 py-2.5 rounded-full font-bold shadow-sm hover:translate-y-[-1px] transition-all">Profile</button>
-        </div>
-      </nav>
-
-      <main className="pt-24">
+      <main className="pt-10">
         <section className="px-8 py-16 md:py-24 max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">

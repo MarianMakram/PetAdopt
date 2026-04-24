@@ -1,85 +1,51 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PetAdopt.Models;
 using PetAdopt.Data;
+using PetAdopt.Models;
 
 namespace PetAdopt.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
-    public class AdminUsersController : ControllerBase
+    [Route("api/admin/users")]
+    public class AdminUsersController(AppDbContext context) : ControllerBase
     {
-        private readonly AppDbContext _context;
-
-        public AdminUsersController(AppDbContext context)
-        {
-            _context = context;
-        }
-
-        [HttpGet("pending-pets")]
-        public async Task<IActionResult> GetPendingPets()
-        {
-            var pendingPets = await _context.Pets
-                .Where(p => p.Status == PetStatus.PendingReview)
-                .ToListAsync();
-            return Ok(pendingPets);
-        }
-
-        [HttpPost("approve-pet/{id}")]
-        public async Task<IActionResult> ApprovePet(int id)
-        {
-            var pet = await _context.Pets.FindAsync(id);
-            if (pet == null) return NotFound(new { message = "Pet not found" });
-            pet.Status = PetStatus.Approved;
-            await _context.SaveChangesAsync();
-            return Ok(new { message = "Pet approved" });
-        }
-
-        [HttpPost("reject-pet/{id}")]
-        public async Task<IActionResult> RejectPet(int id, [FromBody] RejectRequest request)
-        {
-            var pet = await _context.Pets.FindAsync(id);
-            if (pet == null) return NotFound(new { message = "Pet not found" });
-            pet.Status = PetStatus.Rejected;
-            await _context.SaveChangesAsync();
-            return Ok(new { message = "Pet rejected", reason = request.Reason });
-        }
-
-        [HttpGet("pending-user")]
+        [HttpGet("pending")]
         public async Task<IActionResult> GetPendingUsers()
         {
-            var pendingUsers = await _context.Users
-                                .Where(u => u.account_status == Status.Pending)
-                                .ToListAsync();
-            return Ok(pendingUsers);
+            var users = await context.Users.Where(u => u.account_status == Status.Pending).ToListAsync();
+            return Ok(users);
         }
 
-        [HttpPatch("approve-user/{id}")]
+        [HttpPatch("{id}/approve")]
         public async Task<IActionResult> ApproveUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null) return NotFound(new { message = "User not found" });
+            var user = await context.Users.FindAsync(id);
+            if (user == null) return NotFound();
             user.account_status = Status.Approved;
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
             return Ok(new { message = "User approved" });
         }
 
-        [HttpPatch("reject-user/{id}")]
+        [HttpPatch("{id}/reject")]
         public async Task<IActionResult> RejectUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null) return NotFound(new { message = "User not found" });
+            var user = await context.Users.FindAsync(id);
+            if (user == null) return NotFound();
             user.account_status = Status.Rejected;
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
             return Ok(new { message = "User rejected" });
         }
-        [HttpGet("users")]
-        public async Task<ActionResult<List<User>>> GetAll(){
-            return Ok(await _context.Users.ToListAsync());
-        }
-        public class RejectRequest
+
+        [HttpPatch("{id}/suspend")]
+        public async Task<IActionResult> SuspendUser(int id)
         {
-            public string Reason { get; set; } = "";
+            var user = await context.Users.FindAsync(id);
+            if (user == null) return NotFound();
+            user.account_status = Status.Suspended;
+            await context.SaveChangesAsync();
+            return Ok(new { message = "User suspended" });
         }
     }
 }

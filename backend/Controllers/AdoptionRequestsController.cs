@@ -1,62 +1,51 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetAdopt.Data;
 using PetAdopt.Models;
+using System.Security.Claims;
 
 namespace PetAdopt.Controllers
 {
+    [Authorize(Roles = "Adopter")]
     [ApiController]
     [Route("api/adoption-requests")]
-    public class AdoptionRequestsController : ControllerBase
+    public class AdoptionRequestsController(AppDbContext context) : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private int GetCurrentUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-        public AdoptionRequestsController(AppDbContext context)
-        {
-            _context = context;
-        }
-
-        // POST /api/adoption-requests
         [HttpPost]
         public async Task<IActionResult> SubmitAdoptionRequest([FromBody] AdoptionRequestDto dto)
         {
-            var pet = await _context.Pets.FindAsync(dto.PetId);
+            var pet = await context.Pets.FindAsync(dto.PetId);
             if (pet == null) return NotFound(new { message = "Pet not found" });
 
             if (pet.Status != PetStatus.Approved)
-            {
                 return BadRequest(new { message = "Pet is not available for adoption" });
-            }
-
-            // Mock AdopterId
-            int mockAdopterId = 2;
 
             var request = new AdoptionRequest
             {
                 PetId = dto.PetId,
-                AdopterId = mockAdopterId,
+                AdopterId = GetCurrentUserId(),
                 Message = dto.Message,
                 WhyThisPet = dto.WhyThisPet,
                 Status = RequestStatus.Pending,
                 RequestedAt = DateTime.UtcNow
             };
 
-            _context.AdoptionRequests.Add(request);
-            await _context.SaveChangesAsync();
+            context.AdoptionRequests.Add(request);
+            await context.SaveChangesAsync();
 
             return Ok(request);
         }
 
-        // GET /api/adoption-requests
         [HttpGet]
         public async Task<IActionResult> GetMyRequests()
         {
-            // Mock AdopterId
-            int mockAdopterId = 2;
-
-            var requests = await _context.AdoptionRequests
+            var userId = GetCurrentUserId();
+            var requests = await context.AdoptionRequests
                 .Include(r => r.Pet)
-                .Where(r => r.AdopterId == mockAdopterId)
+                .Where(r => r.AdopterId == userId)
                 .OrderByDescending(r => r.RequestedAt)
                 .ToListAsync();
 
@@ -67,7 +56,7 @@ namespace PetAdopt.Controllers
     public class AdoptionRequestDto
     {
         public int PetId { get; set; }
-        public string Message { get; set; }
-        public string WhyThisPet { get; set; }
+        public string Message { get; set; } = string.Empty;
+        public string WhyThisPet { get; set; } = string.Empty;
     }
 }

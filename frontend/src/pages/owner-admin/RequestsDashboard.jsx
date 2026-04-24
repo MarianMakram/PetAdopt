@@ -1,46 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../../components/owner-admin/Sidebar';
+import apiClient from '../../services/apiClient';
 
 export default function RequestsDashboard() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchRequests = () => {
-    fetch('http://localhost:5251/api/shelter/requests')
-      .then(res => res.json())
-      .then(data => {
-        setRequests(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Error fetching requests:", err);
-        setLoading(false);
-      });
+  const fetchRequests = async () => {
+    try {
+      const data = await apiClient.get('/shelter/requests');
+      setRequests(data.data || data);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching requests:", err);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchRequests();
   }, []);
 
-  const handleAccept = (id) => {
-    fetch(`http://localhost:5251/api/shelter/requests/${id}/accept`, {
-      method: 'PATCH'
-    })
-    .then(res => res.json())
-    .then(() => fetchRequests())
-    .catch(err => console.error("Error accepting:", err));
+  const handleAccept = async (id) => {
+    try {
+      await apiClient.patch(`/shelter/requests/${id}/accept`);
+      fetchRequests();
+    } catch (err) {
+      console.error("Error accepting:", err);
+    }
   };
 
-  const handleReject = (id) => {
-    fetch(`http://localhost:5251/api/shelter/requests/${id}/reject`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ reason: "Not a good fit at this time." })
-    })
-    .then(res => res.json())
-    .then(() => fetchRequests())
-    .catch(err => console.error("Error rejecting:", err));
+  const handleReject = async (id) => {
+    try {
+      await apiClient.patch(`/shelter/requests/${id}/reject`, {
+        reason: "Not a good fit at this time."
+      });
+      fetchRequests();
+    } catch (err) {
+      console.error("Error rejecting:", err);
+    }
   };
 
   return (

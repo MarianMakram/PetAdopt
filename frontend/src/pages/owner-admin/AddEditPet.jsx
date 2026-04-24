@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/owner-admin/Sidebar';
 import AddPets from '../../components/owner-admin/AddPets';
-import { apiClient } from '../../services/apiClient';
+import apiClient from '../../services/apiClient';
 
 export default function AddEditPet() {
   const { id } = useParams();
@@ -16,7 +16,7 @@ export default function AddEditPet() {
     const fetchPet = async () => {
       if (!isEditMode) return;
       try {
-        const data = await apiClient.get(`/api/Pet/${id}`);
+        const data = await apiClient.get(`/shelter/pets/${id}`);
         setInitialData(data);
       } catch (err) {
         console.error("Failed to fetch pet", err);
@@ -32,9 +32,9 @@ export default function AddEditPet() {
   const handleSubmit = async (formData) => {
     try {
       if (isEditMode) {
-        await apiClient.put(`/api/Pet/${id}`, formData);
+        await apiClient.put(`/shelter/pets/${id}`, formData);
       } else {
-        await apiClient.post('/api/Pet', formData);
+        await apiClient.post('/shelter/pets', formData);
       }
       navigate('/owner/pets');
     } catch (err) {

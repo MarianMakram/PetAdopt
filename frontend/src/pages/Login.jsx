@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const API_BASE = "/api"; 
+import { useAuth } from "../context/AuthContext";
 
 // ── Icons ──────────────────────────────────────────────────────────────────
 const HeartIcon = () => (
@@ -46,12 +45,6 @@ const ROLES = [
   { key: "shelter_owner", icon: <PawIcon />,   label: "SHELTER" },
   { key: "admin",         icon: <ShieldIcon />, label: "ADMIN"  },
 ];
-
-const ROLE_MAP = {
-  adopter:       2,
-  shelter_owner: 1,
-  admin:         0,
-};
 
 const INPUT_CLS =
   "w-full box-border pr-4 py-4 bg-[#adecff] border-none rounded-xl text-[14px] text-[#00343e] outline-none transition-all duration-200 font-inherit focus:shadow-[0_0_0_2px_#00656f66]";
@@ -99,14 +92,15 @@ const FieldLabel = ({ children }) => (
 // ── Main Component ─────────────────────────────────────────────────────────
 export default function LoginForm() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [activeRole, setActiveRole] = useState("adopter");
-  const [form, setForm]             = useState({ email: "", password: "", stay: false });
+  const [form, setForm]             = useState({ email: "", password: "" });
   const [showPass, setShowPass]     = useState(false);
   const [loading, setLoading]       = useState(false);
   const [snack, setSnack]           = useState(null);
 
-  const handleChange = ({ target: { name, value, type, checked } }) =>
-    setForm((p) => ({ ...p, [name]: type === "checkbox" ? checked : value }));
+  const handleChange = ({ target: { name, value } }) =>
+    setForm((p) => ({ ...p, [name]: value }));
 
   const showSnack = (message, type = "success") => {
     setSnack({ message, type });
@@ -119,35 +113,16 @@ export default function LoginForm() {
       return;
     }
 
-    const payload = {
-      email:    form.email,
-      password: form.password,
-      role:     ROLE_MAP[activeRole],  
-    };
-
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE}/users/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (res.ok) {
-        const token = await res.text();
-        if (form.stay) {
-          localStorage.setItem("token", token);
-        } else {
-          sessionStorage.setItem("token", token);
-        }
-        showSnack("Welcome back! 🐾 You're now logged in.", "success");
-        navigate("/");
-      } else {
-        const text = await res.text();
-        showSnack(text || "Invalid email or password.", "error");
-      }
-    } catch {
-      showSnack("Could not connect to the server. Please check your connection.", "error");
+      const user = await login(form.email, form.password);
+      showSnack(`Welcome back! 🐾 Logged in as ${user.role}.`, "success");
+      
+      if (user.role === 'Admin') navigate('/admin/users');
+      else if (user.role === 'Shelter') navigate('/shelter/pets');
+      else navigate('/');
+    } catch (err) {
+      showSnack(err.response?.data?.message || err.response?.data || "Invalid credentials or account pending approval.", "error");
     } finally {
       setLoading(false);
     }
@@ -155,7 +130,6 @@ export default function LoginForm() {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-[#d9f6ff] to-[#e9f9ff] flex items-center justify-center p-6 font-['Be_Vietnam_Pro',sans-serif]">
-
       <Snackbar snack={snack} onClose={() => setSnack(null)} />
 
       {/* Blobs */}
@@ -163,8 +137,7 @@ export default function LoginForm() {
       <div className="absolute -bottom-[5%] -left-[5%] w-[30rem] h-[30rem] bg-[#ffc4b3]/10 rounded-full blur-[80px] pointer-events-none" />
 
       {/* Card */}
-      <div className="w-full h-screen grid grid-cols-2 rounded-none shadow-none bg-white">
-
+      <div className="w-full h-screen grid grid-cols-2 rounded-none shadow-none bg-white overflow-hidden">
         {/* LEFT */}
         <div className="relative bg-gradient-to-br from-[#00656f] to-[#005861] flex flex-col justify-between p-12 text-[#d4f9ff]">
           <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay">
@@ -189,26 +162,14 @@ export default function LoginForm() {
         </div>
 
         {/* RIGHT */}
-        <div className="px-14 py-12 flex flex-col justify-center">
+        <div className="px-14 py-12 flex flex-col justify-center bg-white">
           <div className="mb-8">
             <h2 className="font-['Plus_Jakarta_Sans',sans-serif] text-[36px] font-extrabold tracking-tight text-[#00343e] m-0 mb-2">Welcome Back</h2>
             <p className="text-[14px] text-[#2c6370] font-medium m-0">Log in to your sanctuary dashboard.</p>
           </div>
 
-          {/* Role Tabs */}
-          <div className="grid grid-cols-3 gap-3 mb-6">
-            {ROLES.map(({ key, icon, label }) => (
-              <button key={key} type="button" onClick={() => setActiveRole(key)}
-                className={`flex flex-col items-center py-3 px-2 rounded-full border transition-all duration-200 gap-1 cursor-pointer ${
-                  activeRole === key
-                    ? "border-[#00656f] bg-[#89e9f6] text-[#00656f]"
-                    : "border-[#81b5c5]/30 bg-[#d9f6ff] text-[#2c6370]"
-                }`}>
-                {icon}
-                <span className="text-[9px] font-bold tracking-widest">{label}</span>
-              </button>
-            ))}
-          </div>
+          {/* Role selection is managed by backend now, but we keep UI for preference if needed */}
+          {/* However, the backend login doesn't take role, it infers it. We can remove role tabs or keep them for visual context. */}
 
           {/* Fields */}
           <div className="flex flex-col gap-4">
@@ -236,17 +197,8 @@ export default function LoginForm() {
             </div>
           </div>
 
-          {/* Remember / Forgot */}
-          <div className="flex items-center justify-between py-1 mt-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" name="stay" checked={form.stay} onChange={handleChange}
-                className="w-4 h-4 accent-[#00656f] rounded" />
-              <span className="text-[13px] font-medium text-[#2c6370]">Stay signed in</span>
-            </label>
-          </div>
-
           {/* Submit */}
-          <div className="pt-2 flex flex-col gap-4 mt-2">
+          <div className="pt-2 flex flex-col gap-4 mt-6">
             <button
               type="button"
               onClick={handleSubmit}

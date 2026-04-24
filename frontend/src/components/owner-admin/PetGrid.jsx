@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PetCard from '../shared/PetCard';
-import { apiClient } from '../../services/apiClient';
+import apiClient from '../../services/apiClient';
 
 export default function PetGrid({ pets, loading, error, setPets }) {
   
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this pet?")) {
       try {
-        await apiClient.delete(`/api/Pet/${id}`);
+        await apiClient.delete(`/shelter/pets/${id}`);
         // Remove pet from local state after successful deletion
         setPets(prevPets => prevPets.filter(pet => pet.id !== id));
       } catch (err) {

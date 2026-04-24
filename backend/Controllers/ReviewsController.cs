@@ -1,58 +1,53 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetAdopt.Data;
 using PetAdopt.Models;
+using System.Security.Claims;
 
 namespace PetAdopt.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class ReviewsController : ControllerBase
+    [Route("api/reviews")]
+    public class ReviewsController(AppDbContext context) : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private int GetCurrentUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-        public ReviewsController(AppDbContext context)
-        {
-            _context = context;
-        }
-
-        // GET /api/reviews/pet/{petId}
         [HttpGet("pet/{petId}")]
         public async Task<IActionResult> GetPetReviews(int petId)
         {
-            var reviews = await _context.Reviews
+            var reviews = await context.Reviews
                 .Include(r => r.Adopter)
                 .Where(r => r.PetId == petId)
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
-
             return Ok(reviews);
         }
 
-        // POST /api/reviews
+        [Authorize(Roles = "Adopter")]
         [HttpPost]
         public async Task<IActionResult> AddReview([FromBody] ReviewDto dto)
         {
-            var pet = await _context.Pets.FindAsync(dto.PetId);
-            if (pet == null) return NotFound(new { message = "Pet not found" });
-
-            int mockAdopterId = 2; // For A1+A2 mocked auth
+            var userId = GetCurrentUserId();
+            
+            // Check if user adopted the pet (Requirement: only after accepted adoption)
+            var adoption = await context.AdoptionRequests
+                .AnyAsync(r => r.PetId == dto.PetId && r.AdopterId == userId && r.Status == RequestStatus.Accepted);
+            
+            if (!adoption)
+                return BadRequest("You can only review pets you have successfully adopted.");
 
             var review = new Review
             {
                 PetId = dto.PetId,
-                AdopterId = mockAdopterId,
+                AdopterId = userId,
                 Rating = dto.Rating,
                 Comment = dto.Comment,
                 CreatedAt = DateTime.UtcNow
             };
 
-            _context.Reviews.Add(review);
-            await _context.SaveChangesAsync();
-
-            // Load the adopter object so we can return it with the review
-            await _context.Entry(review).Reference(r => r.Adopter).LoadAsync();
-
+            context.Reviews.Add(review);
+            await context.SaveChangesAsync();
             return Ok(review);
         }
     }
@@ -61,6 +56,6 @@ namespace PetAdopt.Controllers
     {
         public int PetId { get; set; }
         public int Rating { get; set; }
-        public string Comment { get; set; }
+        public string Comment { get; set; } = string.Empty;
     }
 }
