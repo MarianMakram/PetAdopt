@@ -59,6 +59,13 @@ namespace PetAdopt.Data
                       .HasForeignKey(rt => rt.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
+
+            modelBuilder.Entity<User>().ToTable("users");
+            modelBuilder.Entity<Pet>().ToTable("pets");
+            modelBuilder.Entity<AdoptionRequest>().ToTable("adoption_request");
+            modelBuilder.Entity<Review>().ToTable("reviews");
+            modelBuilder.Entity<Favorite>().ToTable("favorites");
+            modelBuilder.Entity<Notification>().ToTable("notifications");
         }
     }
 }

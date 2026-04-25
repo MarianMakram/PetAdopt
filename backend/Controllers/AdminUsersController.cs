@@ -24,7 +24,7 @@ namespace PetAdopt.Controllers
                 return BadRequest("Invalid status");
 
             var users = await context.Users
-                .Where(u => u.account_status == statusEnum)
+                .Where(u => u.account_status == statusEnum && u.role == Role.Shelter)
                 .OrderByDescending(u => u.created_at)
                 .ToListAsync();
             return Ok(users);

@@ -1,11 +1,1 @@
-{
-  "Version": 1,
-  "Hash": "jwdHDdZ860uLWKedrXkBQUE1sJusO9r+ad9L2bLqQcI=",
-  "Source": "PetAdopt",
-  "BasePath": "_content/PetAdopt",
-  "Mode": "Default",
-  "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
-}
+{"Version":1,"Hash":"J3Hxi8Bs9DNHRatr0+4LmyNPfXTvwFwLO8EltD+lPxU=","Source":"PetAdopt","BasePath":"/","Mode":"Root","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}

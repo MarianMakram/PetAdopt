@@ -12,18 +12,18 @@ using PetAdopt.Data;
 namespace PetAdopt.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260424223153_UpdateSecuritySchema")]
-    partial class UpdateSecuritySchema
+    [Migration("20260425095917_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("PetAdopt.Models.AdoptionRequest", b =>
                 {
@@ -31,34 +31,34 @@ namespace PetAdopt.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AdopterId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("PetId")
                         .HasColumnType("int");
 
                     b.Property<string>("RejectionReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("RequestedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("RespondedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<string>("WhyThisPet")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -75,10 +75,10 @@ namespace PetAdopt.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("PetId")
                         .HasColumnType("int");
@@ -95,13 +95,58 @@ namespace PetAdopt.Migrations
                     b.ToTable("Favorites");
                 });
 
+            modelBuilder.Entity("PetAdopt.Models.Notification", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("is_read")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("message")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("related_entity_id")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("related_entity_type")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("type")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("user_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("userid")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("userid");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("PetAdopt.Models.Pet", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
@@ -110,28 +155,28 @@ namespace PetAdopt.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Breed")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
                     b.Property<string>("HealthStatus")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ImageUrls")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
@@ -153,24 +198,24 @@ namespace PetAdopt.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("Expires")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("Revoked")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Token")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("TokenHash")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -188,17 +233,17 @@ namespace PetAdopt.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AdopterId")
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("PetId")
                         .HasColumnType("int");
@@ -221,60 +266,60 @@ namespace PetAdopt.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
 
                     b.Property<string>("account_status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("account_status");
 
                     b.Property<string>("city")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("city");
 
                     b.Property<string>("country")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("country");
 
                     b.Property<DateTime>("created_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
 
                     b.Property<string>("email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("email");
 
                     b.Property<string>("first_name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("first_name");
 
                     b.Property<string>("last_name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("last_name");
 
                     b.Property<string>("password_hash")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("password_hash");
 
                     b.Property<string>("phone")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("phone");
 
                     b.Property<string>("role")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("longtext")
                         .HasColumnName("role");
 
                     b.Property<string>("salt")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("updated_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("updated_at");
 
                     b.HasKey("id");
@@ -318,6 +363,15 @@ namespace PetAdopt.Migrations
                     b.Navigation("Pet");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PetAdopt.Models.Notification", b =>
+                {
+                    b.HasOne("PetAdopt.Models.User", "user")
+                        .WithMany()
+                        .HasForeignKey("userid");
+
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("PetAdopt.Models.RefreshToken", b =>
