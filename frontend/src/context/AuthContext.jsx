@@ -17,8 +17,9 @@ export const AuthProvider = ({ children }) => {
   const validateSession = useCallback(async () => {
     try {
       const response = await apiClient.get('/auth/me');
-      if (response.data?.data) {
-        setUser(response.data.data);
+      const userData = response.data?.data || response.data;
+      if (userData) {
+        setUser(userData);
       }
     } catch (err) {
       console.warn("Session validation failed:", err.message);
@@ -36,8 +37,9 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const response = await apiClient.post('/auth/login', { email, password });
-    // VendorHub response structure: response.data.data
-    const { accessToken, user: userData } = response.data.data;
+    // Handle both wrapped { data: { ... } } and direct { ... } responses
+    const data = response.data?.data || response.data;
+    const { accessToken, user: userData } = data;
     
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('user', JSON.stringify(userData));

@@ -31,6 +31,7 @@ namespace PetAdopt.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<AuthResponseDto>> Login(UserDto request)
         {
+            Console.WriteLine($"[LOGIN ATTEMPT] Email: {request.Email}");
             try 
             {
                 var result = await authService.LoginAsync(request);

@@ -118,7 +118,13 @@ export default function LoginForm() {
       else if (userData.role === 'Shelter') navigate('/shelter/pets');
       else navigate('/');
     } catch (err) {
-      showSnack(err.response?.data?.message || err.response?.data || "Invalid credentials or account pending approval.", "error");
+      console.error("Login Error Details:", err);
+      const errMsg = err.response?.data?.message || err.response?.data;
+      if (err.code === "ERR_NETWORK") {
+        showSnack("Server unreachable. Please ensure the backend is running.", "error");
+      } else {
+        showSnack(errMsg || "Invalid credentials or account pending approval.", "error");
+      }
     } finally {
       setLoading(false);
     }

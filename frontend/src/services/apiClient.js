@@ -36,8 +36,8 @@ apiClient.interceptors.response.use(
         // Refresh token is in httpOnly cookie — just call the endpoint without body
         const response = await axios.post(`${BASE_URL}/auth/refresh`, {}, { withCredentials: true });
         
-        // Data is wrapped in 'data' as per VendorHub pattern
-        const newAccessToken = response.data?.data?.accessToken;
+        const data = response.data?.data || response.data;
+        const newAccessToken = data?.accessToken;
         
         if (newAccessToken) {
           localStorage.setItem('accessToken', newAccessToken);
