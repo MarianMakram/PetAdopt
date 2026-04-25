@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import apiClient from "../services/apiClient";
 
 const DOG = "https://lh3.googleusercontent.com/aida-public/AB6AXuCYrBgva3qz5JP6OvDs5-xnorvTdlZtHezyO3tS4E99_jOIqztOQeXOjnuVs5Z1ukbLD_Pbtcdqd6B5Ayk5m5vr3r7n2A5KtuNZy0eyhu1Hw2394Avd1IYWfo5EAappZlVoC45t7PcNfGQ_nHuawGTJrD8CYSEVdlGuYtYo9vGwCtqm4cff1E3tu-kTc4hy27ICVKkq0Vu7qXfoVMKxKlDFmZhGfhW3WusR4TcuIcZIZh_9sj_ZxkaMTBfLNMp-ZIH4CmQJzClEqWQ";
@@ -64,12 +65,34 @@ function Snackbar({ snack, onClose }) {
 // ── Main Component ─────────────────────────────────────────────────────────
 export default function PetAdoptRegister() {
   const navigate = useNavigate();
+  const { user, isLoading } = useAuth();
   const [role, setRole] = useState("adopter");
   const [showPw, setShowPw] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [snack, setSnack] = useState(null);
   const [form, setForm] = useState({ name: "", email: "", phone: "", location: "", password: "" });
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user && !isLoading) {
+      const roleStr = String(user.role).toLowerCase();
+      if (roleStr === 'admin') navigate('/admin/users');
+      else if (roleStr === 'shelter') navigate('/shelter/pets');
+      else navigate('/');
+    }
+  }, [user, isLoading, navigate]);
+
+  if (user && !isLoading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#e9f9ff' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ width: 40, height: 40, border: '4px solid #00656f', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 16px' }} />
+          <p style={{ color: '#00343e', fontWeight: 600, fontFamily: "'Be Vietnam Pro'" }}>Redirecting to your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   const set = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -139,6 +162,50 @@ export default function PetAdoptRegister() {
         html, body, #root { width: 100%; min-height: 100vh; }
         body { font-family: 'Be Vietnam Pro', sans-serif; }
         .material-symbols-outlined { font-family: 'Material Symbols Outlined'; font-style: normal; display: inline-block; line-height: 1; white-space: nowrap; -webkit-font-smoothing: antialiased; vertical-align: middle; }
+        
+        /* Utility shim for non-tailwind environment */
+        .min-h-screen { min-height: 100vh; }
+        .w-full { width: 100%; }
+        .flex { display: flex; }
+        .hidden { display: none; }
+        .flex-1 { flex: 1; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .justify-start { justify-content: flex-start; }
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+        .object-cover { object-fit: cover; }
+        .overflow-hidden { overflow: hidden; }
+        .overflow-y-auto { overflow-y: auto; }
+        .grid { display: grid; }
+        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-12 { gap: 3rem; }
+        .p-4 { padding: 1rem; }
+        .p-7 { padding: 1.75rem; }
+        .px-8 { padding-left: 2rem; padding-right: 2rem; }
+        .px-20 { padding-left: 5rem; padding-right: 5rem; }
+        .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-5 { margin-bottom: 1.25rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .rounded-xl { border-radius: 0.75rem; }
+        .rounded-2xl { border-radius: 1rem; }
+        .rounded-full { border-radius: 9999px; }
+        .border { border: 1px solid; }
+        .border-2 { border-width: 2px; }
+        .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+        .duration-200 { transition-duration: 200ms; }
+        
+        @media (min-width: 768px) {
+          .md\:flex { display: flex; }
+        }
       `}</style>
 
       <Snackbar snack={snack} onClose={() => setSnack(null)} />
@@ -171,7 +238,7 @@ export default function PetAdoptRegister() {
         <div className="flex-1 flex flex-col justify-start items-center px-8 overflow-y-auto py-8 px-20" style={{ backgroundColor: "#e9f9ff" }}>
           <div className="w-[650px]">
             <h2 className="text-2xl font-extrabold mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: "#00343e" }}>Begin your journey</h2>
-            <p 
+            <p
               onClick={() => navigate("/login")}
               className="text-xs mb-5 cursor-pointer" style={{ color: "#2c6370" }}>
               Already have an account?{" "}

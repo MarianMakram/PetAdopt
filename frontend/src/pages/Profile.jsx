@@ -87,7 +87,15 @@ export default function ProfilePage() {
     const fetchProfile = async () => {
       try {
         const response = await apiClient.get('/auth/me');
-        setUser(response.data);
+        const userData = response.data.data || response.data; // Handle wrapped or unwrapped
+        setUser(userData);
+        
+        // Role-based redirection
+        if (userData.role === 'Admin') {
+          navigate('/admin/users');
+        } else if (userData.role === 'Shelter') {
+          navigate('/shelter/pets');
+        }
       } catch (err) {
         console.error("Profile fetch failed", err);
         navigate("/login");

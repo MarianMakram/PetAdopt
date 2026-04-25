@@ -11,66 +11,96 @@ namespace PetAdopt.Controllers
     public class AuthController(IAuthService authService) : ControllerBase
     {
         [HttpPost("register")]
-        public async Task<ActionResult<AuthenticatedUserDto>> Register(RegisterDto request)
+        public async Task<IActionResult> Register(RegisterDto request)
         {
             request.Role = Role.Adopter;
             var user = await authService.RegisterAsync(request);
-            if (user is null) return BadRequest("User already exists.");
-            return Ok(user);
+            if (user is null) return BadRequest(new { message = "User already exists." });
+            return Ok(new { data = user });
         }
 
         [HttpPost("register/shelter")]
-        public async Task<ActionResult<AuthenticatedUserDto>> RegisterShelter(RegisterDto request)
+        public async Task<IActionResult> RegisterShelter(RegisterDto request)
         {
             request.Role = Role.Shelter;
             var user = await authService.RegisterAsync(request);
-            if (user is null) return BadRequest("User already exists.");
-            return Ok(user);
+            if (user is null) return BadRequest(new { message = "User already exists." });
+            return Ok(new { data = user });
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AuthResponseDto>> Login(UserDto request)
+        public async Task<IActionResult> Login(UserDto request)
         {
             var result = await authService.LoginAsync(request);
-            if (result is null) return Unauthorized("Invalid login credentials or account pending approval.");
+            if (result is null) return Unauthorized(new { message = "Invalid login credentials or account pending approval." });
 
-            // Set refresh token in cookie for better security (optional, but prompt says body/cookie)
-            // For now, returning in body as per common React patterns if not specified
-            return Ok(result);
+            SetRefreshTokenCookie(result.RefreshToken);
+
+            return Ok(new { 
+                data = new { 
+                    accessToken = result.AccessToken, 
+                    user = result.User 
+                } 
+            });
         }
 
         [HttpPost("refresh")]
-        public async Task<ActionResult<AuthResponseDto>> Refresh([FromBody] RefreshRequest request)
+        public async Task<IActionResult> Refresh()
         {
-            var result = await authService.RefreshTokenAsync(request.RefreshToken);
-            if (result is null) return Unauthorized("Invalid refresh token.");
-            return Ok(result);
+            var refreshToken = Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(refreshToken))
+                return Unauthorized(new { message = "No refresh token provided." });
+
+            var result = await authService.RefreshTokenAsync(refreshToken);
+            if (result is null) return Unauthorized(new { message = "Invalid refresh token." });
+
+            SetRefreshTokenCookie(result.RefreshToken);
+
+            return Ok(new { 
+                data = new { 
+                    accessToken = result.AccessToken, 
+                    user = result.User 
+                } 
+            });
         }
 
         [Authorize]
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout([FromBody] RefreshRequest request)
+        public async Task<IActionResult> Logout()
         {
-            await authService.LogoutAsync(request.RefreshToken);
+            var refreshToken = Request.Cookies["refreshToken"];
+            if (!string.IsNullOrEmpty(refreshToken))
+            {
+                await authService.LogoutAsync(refreshToken);
+            }
+            
+            Response.Cookies.Delete("refreshToken");
             return Ok(new { message = "Logged out successfully" });
         }
 
         [Authorize]
         [HttpGet("me")]
-        public async Task<ActionResult<ProfileDto>> GetCurrentUser()
+        public async Task<IActionResult> GetCurrentUser()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null) return Unauthorized();
 
             var user = await authService.GetUserAsync(userId);
-            if (user is null) return NotFound("User not found.");
+            if (user is null) return NotFound(new { message = "User not found." });
             
-            return Ok(user);
+            return Ok(new { data = user });
         }
-    }
 
-    public class RefreshRequest
-    {
-        public string RefreshToken { get; set; } = string.Empty;
+        private void SetRefreshTokenCookie(string refreshToken)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true, // Set to true in production
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(7)
+            };
+            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+        }
     }
 }

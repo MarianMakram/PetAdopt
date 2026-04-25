@@ -100,7 +100,7 @@ export default function OwnerPets() {
   const activePetsCount = pets.filter(p => p.status === 'Approved' || p.status === 'Draft').length;
 
   return (
-    <>
+    <div className="flex">
       <Sidebar activeTab={activeTab} />
 
       <main className="flex-1 min-h-screen pb-24 md:pb-12 overflow-y-auto">
@@ -120,7 +120,7 @@ export default function OwnerPets() {
                 <span className="material-symbols-outlined">filter_list</span>
                 Filter
               </button>
-              <Link to="/owner/pets/add" className="md:hidden bg-primary text-on-primary px-6 py-3 rounded-full font-bold shadow-lg shadow-primary/20 flex items-center justify-center">
+              <Link to="/shelter/pets/new" className="md:hidden bg-primary text-on-primary px-6 py-3 rounded-full font-bold shadow-lg shadow-primary/20 flex items-center justify-center">
                 Add New
               </Link>
             </div>
@@ -134,6 +134,6 @@ export default function OwnerPets() {
 
       <BottomNav activeTab="Home" />
       <BackToHomeLink />
-    </>
+    </div>
   );
 }

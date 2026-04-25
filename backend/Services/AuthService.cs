@@ -30,16 +30,10 @@ namespace PetAdopt.Services
                 .FirstOrDefaultAsync(u => u.email == request.Email);
 
             if (user is null) return null;
+            if (user.account_status != Status.Approved) return null;
 
-            // Check account status (Task 2D)
-            if (user.account_status != Status.Approved)
-            {
-                // In a real app, you might return specific error for Pending/Rejected/Suspended
+            if (!VerifyPasswordHash(request.Password, user.password_hash, user.salt))
                 return null;
-            }
-
-            var result = new PasswordHasher<User>().VerifyHashedPassword(user, user.password_hash, request.Password);
-            if (result == PasswordVerificationResult.Failed) return null;
 
             var accessToken = CreateToken(user);
             var refreshToken = GenerateRefreshToken(user.id);
@@ -67,13 +61,14 @@ namespace PetAdopt.Services
 
         public async Task<AuthResponseDto?> RefreshTokenAsync(string token)
         {
+            var tokenHash = HashToken(token);
             var user = await _context.Users
                 .Include(u => u.RefreshTokens)
-                .FirstOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
+                .FirstOrDefaultAsync(u => u.RefreshTokens.Any(t => t.TokenHash == tokenHash));
 
             if (user == null) return null;
 
-            var refreshToken = user.RefreshTokens.FirstOrDefault(t => t.Token == token);
+            var refreshToken = user.RefreshTokens.FirstOrDefault(t => t.TokenHash == tokenHash);
             if (refreshToken == null || !refreshToken.IsActive) return null;
 
             // Rotate token (Task 2B)
@@ -84,10 +79,11 @@ namespace PetAdopt.Services
             var accessToken = CreateToken(user);
             await _context.SaveChangesAsync();
 
+            // Return the raw token to the user, but it's saved encrypted in DB
             return new AuthResponseDto
             {
                 AccessToken = accessToken,
-                RefreshToken = newRefreshToken.Token,
+                RefreshToken = _encryptionService.Decrypt(newRefreshToken.Token), 
                 User = new AuthenticatedUserDto
                 {
                     Id = user.id,
@@ -104,7 +100,8 @@ namespace PetAdopt.Services
 
         public async Task<bool> LogoutAsync(string token)
         {
-            var refreshToken = await _context.RefreshTokens.FirstOrDefaultAsync(t => t.Token == token);
+            var tokenHash = HashToken(token);
+            var refreshToken = await _context.RefreshTokens.FirstOrDefaultAsync(t => t.TokenHash == tokenHash);
             if (refreshToken == null) return false;
 
             refreshToken.Revoked = DateTime.UtcNow;
@@ -116,6 +113,8 @@ namespace PetAdopt.Services
         {
             if (await _context.Users.AnyAsync(u => u.email == request.Email)) return null;
 
+            CreatePasswordHash(request.Password, out string hash, out string salt);
+
             var user = new User
             {
                 email = request.Email,
@@ -125,11 +124,11 @@ namespace PetAdopt.Services
                 city = request.City,
                 country = request.Country,
                 role = request.Role,
+                password_hash = hash,
+                salt = salt,
                 created_at = DateTime.UtcNow,
                 updated_at = DateTime.UtcNow
             };
-
-            user.password_hash = new PasswordHasher<User>().HashPassword(user, request.Password);
 
             // User Permissions Management (Task 2D)
             if (user.role == Role.Shelter)
@@ -166,6 +165,8 @@ namespace PetAdopt.Services
 
             return new ProfileDto
             {
+                Id = user.id,
+                Role = user.role.ToString(),
                 FirstName = user.first_name,
                 LastName = user.last_name,
                 Email = user.email,
@@ -200,12 +201,35 @@ namespace PetAdopt.Services
 
         private RefreshToken GenerateRefreshToken(int userId)
         {
+            var rawToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
             return new RefreshToken
             {
-                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                Expires = DateTime.UtcNow.AddDays(7), // 7-30 days (Task 2B)
+                Token = _encryptionService.Encrypt(rawToken), // AES Encryption
+                TokenHash = HashToken(rawToken),             // Hashed for search
+                Expires = DateTime.UtcNow.AddDays(7), 
                 UserId = userId
             };
+        }
+
+        private string HashToken(string token)
+        {
+            using var sha256 = SHA256.Create();
+            var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(token));
+            return Convert.ToBase64String(bytes);
+        }
+
+        private void CreatePasswordHash(string password, out string hash, out string salt)
+        {
+            using var hmac = new HMACSHA512();
+            salt = Convert.ToBase64String(hmac.Key);
+            hash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
+        }
+
+        private bool VerifyPasswordHash(string password, string storedHash, string storedSalt)
+        {
+            using var hmac = new HMACSHA512(Convert.FromBase64String(storedSalt));
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            return Convert.ToBase64String(computedHash) == storedHash;
         }
     }
 }

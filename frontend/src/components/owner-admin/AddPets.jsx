@@ -48,9 +48,9 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
   const [newImageUrl, setNewImageUrl] = useState("");
 
   // UI Only State (Not mapped to current backend)
-  const [health, setHealth] = useState(["Vaccinated", "Neutered"]);
-  const [description, setDescription] = useState("");
-  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState(initialData?.description || "");
+  const [location, setLocation] = useState(initialData?.location || "");
+  const [health, setHealth] = useState(initialData?.healthStatus ? initialData.healthStatus.split(', ') : ["Vaccinated", "Neutered"]);
 
   const toggleHealth = (tag) =>
     setHealth((h) => (h.includes(tag) ? h.filter((x) => x !== tag) : [...h, tag]));
@@ -83,13 +83,16 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
 
     onSubmit({
       id: initialData?.id || 0,
-      ownerId: initialData?.ownerId || 1,
+      ownerId: initialData?.ownerId || 0,
       name: name,
       breed: breed,
       age: parseInt(age) || 0,
       ageUnit: ageUnitEnum,
       species: speciesEnum,
       gender: genderEnum,
+      description: description,
+      location: location,
+      healthStatus: health.join(', '),
       imageUrls: images.join(',') || PET_IMG,
       status: initialData?.status !== undefined ? initialData.status : 1 // Default to PendingReview
     });

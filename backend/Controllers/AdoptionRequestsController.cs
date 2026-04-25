@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetAdopt.Data;
 using PetAdopt.Models;
+using PetAdopt.Services;
 using System.Security.Claims;
 
 namespace PetAdopt.Controllers
@@ -10,7 +11,7 @@ namespace PetAdopt.Controllers
     [Authorize(Roles = "Adopter")]
     [ApiController]
     [Route("api/adoption-requests")]
-    public class AdoptionRequestsController(AppDbContext context) : ControllerBase
+    public class AdoptionRequestsController(AppDbContext context, INotificationService notificationService) : ControllerBase
     {
         private int GetCurrentUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
@@ -35,6 +36,16 @@ namespace PetAdopt.Controllers
 
             context.AdoptionRequests.Add(request);
             await context.SaveChangesAsync();
+
+            // Send real-time notification to pet owner
+            await notificationService.SendNotificationAsync(
+                pet.OwnerId,
+                "New Adoption Request",
+                $"You have a new adoption request for {pet.Name}!",
+                "Success",
+                request.Id.ToString(),
+                "AdoptionRequest"
+            );
 
             return Ok(request);
         }

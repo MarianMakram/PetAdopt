@@ -36,7 +36,7 @@ export default function AddEditPet() {
       } else {
         await apiClient.post('/shelter/pets', formData);
       }
-      navigate('/owner/pets');
+      navigate('/shelter/pets');
     } catch (err) {
       console.error("Failed to save pet", err);
       alert("Failed to save pet. Please try again.");
@@ -44,7 +44,7 @@ export default function AddEditPet() {
   };
 
   const handleCancel = () => {
-    navigate('/owner/pets');
+    navigate('/shelter/pets');
   };
 
   return (

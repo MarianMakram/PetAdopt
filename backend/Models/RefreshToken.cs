@@ -10,6 +10,7 @@ namespace PetAdopt.Models
         [Key]
         public int Id { get; set; }
         public string Token { get; set; } = string.Empty;
+        public string TokenHash { get; set; } = string.Empty;
         public DateTime Created { get; set; } = DateTime.UtcNow;
         public DateTime Expires { get; set; }
         public bool IsExpired => DateTime.UtcNow >= Expires;

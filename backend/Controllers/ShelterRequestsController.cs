@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetAdopt.Data;
 using PetAdopt.Models;
+using PetAdopt.Services;
 using System.Security.Claims;
 
 namespace PetAdopt.Controllers
@@ -10,7 +11,7 @@ namespace PetAdopt.Controllers
     [Authorize(Roles = "Shelter")]
     [ApiController]
     [Route("api/shelter/requests")]
-    public class ShelterRequestsController(AppDbContext context) : ControllerBase
+    public class ShelterRequestsController(AppDbContext context, INotificationService notificationService) : ControllerBase
     {
         private int GetCurrentUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
@@ -54,6 +55,30 @@ namespace PetAdopt.Controllers
             }
 
             await context.SaveChangesAsync();
+
+            // Notify Accepted Adopter
+            await notificationService.SendNotificationAsync(
+                request.AdopterId,
+                "Request Accepted!",
+                $"Congratulations! Your request for {request.Pet?.Name} has been accepted.",
+                "Success",
+                request.Id.ToString(),
+                "AdoptionRequest"
+            );
+
+            // Notify Rejected Adopters (others)
+            foreach (var o in others)
+            {
+                await notificationService.SendNotificationAsync(
+                    o.AdopterId,
+                    "Pet Adopted",
+                    $"The pet {request.Pet?.Name} has been adopted by someone else.",
+                    "Info",
+                    o.Id.ToString(),
+                    "AdoptionRequest"
+                );
+            }
+
             return Ok(request);
         }
 
@@ -72,6 +97,17 @@ namespace PetAdopt.Controllers
             request.RespondedAt = DateTime.UtcNow;
 
             await context.SaveChangesAsync();
+
+            // Notify Rejected Adopter
+            await notificationService.SendNotificationAsync(
+                request.AdopterId,
+                "Request Update",
+                $"Unfortunately, your request for {request.Pet?.Name} was not accepted.",
+                "Warning",
+                request.Id.ToString(),
+                "AdoptionRequest"
+            );
+
             return Ok(request);
         }
     }

@@ -45,13 +45,13 @@ export default function PetCard({ pet, onDelete }) {
               <button className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors" title="Check Feedback">
                 <span className="material-symbols-outlined text-[20px]">info</span>
               </button>
-              <Link to={`/owner/pets/edit/${id}`} className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
+              <Link to={`/shelter/pets/${id}/edit`} className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
                 <span className="material-symbols-outlined text-[20px]">edit</span>
               </Link>
             </>
           ) : (
             <>
-              <Link to={`/owner/pets/edit/${id}`} className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
+              <Link to={`/shelter/pets/${id}/edit`} className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
                 <span className="material-symbols-outlined text-[20px]">edit</span>
               </Link>
               <button

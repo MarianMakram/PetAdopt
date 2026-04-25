@@ -21,6 +21,7 @@ namespace PetAdopt.Models
         public PetStatus Status { get; set; }
 
         public string? Description { get; set; }
+        public string? HealthStatus { get; set; }
         public string? Location { get; set; }
         public DateTime CreatedAt { get; set; }
 

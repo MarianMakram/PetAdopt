@@ -8,6 +8,8 @@ import HomePage from './pages/HomePage';
 import BrowsePetsPage from './pages/BrowsePetsPage';
 import PetDetailsPage from './pages/PetDetailsPage';
 import FavoritesPage from './pages/FavoritesPage';
+import AboutPage from './pages/AboutPage';
+import NotificationsPage from './pages/NotificationsPage';
 import AdopterRequestsPage from './pages/AdopterRequestsPage';
 import RequestsDashboard from './pages/owner-admin/RequestsDashboard';
 import LoginForm from './pages/Login';
@@ -29,6 +31,8 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/pets" element={<BrowsePetsPage />} />
         <Route path="/pets/:id" element={<PetDetailsPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/unauthorized" element={<div className="p-12 text-center text-xl font-bold">Unauthorized Access</div>} />
 
         {/* ADOPTER ROUTES */}

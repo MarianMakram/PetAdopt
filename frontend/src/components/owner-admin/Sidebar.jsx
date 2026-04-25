@@ -1,45 +1,65 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Sidebar({ activeTab = 'Dashboard' }) {
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'Admin';
+
   return (
     <aside className="h-screen w-64 border-r border-cyan-200/20 bg-cyan-50 dark:bg-cyan-950 hidden md:flex flex-col py-6 gap-2 shrink-0 sticky top-0 overflow-y-auto">
       <div className="px-6 mb-8">
         <h1 className="text-xl font-black text-cyan-900 dark:text-cyan-50">PetAdopt</h1>
-        <p className="text-[10px] uppercase tracking-widest font-bold text-cyan-600/60 mt-1">Shelter Portal</p>
+        <p className="text-[10px] uppercase tracking-widest font-bold text-cyan-600/60 mt-1">
+          {isAdmin ? 'Admin Portal' : 'Shelter Portal'}
+        </p>
       </div>
       
       <nav className="flex-1 space-y-1">
-        <Link to="/owner/pets" className={`${activeTab === 'Dashboard' ? 'bg-gradient-to-r from-cyan-600 to-cyan-400 text-white shadow-md' : 'text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100/50 dark:hover:bg-cyan-800/50'} rounded-full mx-2 flex items-center px-4 py-3 gap-3 transition-transform hover:translate-x-1`}>
-          <span className="material-symbols-outlined">dashboard</span>
-          <span className="font-medium">Dashboard</span>
-        </Link>
-        <Link to="/owner/pets#pets-grid" className={`${activeTab === 'My Pets' ? 'bg-gradient-to-r from-cyan-600 to-cyan-400 text-white shadow-md' : 'text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100/50 dark:hover:bg-cyan-800/50'} rounded-full mx-2 flex items-center px-4 py-3 gap-3 transition-transform hover:translate-x-1`}>
-          <span className="material-symbols-outlined">pets</span>
-          <span className="font-medium">My Pets</span>
-        </Link>
-        <Link to="/owner/requests" className={`${activeTab === 'Requests' ? 'bg-gradient-to-r from-cyan-600 to-cyan-400 text-white shadow-md' : 'text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100/50 dark:hover:bg-cyan-800/50'} rounded-full mx-2 flex items-center px-4 py-3 gap-3 transition-transform hover:translate-x-1`}>
-          <span className="material-symbols-outlined">description</span>
-          <span className="font-medium">Requests</span>
-        </Link>
-        <Link to="/admin/approvals" className={`${activeTab === 'Approvals' ? 'bg-gradient-to-r from-cyan-600 to-cyan-400 text-white shadow-md' : 'text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100/50 dark:hover:bg-cyan-800/50'} rounded-full mx-2 flex items-center px-4 py-3 gap-3 transition-transform hover:translate-x-1`}>
-          <span className="material-symbols-outlined">verified_user</span>
-          <span className="font-medium">Approvals</span>
-        </Link>
-        <Link to="#" className={`${activeTab === 'Settings' ? 'bg-gradient-to-r from-cyan-600 to-cyan-400 text-white shadow-md' : 'text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100/50 dark:hover:bg-cyan-800/50'} rounded-full mx-2 flex items-center px-4 py-3 gap-3 transition-transform hover:translate-x-1`}>
+        {!isAdmin ? (
+          <>
+            <Link to="/shelter/pets" className={`${activeTab === 'Dashboard' ? 'bg-gradient-to-r from-cyan-600 to-cyan-400 text-white shadow-md' : 'text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100/50 dark:hover:bg-cyan-800/50'} rounded-full mx-2 flex items-center px-4 py-3 gap-3 transition-transform hover:translate-x-1`}>
+              <span className="material-symbols-outlined">dashboard</span>
+              <span className="font-medium">Dashboard</span>
+            </Link>
+            <Link to="/shelter/pets#pets-grid" className={`${activeTab === 'My Pets' ? 'bg-gradient-to-r from-cyan-600 to-cyan-400 text-white shadow-md' : 'text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100/50 dark:hover:bg-cyan-800/50'} rounded-full mx-2 flex items-center px-4 py-3 gap-3 transition-transform hover:translate-x-1`}>
+              <span className="material-symbols-outlined">pets</span>
+              <span className="font-medium">My Pets</span>
+            </Link>
+            <Link to="/shelter/requests" className={`${activeTab === 'Requests' ? 'bg-gradient-to-r from-cyan-600 to-cyan-400 text-white shadow-md' : 'text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100/50 dark:hover:bg-cyan-800/50'} rounded-full mx-2 flex items-center px-4 py-3 gap-3 transition-transform hover:translate-x-1`}>
+              <span className="material-symbols-outlined">description</span>
+              <span className="font-medium">Requests</span>
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link to="/admin/users" className={`${activeTab === 'User Approvals' || activeTab === 'Dashboard' ? 'bg-gradient-to-r from-cyan-600 to-cyan-400 text-white shadow-md' : 'text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100/50 dark:hover:bg-cyan-800/50'} rounded-full mx-2 flex items-center px-4 py-3 gap-3 transition-transform hover:translate-x-1`}>
+              <span className="material-symbols-outlined">group</span>
+              <span className="font-medium">User Approvals</span>
+            </Link>
+            <Link to="/admin/pets" className={`${activeTab === 'Pet Approvals' || activeTab === 'Approvals' ? 'bg-gradient-to-r from-cyan-600 to-cyan-400 text-white shadow-md' : 'text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100/50 dark:hover:bg-cyan-800/50'} rounded-full mx-2 flex items-center px-4 py-3 gap-3 transition-transform hover:translate-x-1`}>
+              <span className="material-symbols-outlined">verified_user</span>
+              <span className="font-medium">Pet Approvals</span>
+            </Link>
+          </>
+        )}
+        
+        <Link to="/profile" className={`${activeTab === 'Settings' ? 'bg-gradient-to-r from-cyan-600 to-cyan-400 text-white shadow-md' : 'text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100/50 dark:hover:bg-cyan-800/50'} rounded-full mx-2 flex items-center px-4 py-3 gap-3 transition-transform hover:translate-x-1`}>
           <span className="material-symbols-outlined">settings</span>
           <span className="font-medium">Settings</span>
         </Link>
       </nav>
       
       <div className="px-4 mt-auto">
-        <Link to="/owner/pets/add" className="w-full py-4 bg-primary text-on-primary rounded-full font-bold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all">
-          <span className="material-symbols-outlined">add</span>
-          <span>Add New Pet</span>
-        </Link>
+        {!isAdmin && (
+          <Link to="/shelter/pets/new" className="w-full py-4 bg-cyan-800 text-white rounded-full font-bold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all">
+            <span className="material-symbols-outlined">add</span>
+            <span>Add New Pet</span>
+          </Link>
+        )}
         
         <div className="mt-6 flex items-center gap-3 px-2">
-          <div className="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border-2 border-primary-container">
+          <div className="w-10 h-10 rounded-full bg-cyan-100 overflow-hidden border-2 border-cyan-200">
             <img 
               alt="User profile" 
               className="w-full h-full object-cover" 
@@ -47,8 +67,8 @@ export default function Sidebar({ activeTab = 'Dashboard' }) {
             />
           </div>
           <div>
-            <p className="text-xs font-bold text-cyan-900">Admin User</p>
-            <p className="text-[10px] text-on-surface-variant">Manage your sanctuary</p>
+            <p className="text-xs font-bold text-cyan-900">{user?.first_name} {user?.last_name}</p>
+            <p className="text-[10px] text-cyan-600/70">{isAdmin ? 'System Administrator' : 'Sanctuary Manager'}</p>
           </div>
         </div>
       </div>

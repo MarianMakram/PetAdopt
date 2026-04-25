@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import apiClient from '../services/apiClient';
+import { useAuth } from '../context/AuthContext';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -10,6 +11,8 @@ export default function HomePage() {
     age: ''
   });
   const [featuredPets, setFeaturedPets] = useState([]);
+  const [favoriteIds, setFavoriteIds] = useState([]);
+  const { user } = useAuth();
 
   useEffect(() => {
     apiClient.get('/pets', { params: { pageSize: 3 } })
@@ -22,7 +25,36 @@ export default function HomePage() {
         }
       })
       .catch(err => console.error("Error fetching pets:", err));
-  }, []);
+
+    if (user?.role === 'Adopter') {
+      apiClient.get('/favorites')
+        .then(response => {
+          setFavoriteIds(response.data.map(f => f.petId));
+        })
+        .catch(err => console.error("Error fetching favorites:", err));
+    }
+  }, [user]);
+
+  const toggleFavorite = async (petId) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    if (user.role !== 'Adopter') return;
+
+    const isFav = favoriteIds.includes(petId);
+    try {
+      if (isFav) {
+        await apiClient.delete(`/favorites/${petId}`);
+        setFavoriteIds(favoriteIds.filter(id => id !== petId));
+      } else {
+        await apiClient.post('/favorites', { petId });
+        setFavoriteIds([...favoriteIds, petId]);
+      }
+    } catch (err) {
+      console.error("Error toggling favorite:", err);
+    }
+  };
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -38,25 +70,7 @@ export default function HomePage() {
 
   return (
     <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body selection:bg-[#89e9f6] selection:text-[#00555d]">
-      <nav className="fixed top-0 w-full z-50 bg-cyan-50/70 dark:bg-cyan-950/70 backdrop-blur-xl flex items-center justify-between px-8 py-4 max-w-full font-headline text-sm tracking-tight shadow-none">
-        <div className="flex items-center gap-12">
-          <Link to="/" className="text-2xl font-bold tracking-tighter text-cyan-900 dark:text-cyan-50">PetAdopt</Link>
-          <div className="hidden md:flex items-center gap-8">
-            <Link to="/pets" className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200">Browse</Link>
-            <Link to="/owner/pets" className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200">Shelters</Link>
-            <Link to="/" className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200">Stories</Link>
-          </div>
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-4 text-cyan-800 dark:text-cyan-100">
-            <button className="material-symbols-outlined hover:text-cyan-900 transition-colors" data-icon="notifications">notifications</button>
-            <button className="material-symbols-outlined hover:text-cyan-900 transition-colors" data-icon="favorite">favorite</button>
-          </div>
-          <button className="bg-gradient-to-br from-[#00656f] to-[#89e9f6] text-[#d4f9ff] px-6 py-2.5 rounded-full font-bold shadow-sm hover:translate-y-[-1px] transition-all">Profile</button>
-        </div>
-      </nav>
-
-      <main className="pt-24">
+      <main className="">
         <section className="px-8 py-16 md:py-24 max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
@@ -143,9 +157,16 @@ export default function HomePage() {
                 <div className={`group ${idx === 1 ? 'mt-8' : ''}`} key={pet.id}>
                   <div className="relative overflow-hidden rounded-t-xl rounded-b-md">
                     <img className="w-full h-96 object-cover transition-transform duration-700 group-hover:scale-110" src={imgUrl} alt={pet.name} />
-                    <button className="absolute top-4 right-4 w-12 h-12 bg-[#ffffff]/80 backdrop-blur-md rounded-full flex items-center justify-center text-[#9b3e20] shadow-lg">
-                      <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>favorite</span>
-                    </button>
+                    {user?.role !== 'Admin' && user?.role !== 'Shelter' && (
+                      <button 
+                        onClick={() => toggleFavorite(pet.id)}
+                        className="absolute top-4 right-4 w-12 h-12 bg-[#ffffff]/80 backdrop-blur-md rounded-full flex items-center justify-center text-[#9b3e20] shadow-lg hover:scale-110 active:scale-95 transition-all"
+                      >
+                        <span className="material-symbols-outlined" style={{ fontVariationSettings: favoriteIds.includes(pet.id) ? "'FILL' 1" : "'FILL' 0" }}>
+                          favorite
+                        </span>
+                      </button>
+                    )}
                   </div>
                   <div className="bg-[#ffffff] p-8 rounded-b-md shadow-sm mt-0.5">
                     <div className="flex justify-between items-start mb-4">

@@ -11,10 +11,22 @@ namespace PetAdopt.Controllers
     [Route("api/admin/users")]
     public class AdminUsersController(AppDbContext context) : ControllerBase
     {
-        [HttpGet("pending")]
-        public async Task<IActionResult> GetPendingUsers()
+        [HttpGet]
+        public async Task<IActionResult> GetDefaultPending()
         {
-            var users = await context.Users.Where(u => u.account_status == Status.Pending).ToListAsync();
+            return await GetUsersByStatus("Pending");
+        }
+
+        [HttpGet("status/{status}")]
+        public async Task<IActionResult> GetUsersByStatus(string status)
+        {
+            if (!Enum.TryParse<Status>(status, true, out var statusEnum))
+                return BadRequest("Invalid status");
+
+            var users = await context.Users
+                .Where(u => u.account_status == statusEnum)
+                .OrderByDescending(u => u.created_at)
+                .ToListAsync();
             return Ok(users);
         }
 

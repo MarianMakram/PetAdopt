@@ -11,6 +11,9 @@ namespace PetAdopt.Models
         [JsonIgnore]
         public string password_hash{ get ; set ;}= null!;
         
+        [JsonIgnore]
+        public string salt { get; set; } = null!;
+        
         public Role role{ get ; set ;}
         public Status account_status{ get ; set ;}
         public string first_name{ get ; set ;} = null!;

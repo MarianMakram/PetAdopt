@@ -1,66 +1,61 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import apiClient from '../services/apiClient';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem('user');
+    try {
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        const currentTime = Date.now() / 1000;
-        if (decoded.exp > currentTime) {
-          // Token is valid
-          const userJson = localStorage.getItem('user');
-          if (userJson) {
-            const storedUser = JSON.parse(userJson);
-            setUser({ ...storedUser, role: decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded.role });
-          }
-        } else {
-          // Token expired, let interceptor handle it or clear
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
-          localStorage.removeItem('user');
-        }
-      } catch (err) {
-        console.error("Token decoding failed", err);
+  const validateSession = useCallback(async () => {
+    try {
+      const response = await apiClient.get('/auth/me');
+      if (response.data?.data) {
+        setUser(response.data.data);
       }
+    } catch (err) {
+      console.warn("Session validation failed:", err.message);
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('user');
+      setUser(null);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    validateSession();
+  }, [validateSession]);
 
   const login = async (email, password) => {
     const response = await apiClient.post('/auth/login', { email, password });
-    const { accessToken, refreshToken, user: userData } = response.data;
+    // VendorHub response structure: response.data.data
+    const { accessToken, user: userData } = response.data.data;
     
-    const decoded = jwtDecode(accessToken);
-    const role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded.role;
-    
-    const fullUser = { ...userData, role };
     localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
-    localStorage.setItem('user', JSON.stringify(fullUser));
+    localStorage.setItem('user', JSON.stringify(userData));
     
-    setUser(fullUser);
-    return fullUser;
+    setUser(userData);
+    return userData;
   };
 
   const logout = async () => {
-    const refreshToken = localStorage.getItem('refreshToken');
     try {
-      await apiClient.post('/auth/logout', { refreshToken });
+      await apiClient.post('/auth/logout');
     } catch (err) {
       console.error("Logout API failed", err);
+    } finally {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('user');
+      setUser(null);
     }
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
-    setUser(null);
   };
 
   return (

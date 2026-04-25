@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import apiClient from '../services/apiClient';
+import { useAuth } from '../context/AuthContext';
 
 export default function BrowsePetsPage() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [pets, setPets] = useState([]);
+  const [favoriteIds, setFavoriteIds] = useState([]);
   
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
@@ -14,7 +18,41 @@ export default function BrowsePetsPage() {
 
   useEffect(() => {
     fetchPets();
-  }, [filters]);
+    if (user?.role === 'Adopter') {
+      fetchFavorites();
+    }
+  }, [filters, user]);
+
+  const fetchFavorites = async () => {
+    try {
+      const data = await apiClient.get('/favorites');
+      setFavoriteIds(data.data.map(f => f.petId));
+    } catch (err) {
+      console.error("Error fetching favorites:", err);
+    }
+  };
+
+  const toggleFavorite = async (e, petId) => {
+    e.preventDefault(); // Prevent Link navigation
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    if (user.role !== 'Adopter') return;
+
+    const isFav = favoriteIds.includes(petId);
+    try {
+      if (isFav) {
+        await apiClient.delete(`/favorites/${petId}`);
+        setFavoriteIds(favoriteIds.filter(id => id !== petId));
+      } else {
+        await apiClient.post('/favorites', { petId });
+        setFavoriteIds([...favoriteIds, petId]);
+      }
+    } catch (err) {
+      console.error("Error toggling favorite:", err);
+    }
+  };
 
   const fetchPets = async () => {
     const params = {};
@@ -37,20 +75,7 @@ export default function BrowsePetsPage() {
 
   return (
     <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body selection:bg-[#89e9f6] selection:text-[#00555d]">
-      <nav className="fixed top-0 w-full z-50 bg-cyan-50/70 backdrop-blur-xl flex items-center justify-between px-8 py-4 max-w-full font-headline text-sm tracking-tight shadow-none border-b border-[#bff0ff]/50">
-        <div className="flex items-center gap-12">
-          <Link to="/" className="text-2xl font-bold tracking-tighter text-cyan-900">PetAdopt</Link>
-          <div className="hidden md:flex items-center gap-8">
-            <Link to="/pets" className="text-cyan-900 font-bold border-b-2 border-cyan-800 pb-1">Browse</Link>
-            <Link to="/favorites" className="text-cyan-700/70 hover:text-cyan-900">Favorites</Link>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-           <Link to="/login" className="bg-[#00656f] text-white px-6 py-2 rounded-full font-bold">Profile</Link>
-        </div>
-      </nav>
-
-      <main className="pt-32 pb-24 px-8 max-w-7xl mx-auto">
+      <main className="pb-24 px-8 max-w-7xl mx-auto">
         <header className="mb-16">
           <h1 className="text-5xl md:text-6xl font-headline font-extrabold text-[#00343e] mb-4">
             Meet the <span className="text-[#00656f] italic">Residents</span>
@@ -60,21 +85,24 @@ export default function BrowsePetsPage() {
           </p>
         </header>
 
-        <div className="flex flex-col md:flex-row gap-8 mb-12 bg-white p-6 rounded-xl shadow-sm border border-[#bff0ff]/50">
-          <div className="flex-1">
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-[#2c6370] mb-2">Search</label>
-            <input 
-              type="text" 
-              placeholder="Search by breed..." 
-              className="w-full bg-[#f4fbfc] border-none rounded-md px-4 py-3 text-sm focus:ring-2 focus:ring-[#00656f]/40" 
-              value={filters.search}
-              onChange={e => setFilters({...filters, search: e.target.value})}
-            />
+        <div className="flex flex-col md:flex-row items-center gap-4 mb-16 bg-white p-2 rounded-[2rem] shadow-[0_10px_30px_rgba(0,0,0,0.04)] border border-[#eefcff]">
+          <div className="flex-1 flex items-center px-6 py-2 w-full">
+            <div className="w-full">
+              <label className="block text-[9px] font-black uppercase tracking-[0.2em] text-[#5c8a95] mb-1">Search</label>
+              <input 
+                type="text" 
+                placeholder="Search by breed..." 
+                className="w-full bg-transparent border-none p-0 text-sm font-bold text-[#00343e] focus:ring-0 placeholder:text-[#5c8a95]/40" 
+                value={filters.search}
+                onChange={e => setFilters({...filters, search: e.target.value})}
+              />
+            </div>
           </div>
-          <div className="w-full md:w-48">
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-[#2c6370] mb-2">Species</label>
+          <div className="hidden md:block w-px h-10 bg-gray-100"></div>
+          <div className="w-full md:w-56 px-6 py-2">
+            <label className="block text-[9px] font-black uppercase tracking-[0.2em] text-[#5c8a95] mb-1">Species</label>
             <select 
-              className="w-full bg-[#f4fbfc] border-none rounded-md px-4 py-3 text-sm focus:ring-2 focus:ring-[#00656f]/40"
+              className="w-full bg-transparent border-none p-0 text-sm font-bold text-[#00343e] focus:ring-0 appearance-none cursor-pointer"
               value={filters.species}
               onChange={e => setFilters({...filters, species: e.target.value})}
             >
@@ -85,10 +113,11 @@ export default function BrowsePetsPage() {
               <option value="3">Rabbits</option>
             </select>
           </div>
-          <div className="w-full md:w-48">
-            <label className="block text-[10px] font-bold uppercase tracking-widest text-[#2c6370] mb-2">Age Range</label>
+          <div className="hidden md:block w-px h-10 bg-gray-100"></div>
+          <div className="w-full md:w-56 px-6 py-2">
+            <label className="block text-[9px] font-black uppercase tracking-[0.2em] text-[#5c8a95] mb-1">Age Range</label>
             <select 
-              className="w-full bg-[#f4fbfc] border-none rounded-md px-4 py-3 text-sm focus:ring-2 focus:ring-[#00656f]/40"
+              className="w-full bg-transparent border-none p-0 text-sm font-bold text-[#00343e] focus:ring-0 appearance-none cursor-pointer"
               value={filters.ageRange}
               onChange={e => setFilters({...filters, ageRange: e.target.value})}
             >
@@ -107,6 +136,16 @@ export default function BrowsePetsPage() {
             <Link to={`/pets/${pet.id}`} key={pet.id} className="group">
               <div className="relative overflow-hidden rounded-t-xl rounded-b-md h-80">
                 <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src={imgUrl} alt={pet.name} />
+                {user?.role !== 'Admin' && user?.role !== 'Shelter' && (
+                  <button 
+                    onClick={(e) => toggleFavorite(e, pet.id)}
+                    className="absolute top-4 right-4 w-10 h-10 bg-[#ffffff]/80 backdrop-blur-md rounded-full flex items-center justify-center text-[#9b3e20] shadow-lg hover:scale-110 active:scale-95 transition-all"
+                  >
+                    <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: favoriteIds.includes(pet.id) ? "'FILL' 1" : "'FILL' 0" }}>
+                      favorite
+                    </span>
+                  </button>
+                )}
               </div>
               <div className="bg-[#ffffff] p-8 rounded-b-md shadow-sm mt-0.5 border border-[#81b5c5]/5">
                 <div className="flex justify-between items-start mb-4">

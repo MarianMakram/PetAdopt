@@ -34,7 +34,7 @@ export default function PetGrid({ pets, loading, error, setPets }) {
       )}
       
       {/* Empty State / Add New Card */}
-      <Link to="/owner/pets/add" className="group relative border-2 border-dashed border-outline-variant/50 rounded-xl p-4 flex flex-col items-center justify-center gap-4 hover:bg-surface-container-low hover:border-primary transition-all duration-300 min-h-[400px]">
+      <Link to="/shelter/pets/new" className="group relative border-2 border-dashed border-outline-variant/50 rounded-xl p-4 flex flex-col items-center justify-center gap-4 hover:bg-surface-container-low hover:border-primary transition-all duration-300 min-h-[400px]">
         <div className="w-16 h-16 rounded-full bg-primary-container/30 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
           <span className="material-symbols-outlined text-4xl">add_circle</span>
         </div>

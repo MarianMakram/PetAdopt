@@ -10,28 +10,31 @@ export default function AdminApprovals() {
   const [approvals, setApprovals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filter, setFilter] = useState('PendingReview');
 
   useEffect(() => {
-    fetchPendingPets();
-  }, []);
+    fetchPets();
+  }, [filter]);
 
-  const fetchPendingPets = async () => {
+  const fetchPets = async () => {
     try {
       setLoading(true);
-      const data = await apiClient.get('/admin/pets/pending');
-      const mappedData = data.map(pet => ({
+      const response = await apiClient.get(`/admin/pets/status/${filter}`);
+      const dataArray = response.data || [];
+      const mappedData = dataArray.map(pet => ({
         id: pet.id,
         name: pet.name || 'Unknown',
         breed: pet.breed || 'Unknown',
         submitter: `Shelter ID: ${pet.ownerId}`,
         submitterType: 'Verified Shelter',
-        dateSubmitted: 'Recently',
+        dateSubmitted: new Date(pet.createdAt).toLocaleDateString(),
         imageUrl: pet.imageUrls ? pet.imageUrls.split(',')[0] : 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80',
-        badgeColor: 'primary'
+        badgeColor: pet.status === "PendingReview" ? 'primary' : pet.status === "Approved" ? 'success' : 'error',
+        status: pet.status
       }));
       setApprovals(mappedData);
     } catch (err) {
-      setError("Failed to load pending approvals.");
+      setError("Failed to load approvals.");
     } finally {
       setLoading(false);
     }
@@ -40,7 +43,7 @@ export default function AdminApprovals() {
   const handleApprove = async (id) => {
     try {
       await apiClient.patch(`/admin/pets/${id}/approve`);
-      setApprovals(prev => prev.filter(p => p.id !== id));
+      fetchPets();
     } catch (err) {
       alert("Failed to approve pet.");
     }
@@ -50,7 +53,7 @@ export default function AdminApprovals() {
     if (window.confirm("Are you sure you want to reject this pet listing?")) {
       try {
         await apiClient.patch(`/admin/pets/${id}/reject`);
-        setApprovals(prev => prev.filter(p => p.id !== id));
+        fetchPets();
       } catch (err) {
         alert("Failed to reject pet.");
       }
@@ -58,12 +61,25 @@ export default function AdminApprovals() {
   };
 
   return (
-    <>
-      <Sidebar activeTab="Approvals" />
+    <div className="flex">
+      <Sidebar activeTab="Pet Approvals" />
       <main className="flex-1 flex flex-col h-screen overflow-hidden bg-cyan-50/30">
         <Header />
         <div className="flex-1 overflow-y-auto p-4 md:p-12 pb-32">
-          <ApprovalHeader count={approvals.length} />
+          <div className="flex justify-between items-center mb-8">
+            <ApprovalHeader count={approvals.length} />
+            <div className="flex bg-white rounded-full p-1 shadow-sm border border-cyan-100">
+              {['PendingReview', 'Approved', 'Rejected'].map(t => (
+                <button
+                  key={t}
+                  onClick={() => setFilter(t)}
+                  className={`px-6 py-2 rounded-full text-xs font-bold transition-all ${filter === t ? 'bg-cyan-600 text-white shadow-md' : 'text-cyan-600 hover:bg-cyan-50'}`}
+                >
+                  {t.replace('Review', '')}
+                </button>
+              ))}
+            </div>
+          </div>
           {loading ? (
             <div className="p-8 text-center text-cyan-800 font-bold">Loading pending approvals...</div>
           ) : error ? (
@@ -78,6 +94,6 @@ export default function AdminApprovals() {
         </div>
       </main>
       <BottomNav activeTab="Approvals" />
-    </>
+    </div>
   );
 }

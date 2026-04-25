@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function ApprovalItem({ pet, onApprove, onReject }) {
   const { id, name, breed, submitter, submitterType, dateSubmitted, timeAgo, imageUrl, badgeColor } = pet;
@@ -35,10 +36,14 @@ export default function ApprovalItem({ pet, onApprove, onReject }) {
         </div>
 
         <div className="flex items-center">
-          <a className="text-primary font-bold text-sm underline-offset-4 hover:underline flex items-center gap-1" href="#">
+          <Link 
+            to={`/pets/${id}`} 
+            target="_blank" 
+            className="text-primary font-bold text-sm underline-offset-4 hover:underline flex items-center gap-1"
+          >
             Preview Post
             <span className="material-symbols-outlined text-sm">open_in_new</span>
-          </a>
+          </Link>
         </div>
       </div>
 

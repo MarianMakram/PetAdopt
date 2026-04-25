@@ -139,12 +139,14 @@ export default function PetDetailsPage() {
           <div className="space-y-6">
             <div className="relative h-[600px] rounded-3xl overflow-hidden shadow-sm">
               <img src={images[0]} alt={pet.name} className="w-full h-full object-cover" />
-              <button 
-                onClick={toggleFavorite}
-                className="absolute top-6 right-6 w-14 h-14 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-[#9f0519] shadow-lg"
-              >
-                <span className="material-symbols-outlined text-3xl" style={isFavorite ? {fontVariationSettings: "'FILL' 1"} : {}}>favorite</span>
-              </button>
+              {user?.role !== 'Admin' && user?.role !== 'Shelter' && (
+                <button 
+                  onClick={toggleFavorite}
+                  className="absolute top-6 right-6 w-14 h-14 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-[#9f0519] shadow-lg hover:scale-110 transition-transform"
+                >
+                  <span className="material-symbols-outlined text-3xl" style={isFavorite ? {fontVariationSettings: "'FILL' 1"} : {}}>favorite</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -153,12 +155,18 @@ export default function PetDetailsPage() {
             <p className="text-2xl text-[#00656f] font-medium mb-8">{pet.breed || 'Mixed Breed'}</p>
             <p className="text-[#2c6370] text-lg leading-relaxed mb-10">{pet.description}</p>
 
-            <button 
-              onClick={() => setIsAdoptModalOpen(true)}
-              className="bg-[#00343e] text-[#e9f9ff] px-10 py-5 rounded-full font-bold shadow-lg w-fit"
-            >
-              Adopt {pet.name}
-            </button>
+            {user?.role === 'Admin' || user?.role === 'Shelter' ? (
+              <div className="bg-[#bff0ff]/30 text-[#00656f] px-10 py-5 rounded-full font-bold w-fit border border-[#00656f]/20">
+                Viewing as {user.role}
+              </div>
+            ) : (
+              <button 
+                onClick={() => setIsAdoptModalOpen(true)}
+                className="bg-[#00343e] text-[#e9f9ff] px-10 py-5 rounded-full font-bold shadow-lg w-fit hover:bg-[#005a6b] transition-colors"
+              >
+                Adopt {pet.name}
+              </button>
+            )}
           </div>
         </div>
 

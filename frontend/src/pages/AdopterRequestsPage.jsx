@@ -30,7 +30,7 @@ export default function AdopterRequestsPage() {
           <div className="hidden md:flex items-center gap-8">
             <Link to="/pets" className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200">Browse</Link>
             <Link to="/favorites" className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200">Favorites</Link>
-            <Link to="/requests" className="text-cyan-900 dark:text-cyan-50 font-bold border-b-2 border-cyan-800 dark:border-cyan-200 pb-1 transition-colors">My Requests</Link>
+            <Link to="/my-requests" className="text-cyan-900 dark:text-cyan-50 font-bold border-b-2 border-cyan-800 dark:border-cyan-200 pb-1 transition-colors">My Requests</Link>
           </div>
         </div>
       </nav>

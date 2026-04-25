@@ -27,6 +27,7 @@ namespace PetAdopt.Controllers
         {
             pet.OwnerId = GetCurrentUserId();
             pet.Status = PetStatus.PendingReview; // Task 2D
+            pet.CreatedAt = DateTime.UtcNow;
             context.Pets.Add(pet);
             await context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetMyPets), new { id = pet.Id }, pet);
@@ -41,6 +42,7 @@ namespace PetAdopt.Controllers
 
             existingPet.Name = pet.Name;
             existingPet.Description = pet.Description;
+            existingPet.HealthStatus = pet.HealthStatus;
             existingPet.Species = pet.Species;
             existingPet.Breed = pet.Breed;
             existingPet.Age = pet.Age;

@@ -22,8 +22,8 @@ const icons = {
 };
 
 const menu = [
-  { id: "dashboard", label: "Dashboard", path: "/owner/pets" },
-  { id: "my-pets",   label: "My Pets", path: "/owner/pets#pets-grid" },
+  { id: "dashboard", label: "Dashboard", path: "/shelter/pets" },
+  { id: "my-pets",   label: "My Pets", path: "/shelter/pets#pets-grid" },
   { id: "requests",  label: "Requests"  },
   { id: "approvals", label: "Approvals", path: "/admin/approvals" },
 ];

@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useNotifications } from '../../context/NotificationContext';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const { unreadCount } = useNotifications();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -13,54 +15,48 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-cyan-50/70 backdrop-blur-xl border-b border-cyan-100/50 px-8 py-4 flex items-center justify-between">
-      <div className="flex items-center gap-12">
+      <div className="flex items-center gap-10">
         <Link to="/" className="text-2xl font-bold tracking-tighter text-cyan-900">PetAdopt</Link>
         
-        <div className="hidden md:flex items-center gap-8 font-medium text-sm text-cyan-800">
-          <Link to="/" className="hover:text-cyan-600 transition-colors">Home</Link>
-          <Link to="/pets" className="hover:text-cyan-600 transition-colors">Browse</Link>
-          
-          {user?.role === 'Adopter' && (
-            <>
-              <Link to="/favorites" className="hover:text-cyan-600 transition-colors">Favorites</Link>
-              <Link to="/my-requests" className="hover:text-cyan-600 transition-colors">My Requests</Link>
-            </>
-          )}
-
-          {user?.role === 'Shelter' && (
-            <>
-              <Link to="/shelter/pets" className="hover:text-cyan-600 transition-colors">My Pets</Link>
-              <Link to="/shelter/requests" className="hover:text-cyan-600 transition-colors">Adoption Requests</Link>
-            </>
-          )}
-
-          {user?.role === 'Admin' && (
-            <>
-              <Link to="/admin/users" className="hover:text-cyan-600 transition-colors">User Approvals</Link>
-              <Link to="/admin/pets" className="hover:text-cyan-600 transition-colors">Pet Approvals</Link>
-            </>
-          )}
+        <div className="hidden md:flex items-center gap-8 font-bold text-sm text-cyan-800/70">
+          <Link to="/" className="hover:text-cyan-900 transition-colors">Home</Link>
+          <Link to="/pets" className="hover:text-cyan-900 transition-colors">Browse</Link>
+          <Link to="/about" className="hover:text-cyan-900 transition-colors">About</Link>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4 text-cyan-800/60">
+          <Link to="/notifications" className="relative material-symbols-outlined hover:text-cyan-900 transition-colors">
+            notifications
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-[10px] font-black flex items-center justify-center rounded-full border-2 border-cyan-50">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </Link>
+          <Link to="/favorites" className="material-symbols-outlined hover:text-cyan-900 transition-colors">favorite</Link>
+        </div>
+        
         {user ? (
-          <>
-            <Link to="/profile" className="text-sm font-bold text-cyan-900">Hi, {user.first_name || 'User'}</Link>
+          <div className="flex items-center gap-3">
+            <Link 
+              to={user.role === 'Admin' ? '/admin/users' : user.role === 'Shelter' ? '/shelter/pets' : '/profile'} 
+              className="bg-[#00656f] text-white px-7 py-2.5 rounded-full text-sm font-bold shadow-md hover:bg-[#00525a] transition-all"
+            >
+              Profile
+            </Link>
             <button 
               onClick={handleLogout}
-              className="bg-cyan-800 text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-cyan-900 transition-all"
+              className="text-[#00656f] font-bold text-sm hover:text-[#004d54] transition-colors px-2"
             >
               Logout
             </button>
-          </>
+          </div>
         ) : (
-          <>
-            <Link to="/login" className="text-sm font-bold text-cyan-800 hover:text-cyan-600">Login</Link>
-            <Link to="/register" className="bg-cyan-800 text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-cyan-900 transition-all">
-              Sign Up
-            </Link>
-          </>
+          <Link to="/login" className="bg-[#00656f] text-white px-7 py-2.5 rounded-full text-sm font-bold shadow-md hover:bg-[#00525a] transition-all">
+            Login
+          </Link>
         )}
       </div>
     </nav>

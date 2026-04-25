@@ -86,14 +86,14 @@ const UserRow = ({ user, onApprove, onReject }) => {
       <td className="p-6">
         <Badge colorClass={getRoleColor(user.role)}>{user.role}</Badge>
       </td>
-      <td className="p-6">
-        <div className="flex items-center gap-3">
-          {user.status === 0 ? (
+      <td className="p-6 whitespace-nowrap">
+        <div className="flex items-center justify-end gap-3 pr-4">
+          {user.status === "Pending" ? (
             <>
-              <Button variant="error" onClick={() => onReject(user.id)}>Reject</Button>
               <Button variant="primary" onClick={() => onApprove(user.id)}>Approve</Button>
+              <Button variant="error" onClick={() => onReject(user.id)}>Reject</Button>
             </>
-          ) : user.status === 1 ? (
+          ) : user.status === "Approved" ? (
              <span className="text-[#257F86] font-bold text-[13px]">Approved</span>
           ) : (
              <span className="text-[#FF6B6B] font-bold text-[13px]">Rejected</span>
@@ -146,30 +146,32 @@ const UserTable = ({ users, onApprove, onReject, loading }) => {
 
 export default function UserApprovalsPage() {
   const [users, setUsers] = useState([]);
+  const [filter, setFilter] = useState('Pending');
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [filter]);
 
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const data = await apiClient.get('/admin/users/pending');
-      const mappedData = data.map(user => ({
+      const response = await apiClient.get(`/admin/users/status/${filter}`);
+      const dataArray = response.data || [];
+      const mappedData = dataArray.map(user => ({
         id: user.id,
         name: `${user.first_name} ${user.last_name}`.trim(),
         email: user.email,
         phone: user.phone || 'N/A',
         location: [user.city, user.country].filter(Boolean).join(', ') || 'Unknown',
-        role: user.role === 1 ? 'SHELTER' : 'ADOPTER',
+        role: user.role === "Shelter" ? 'SHELTER' : 'ADOPTER',
         status: user.account_status,
       }));
       setUsers(mappedData);
     } catch (err) {
-      console.error("Failed to fetch pending users", err);
+      console.error("Failed to fetch users", err);
     } finally {
       setLoading(false);
     }
@@ -183,7 +185,7 @@ export default function UserApprovalsPage() {
   const handleApprove = async (id) => {
     try {
       await apiClient.patch(`/admin/users/${id}/approve`);
-      setUsers(users.filter((user) => user.id !== id));
+      fetchUsers();
       showToast("User approved successfully!", "success");
     } catch (error) {
       showToast("Failed to approve user.", "error");
@@ -193,7 +195,7 @@ export default function UserApprovalsPage() {
   const handleReject = async (id) => {
     try {
       await apiClient.patch(`/admin/users/${id}/reject`);
-      setUsers(users.filter((user) => user.id !== id));
+      fetchUsers();
       showToast("User rejected successfully.", "success");
     } catch (error) {
       showToast("Failed to reject user.", "error");
@@ -210,8 +212,8 @@ export default function UserApprovalsPage() {
   });
 
   return (
-    <>
-      <Sidebar activeTab="Approvals" />
+    <div className="flex">
+      <Sidebar activeTab="User Approvals" />
       <main className="flex-1 min-h-screen pb-24 md:pb-12 overflow-y-auto bg-[#F4FBFC] font-[Be_Vietnam_Pro] w-full relative">
         <Header />
         <div className="max-w-[1200px] mx-auto px-6 md:px-10 py-12">
@@ -228,17 +230,27 @@ export default function UserApprovalsPage() {
             </p>
           </div>
           <div className="flex gap-4">
-            <StatCard title="PENDING" count={users.length} countColor="text-[#004D56]" />
-            <StatCard title="FLAGGED" count={0} countColor="text-[#FF6B6B]" />
+            <StatCard title="CURRENT VIEW" count={users.length} countColor="text-[#004D56]" />
           </div>
         </div>
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-8 gap-4">
           <SearchBar search={search} setSearch={setSearch} />
+          <div className="flex bg-white rounded-full p-1 shadow-sm border border-[#A7EAEF]/30">
+            {['Pending', 'Approved', 'Rejected'].map(t => (
+              <button
+                key={t}
+                onClick={() => setFilter(t)}
+                className={`px-6 py-2 rounded-full text-xs font-bold transition-all ${filter === t ? 'bg-[#257F86] text-white shadow-md' : 'text-[#257F86] hover:bg-[#F4FBFC]'}`}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
         </div>
         <UserTable users={filteredUsers} onApprove={handleApprove} onReject={handleReject} loading={loading} />
         </div>
       </main>
       <BottomNav activeTab="Approvals" />
-    </>
+    </div>
   );
 }

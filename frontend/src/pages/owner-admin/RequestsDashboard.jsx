@@ -6,6 +6,7 @@ import apiClient from '../../services/apiClient';
 export default function RequestsDashboard() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("Pending"); // "Pending", "Accepted", "Rejected"
 
   const fetchRequests = async () => {
     try {
@@ -42,6 +43,8 @@ export default function RequestsDashboard() {
     }
   };
 
+  const filteredRequests = requests.filter(r => r.status === filter);
+
   return (
     <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen flex overflow-hidden font-body">
       <Sidebar activeTab="Requests" />
@@ -51,9 +54,9 @@ export default function RequestsDashboard() {
           <h1 className="text-2xl font-bold tracking-tighter text-cyan-900 dark:text-cyan-50 font-headline">PetAdopt</h1>
           <div className="flex items-center gap-6">
             <div className="hidden lg:flex items-center gap-8 font-headline text-sm tracking-tight">
-              <Link className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors" to="/pets">Browse</Link>
-              <Link className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors" to="/shelters">Shelters</Link>
-              <Link className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors" to="/stories">Stories</Link>
+              <Link className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200" to="/pets">Browse</Link>
+              <Link className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200" to="/shelter/pets">My Pets</Link>
+              <Link className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200" to="/">Home</Link>
             </div>
             <div className="flex items-center gap-4 text-cyan-800 dark:text-cyan-100">
               <span className="material-symbols-outlined cursor-pointer hover:scale-110 duration-200">notifications</span>
@@ -67,34 +70,28 @@ export default function RequestsDashboard() {
         </header>
 
         <div className="pt-24 pb-32 px-8 max-w-7xl mx-auto">
-          <section className="mb-12">
-            <h2 className="text-5xl font-black text-[#00343e] tracking-tight mb-2 font-headline">Adoption Requests</h2>
-            <p className="text-[#2c6370] max-w-2xl text-lg leading-relaxed">
-              Review and manage incoming interest for your residents. Every click brings a pet one step closer to their forever home.
-            </p>
-          </section>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-[#d9f6ff] p-6 rounded-xl flex flex-col justify-between aspect-video md:aspect-auto">
-              <span className="text-sm font-bold uppercase tracking-widest text-[#2c6370]">Pending Review</span>
-              <span className="text-4xl font-black text-[#00656f] font-headline">{requests.filter(r => r.status === 0).length}</span>
+          <div className="flex justify-between items-end mb-12">
+            <div>
+              <h2 className="text-5xl font-black text-[#00343e] tracking-tight mb-2 font-headline">Adoption Requests</h2>
+              <p className="text-[#2c6370] max-w-2xl text-lg leading-relaxed">
+                Review and manage incoming interest for your residents.
+              </p>
             </div>
-            <div className="bg-[#d9f6ff] p-6 rounded-xl flex flex-col justify-between aspect-video md:aspect-auto">
-              <span className="text-sm font-bold uppercase tracking-widest text-[#2c6370]">Active Matches</span>
-              <span className="text-4xl font-black text-[#9b3e20] font-headline">{requests.filter(r => r.status === 1).length}</span>
-            </div>
-            <div className="bg-[#d9f6ff] p-6 rounded-xl flex items-center justify-between col-span-1">
-              <div className="flex -space-x-3">
-                <img className="w-10 h-10 rounded-full ring-2 ring-[#e9f9ff]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDShXDayEd4yEwuCkpG3MYzd2HcMcveWiNRq0qARO88F6PU3MLsvTWIdBlPjttt93Ze3upUsR5A-mwFyL-M4rdlA8btKifYlV3RPNc5V-kg3BSzCWa6BhZCB_JFzOzq3jzWNLVMmwPY86Tge34DZZORp_2BXhfvVhF5jY6wwVObWzbFkjwi16aR0GzWA3-foxrRTxrWtc6grOZFmxldVzd2E32aiNxwSXfnJDBr8bjGgDj7C1U2pqBVW_du4KJqKm6edub9YMvHTkw" alt="User 1" />
-                <img className="w-10 h-10 rounded-full ring-2 ring-[#e9f9ff]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0qZJnJnpafgSQwgz9WETYTXhKe8Vs8gv6mo7uGJ1cfMC7TXDpySCdUu5BxgsT1K6Gidv1ToB0G4uO8zH3cYEmbbrI9jGWbKmD6TNzO741g-01nrE5ITMMMXbaMKlgzrRABvng-BRcKZTb2QpVCm8l7A_Bqv_KyoaUTtbtVA7de5vvaFKPTVwkgELE7K6TPQ9BQfwuAUl5Iu8jJp_Bqk0_LdGiReeck-PPPAxISFjGDO9C9Ay-ZNHosGWnD_ZUG67rmxwiIfp7rNI" alt="User 2" />
-                <div className="w-10 h-10 rounded-full bg-[#89e9f6] text-[#00555d] flex items-center justify-center text-xs font-bold ring-2 ring-[#e9f9ff]">+5</div>
-              </div>
-              <span className="text-sm font-medium text-[#2c6370]">Recent Activity</span>
+            <div className="flex bg-white/50 backdrop-blur-md rounded-full p-1 border border-cyan-200/30">
+              {['Pending', 'Accepted', 'Rejected'].map(t => (
+                <button
+                  key={t}
+                  onClick={() => setFilter(t)}
+                  className={`px-6 py-2 rounded-full text-xs font-bold transition-all ${filter === t ? 'bg-cyan-600 text-white shadow-md' : 'text-cyan-600 hover:bg-cyan-100'}`}
+                >
+                  {t}
+                </button>
+              ))}
             </div>
           </div>
 
           <div className="space-y-6">
-            {loading ? <p className="text-[#2c6370]">Loading requests...</p> : requests.length === 0 ? <p className="text-[#2c6370]">No requests found.</p> : requests.map((req, i) => {
+            {loading ? <p className="text-[#2c6370]">Loading requests...</p> : filteredRequests.length === 0 ? <p className="text-[#2c6370]">No requests found in this category.</p> : filteredRequests.map((req, i) => {
               const petName = req.pet?.name || 'Unknown Pet';
               const breed = req.pet?.breed || 'Unknown';
               const age = req.pet?.age ? `${req.pet.age} ${req.pet.ageUnit === 0 ? 'Months' : 'Years'}` : '';
