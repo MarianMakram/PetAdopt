@@ -135,27 +135,40 @@ export default function LoginForm() {
     <div className="login-page">
       <style>{`
         .login-page {
-          position: relative;
-          min-height: 100vh;
+          min-height: calc(100vh - 80px);
           width: 100%;
           background: linear-gradient(135deg, #d9f6ff 0%, #e9f9ff 100%);
           display: flex;
           align-items: center;
           justify-content: center;
           font-family: 'Be Vietnam Pro', sans-serif;
-          margin: 0;
-          padding: 0;
+          padding: 40px 20px;
           box-sizing: border-box;
         }
         .login-card {
           width: 100%;
           max-width: 1000px;
-          height: 600px;
+          min-height: 600px;
           display: flex;
           background: #fff;
           border-radius: 32px;
           overflow: hidden;
-          box-shadow: 0 20px 50px rgba(0, 101, 111, 0.1);
+          box-shadow: 0 20px 60px rgba(0, 52, 62, 0.08);
+          transition: transform 0.3s ease;
+        }
+        @media (max-width: 900px) {
+          .login-card {
+            flex-direction: column;
+            max-width: 500px;
+            min-height: auto;
+          }
+          .login-left {
+            padding: 40px !important;
+            min-height: 200px;
+          }
+          .login-right {
+            padding: 40px !important;
+          }
         }
         .login-left {
           flex: 1;

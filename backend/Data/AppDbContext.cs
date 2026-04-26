@@ -60,9 +60,28 @@ namespace PetAdopt.Data
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
+            modelBuilder.Entity<AdoptionRequest>(entity =>
+            {
+                entity.ToTable("adoptionrequest");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.PetId).HasColumnName("pet_id");
+                entity.Property(e => e.AdopterId).HasColumnName("adopter_id");
+                entity.Property(e => e.OwnerId).HasColumnName("owner_id");
+                entity.Property(e => e.Message).HasColumnName("message");
+                entity.Property(e => e.WhyThisPet).HasColumnName("why_this_pet");
+                entity.Property(e => e.RejectionReason).HasColumnName("rejection_reason");
+                entity.Property(e => e.RespondedAt).HasColumnName("responded_at");
+                entity.Property(e => e.RequestedAt).HasColumnName("requested_at");
+                
+                entity.Property(e => e.Status)
+                    .HasColumnName("status")
+                    .HasConversion(new ValueConverter<RequestStatus, string>(
+                        v => v.ToString().ToLower(),
+                        v => (RequestStatus)Enum.Parse(typeof(RequestStatus), v, true)));
+            });
+
             modelBuilder.Entity<User>().ToTable("users");
             modelBuilder.Entity<Pet>().ToTable("pets");
-            modelBuilder.Entity<AdoptionRequest>().ToTable("adoption_request");
             modelBuilder.Entity<Review>().ToTable("reviews");
             modelBuilder.Entity<Favorite>().ToTable("favorites");
             modelBuilder.Entity<Notification>().ToTable("notifications");

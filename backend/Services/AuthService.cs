@@ -195,6 +195,8 @@ namespace PetAdopt.Services
 
             return new ProfileDto
             {
+                Id = user.id,
+                Role = user.role.ToString(),
                 FirstName = user.first_name,
                 LastName = user.last_name,
                 Email = user.email,

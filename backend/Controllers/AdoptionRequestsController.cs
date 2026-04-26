@@ -28,6 +28,7 @@ namespace PetAdopt.Controllers
             {
                 PetId = dto.PetId,
                 AdopterId = GetCurrentUserId(),
+                OwnerId = pet.OwnerId,
                 Message = dto.Message,
                 WhyThisPet = dto.WhyThisPet,
                 Status = RequestStatus.Pending,

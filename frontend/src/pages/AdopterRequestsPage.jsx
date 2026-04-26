@@ -6,12 +6,26 @@ export default function AdopterRequestsPage() {
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    apiClient.get('/adoption-requests')
-      .then(response => {
-        setRequests(response.data);
-      })
-      .catch(err => console.error("Error fetching requests:", err));
-  }, []);
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        window.location.href = "/login";
+        return;
+      }
+
+      apiClient.get('/adoption-requests')
+        .then(response => {
+          setRequests(response.data);
+        })
+        .catch(err => {
+          if (err.response?.status === 401) {
+            console.log("Unauthorized - redirecting...");
+            window.location.href = "/login";
+          } else {
+            console.error("Error fetching requests:", err);
+          }
+        });
+    }, []);
 
   const getStatusBadge = (status) => {
     switch(status) {

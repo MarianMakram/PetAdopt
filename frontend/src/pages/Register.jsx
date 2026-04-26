@@ -155,205 +155,289 @@ export default function PetAdoptRegister() {
   };
 
   return (
-    <>
-      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet" />
-      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap" rel="stylesheet" />
+    <div className="register-page">
       <style>{`
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body, #root { width: 100%; min-height: 100vh; }
-        body { font-family: 'Be Vietnam Pro', sans-serif; }
-        .material-symbols-outlined { font-family: 'Material Symbols Outlined'; font-style: normal; display: inline-block; line-height: 1; white-space: nowrap; -webkit-font-smoothing: antialiased; vertical-align: middle; }
-        
-        /* Utility shim for non-tailwind environment */
-        .min-h-screen { min-height: 100vh; }
-        .w-full { width: 100%; }
-        .flex { display: flex; }
-        .hidden { display: none; }
-        .flex-1 { flex: 1; }
-        .flex-col { flex-direction: column; }
-        .items-center { align-items: center; }
-        .justify-center { justify-content: center; }
-        .justify-start { justify-content: flex-start; }
-        .relative { position: relative; }
-        .absolute { position: absolute; }
-        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
-        .object-cover { object-fit: cover; }
-        .overflow-hidden { overflow: hidden; }
-        .overflow-y-auto { overflow-y: auto; }
-        .grid { display: grid; }
-        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .gap-2 { gap: 0.5rem; }
-        .gap-3 { gap: 0.75rem; }
-        .gap-12 { gap: 3rem; }
-        .p-4 { padding: 1rem; }
-        .p-7 { padding: 1.75rem; }
-        .px-8 { padding-left: 2rem; padding-right: 2rem; }
-        .px-20 { padding-left: 5rem; padding-right: 5rem; }
-        .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
-        .mb-1 { margin-bottom: 0.25rem; }
-        .mb-2 { margin-bottom: 0.5rem; }
-        .mb-3 { margin-bottom: 0.75rem; }
-        .mb-4 { margin-bottom: 1rem; }
-        .mb-5 { margin-bottom: 1.25rem; }
-        .mb-8 { margin-bottom: 2rem; }
-        .rounded-xl { border-radius: 0.75rem; }
-        .rounded-2xl { border-radius: 1rem; }
-        .rounded-full { border-radius: 9999px; }
-        .border { border: 1px solid; }
-        .border-2 { border-width: 2px; }
-        .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
-        .duration-200 { transition-duration: 200ms; }
-        
-        @media (min-width: 768px) {
-          .md\:flex { display: flex; }
+        .register-page {
+          min-height: calc(100vh - 80px);
+          width: 100%;
+          background: linear-gradient(135deg, #d9f6ff 0%, #e9f9ff 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Be Vietnam Pro', sans-serif;
+          padding: 40px 20px;
+          box-sizing: border-box;
         }
+        .register-card {
+          width: 100%;
+          max-width: 1200px;
+          min-height: 700px;
+          display: flex;
+          background: #fff;
+          border-radius: 32px;
+          overflow: hidden;
+          box-shadow: 0 20px 60px rgba(0, 52, 62, 0.08);
+        }
+        .register-left {
+          flex: 1;
+          position: relative;
+          background: linear-gradient(to bottom right, #00656f, #005861);
+          padding: 48px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          color: #d4f9ff;
+        }
+        .register-left-img {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          opacity: 0.3;
+          mix-blend-mode: overlay;
+        }
+        .register-right {
+          flex: 1.2;
+          padding: 50px 60px;
+          background: #fff;
+          overflow-y: auto;
+          max-height: 800px;
+        }
+        .register-header h2 {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 32px;
+          font-weight: 800;
+          color: #00343e;
+          margin: 0 0 8px 0;
+        }
+        .register-header p {
+          font-size: 14px;
+          color: #2c6370;
+          margin: 0;
+        }
+        .role-selector {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+          margin: 24px 0;
+        }
+        .role-card {
+          padding: 16px;
+          border-radius: 16px;
+          border: 2px solid transparent;
+          background: #f4fbfc;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .role-card.active {
+          border-color: #00656f;
+          background: #e9f9ff;
+        }
+        .form-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+          margin-bottom: 16px;
+        }
+        .form-group {
+          margin-bottom: 16px;
+        }
+        .form-label {
+          display: block;
+          font-size: 12px;
+          font-weight: 700;
+          color: #2c6370;
+          margin-bottom: 6px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .input-wrapper {
+          position: relative;
+        }
+        .register-input {
+          width: 100%;
+          padding: 12px 16px;
+          background: #f4fbfc;
+          border: 1px solid #e1f0f4;
+          border-radius: 12px;
+          font-size: 14px;
+          color: #00343e;
+          outline: none;
+          transition: all 0.2s;
+        }
+        .register-input:focus {
+          border-color: #00656f;
+          background: #fff;
+          box-shadow: 0 0 0 4px rgba(0, 101, 111, 0.05);
+        }
+        .register-btn {
+          width: 100%;
+          padding: 16px;
+          border: none;
+          border-radius: 100px;
+          font-size: 16px;
+          font-weight: 700;
+          color: #fff;
+          background: linear-gradient(to right, #00656f, #005861);
+          cursor: pointer;
+          transition: transform 0.2s, box-shadow 0.2s;
+          margin-top: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+        }
+        .register-btn:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(0, 101, 111, 0.3);
+        }
+        .register-btn:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+        .quote-card {
+          position: relative;
+          z-index: 1;
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          padding: 24px;
+          border-radius: 16px;
+          border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        @media (max-width: 1000px) {
+          .register-card {
+            flex-direction: column;
+            max-width: 600px;
+            min-height: auto;
+          }
+          .register-left {
+            display: none;
+          }
+          .register-right {
+            padding: 40px;
+            max-height: none;
+          }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
 
       <Snackbar snack={snack} onClose={() => setSnack(null)} />
 
-      <div className="min-h-screen w-full flex" style={{ fontFamily: "'Be Vietnam Pro', sans-serif", backgroundColor: "#e9f9ff" }}>
-
-        {/* ── LEFT ── */}
-        <div className="hidden md:flex w-[750px] relative items-center justify-start overflow-hidden py-8 px-20" style={{ backgroundColor: "#00656f" }}>
-          <img src={DOG} alt="" className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay" />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#00656f 0%,transparent 60%,#005861 100%)", opacity: 0.8 }} />
-          <div className="relative z-10 max-w-sm">
-            <p className="text-3xl font-black text-white mb-8" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-1px" }}>PetAdopt</p>
-            <h1 className="text-4xl font-bold text-white leading-tight mb-4" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Create a legacy of kindness.</h1>
-            <p className="text-sm font-medium leading-relaxed" style={{ color: "#89e9f6" }}>Whether you are finding a best friend or managing a sanctuary, your journey starts here.</p>
-            <div className="mt-10 p-7 rounded-2xl border border-white/10" style={{ backgroundColor: "rgba(255,255,255,0.08)", backdropFilter: "blur(12px)" }}>
-              <Icon name="format_quote" size={34} className="text-[#fdd34d] mb-2" />
-              <p className="text-sm text-white italic leading-relaxed mb-4">"Adopting wasn't just about saving a life; it was about completing our home. The process was seamless and heartfelt."</p>
-              <div className="flex items-center gap-3">
-                <img src={AVA} alt="Sarah" className="w-10 h-10 rounded-full object-cover" />
-                <div>
-                  <p className="text-xs font-bold text-white">Sarah Jenkins</p>
-                  <p className="text-xs" style={{ color: "#89e9f6" }}>Adopter since 2023</p>
-                </div>
+      <div className="register-card">
+        <div className="register-left">
+          <img src={DOG} className="register-left-img" alt="Registration" />
+          <div style={{ position: "relative", zIndex: 1 }}>
+            <p style={{ fontFamily: "'Plus Jakarta Sans'", fontSize: 28, fontWeight: 900, margin: 0 }}>PetAdopt</p>
+            <p style={{ fontSize: 13, opacity: 0.8, marginTop: 6 }}>Create a legacy of kindness today.</p>
+          </div>
+          <div className="quote-card">
+            <p style={{ fontSize: 15, fontStyle: "italic", lineHeight: 1.6, margin: 0 }}>
+              "Adopting wasn't just about saving a life; it was about completing our home. The process was seamless and heartfelt."
+            </p>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 16 }}>
+              <img src={AVA} style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(255,255,255,0.25)" }} alt="Sarah" />
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 700, margin: 0 }}>Sarah Jenkins</p>
+                <p style={{ fontSize: 11, opacity: 0.6, margin: 0 }}>Adopter since 2023</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ── RIGHT ── */}
-        <div className="flex-1 flex flex-col justify-start items-center px-8 overflow-y-auto py-8 px-20" style={{ backgroundColor: "#e9f9ff" }}>
-          <div className="w-[650px]">
-            <h2 className="text-2xl font-extrabold mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: "#00343e" }}>Begin your journey</h2>
-            <p
-              onClick={() => navigate("/login")}
-              className="text-xs mb-5 cursor-pointer" style={{ color: "#2c6370" }}>
-              Already have an account?{" "}
-              <span className="font-semibold" style={{ color: "#00656f", textDecoration: "none" }}>Sign in</span>
+        <div className="register-right">
+          <div className="register-header">
+            <h2>Begin your journey</h2>
+            <p onClick={() => navigate("/login")} style={{ cursor: "pointer", display: "inline-block" }}>
+              Already have an account? <span style={{ color: "#00656f", fontWeight: 700 }}>Sign in</span>
             </p>
-
-            {/* Roles */}
-            <p className="text-xs font-bold mb-3" style={{ color: "#00343e" }}>What is your role?</p>
-            <div className="grid grid-cols-2 gap-3 mb-3">
-              <div onClick={() => setRole("adopter")} className={`p-4 rounded-2xl cursor-pointer transition-all duration-200 hover:shadow-lg border-2 ${role === "adopter" ? "border-[#00656f] bg-[#89e9f6]/10" : "border-transparent bg-white"}`}>
-                <div className="flex justify-between items-start mb-2">
-                  <div className="p-2 rounded-xl bg-[#89e9f6]"><Icon name="favorite" size={20} fill={1} className="text-[#00656f]" /></div>
-                  {role === "adopter" && <Icon name="check_circle" size={18} className="text-[#00656f]" />}
-                </div>
-                <p className="text-sm font-bold text-[#00343e] mb-1">I am an Adopter</p>
-                <p className="text-xs text-[#2c6370] leading-relaxed">I'm looking for a new companion to join my family.</p>
-              </div>
-              <div onClick={() => setRole("shelter")} className={`p-4 rounded-2xl cursor-pointer transition-all duration-200 hover:shadow-lg border-2 ${role === "shelter" ? "border-[#00656f] bg-[#89e9f6]/10" : "border-transparent bg-white"}`}>
-                <div className="flex justify-between items-start mb-2">
-                  <div className="p-2 rounded-xl bg-[#ffc4b3]"><Icon name="home_health" size={20} fill={1} className="text-[#9b3e20]" /></div>
-                  {role === "shelter" && <Icon name="check_circle" size={18} className="text-[#00656f]" />}
-                </div>
-                <p className="text-sm font-bold text-[#00343e] mb-1">Shelter / Owner</p>
-                <p className="text-xs text-[#2c6370] leading-relaxed">I want to list pets and manage adoption requests.</p>
-              </div>
-            </div>
-            <div className="flex gap-2 p-3 rounded-xl mb-5" style={{ backgroundColor: "#d9f6ff" }}>
-              <Icon name="info" size={16} className="text-[#005861] mt-0.5 shrink-0" />
-              <p className="text-xs leading-relaxed" style={{ color: "#2c6370" }}>
-                <b style={{ color: "#00343e" }}>Note for Shelters:</b> Accounts require manual Admin approval. Verification takes 24-48 hours.
-              </p>
-            </div>
-
-            {/* Fields */}
-            <div className="grid grid-cols-2 gap-3 mb-3">
-              <div>
-                <label className="block text-xs font-bold text-[#00343e] mb-1.5">Full Name</label>
-                <input name="name" type="text" placeholder="Johnathan Doe" value={form.name} onChange={set}
-                  className="w-full h-11 px-5 bg-[#adecff] rounded-lg text-sm text-[#00343e] border-none outline-none focus:ring-2 focus:ring-[#00656f]/40 placeholder:text-[#2c6370]/50" />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-[#00343e] mb-1.5">Email Address</label>
-                <input name="email" type="email" placeholder="john@example.com" value={form.email} onChange={set}
-                  className="w-full h-11 px-5 bg-[#adecff] rounded-lg text-sm text-[#00343e] border-none outline-none focus:ring-2 focus:ring-[#00656f]/40 placeholder:text-[#2c6370]/50" />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3 mb-3">
-              <div>
-                <label className="block text-xs font-bold text-[#00343e] mb-1.5">Phone Number</label>
-                <input name="phone" type="tel" placeholder="+1 (555) 000-0000" value={form.phone} onChange={set}
-                  className="w-full h-11 px-5 bg-[#adecff] rounded-lg text-sm text-[#00343e] border-none outline-none focus:ring-2 focus:ring-[#00656f]/40 placeholder:text-[#2c6370]/50" />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-[#00343e] mb-1.5">Location</label>
-                <div className="relative">
-                  <input name="location" type="text" placeholder="City, Country" value={form.location} onChange={set}
-                    className="w-full h-11 pl-9 pr-4 bg-[#adecff] rounded-lg text-sm text-[#00343e] border-none outline-none focus:ring-2 focus:ring-[#00656f]/40 placeholder:text-[#2c6370]/50" />
-                  <Icon name="location_on" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2c6370]/60" />
-                </div>
-              </div>
-            </div>
-            <div className="mb-4">
-              <label className="block text-xs font-bold text-[#00343e] mb-1.5">Create Password</label>
-              <div className="relative">
-                <input name="password" type={showPw ? "text" : "password"} placeholder="••••••••" value={form.password} onChange={set}
-                  className="w-full h-11 px-5 pr-11 bg-[#adecff] rounded-lg text-sm text-[#00343e] border-none outline-none focus:ring-2 focus:ring-[#00656f]/40 placeholder:text-[#2c6370]/50" />
-                <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer">
-                  <Icon name={showPw ? "visibility_off" : "visibility"} size={18} className="text-[#2c6370]/60" />
-                </button>
-              </div>
-              <p className="text-[10px] uppercase tracking-widest mt-1.5" style={{ color: "#2c6370" }}>Min 8 characters with at least one number.</p>
-            </div>
-
-            {/* Checkbox */}
-            <div className="flex gap-2.5 cursor-pointer mb-4" onClick={() => setAgreed(!agreed)}>
-              <div className={`w-5 h-5 min-w-[20px] rounded-md mt-0.5 border-2 flex items-center justify-center transition-all ${agreed ? "border-[#00656f] bg-[#00656f]" : "border-[#4a7e8d] bg-transparent"}`}>
-                {agreed && <Icon name="check" size={12} className="text-white" />}
-              </div>
-              <p className="text-xs leading-relaxed" style={{ color: "#2c6370" }}>
-                I agree to the{" "}
-                <span className="font-bold" style={{ color: "#00656f" }}>Terms of Service</span>
-                {" "}and{" "}
-                <span className="font-bold" style={{ color: "#00656f" }}>Privacy Policy</span>
-                , and consent to receiving updates about my adoption requests.
-              </p>
-            </div>
-
-            {/* Submit */}
-            <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={loading}
-              className="w-full h-12 rounded-full text-sm font-bold flex items-center justify-center gap-2 transition-transform hover:scale-[1.02] active:scale-[0.97]"
-              style={{
-                background: loading ? "#81b5c5" : "linear-gradient(to right,#00656f,#89e9f6)",
-                color: "#d4f9ff",
-                boxShadow: "0 8px 24px rgba(0,101,111,0.3)",
-                fontFamily: "'Be Vietnam Pro', sans-serif",
-                border: "none",
-                cursor: loading ? "not-allowed" : "pointer",
-              }}
-            >
-              {loading ? (
-                <>
-                  <span style={{ display: "inline-block", width: 16, height: 16, border: "2px solid #d4f9ff", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
-                  Creating Account…
-                </>
-              ) : (
-                <>Create Account <Icon name="arrow_forward" size={18} className="text-[#d4f9ff]" /></>
-              )}
-            </button>
           </div>
+
+          <div className="role-selector">
+            <div 
+              className={`role-card ${role === "adopter" ? "active" : ""}`}
+              onClick={() => setRole("adopter")}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                <Icon name="favorite" size={20} fill={role === "adopter" ? 1 : 0} className={role === "adopter" ? "text-[#00656f]" : "text-[#2c6370]"} />
+                {role === "adopter" && <Icon name="check_circle" size={18} className="text-[#00656f]" />}
+              </div>
+              <p style={{ fontSize: 14, fontWeight: 800, color: "#00343e", marginBottom: 4 }}>I am an Adopter</p>
+              <p style={{ fontSize: 11, color: "#2c6370", lineHeight: 1.4 }}>Looking for a new companion.</p>
+            </div>
+            <div 
+              className={`role-card ${role === "shelter" ? "active" : ""}`}
+              onClick={() => setRole("shelter")}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                <Icon name="home_health" size={20} fill={role === "shelter" ? 1 : 0} className={role === "shelter" ? "text-[#00656f]" : "text-[#2c6370]"} />
+                {role === "shelter" && <Icon name="check_circle" size={18} className="text-[#00656f]" />}
+              </div>
+              <p style={{ fontSize: 14, fontWeight: 800, color: "#00343e", marginBottom: 4 }}>Shelter / Owner</p>
+              <p style={{ fontSize: 11, color: "#2c6370", lineHeight: 1.4 }}>Manage pets and requests.</p>
+            </div>
+          </div>
+
+          <div className="form-grid">
+            <div className="form-group">
+              <label className="form-label">Full Name</label>
+              <input name="name" type="text" placeholder="Johnathan Doe" value={form.name} onChange={set} className="register-input" />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Email Address</label>
+              <input name="email" type="email" placeholder="john@example.com" value={form.email} onChange={set} className="register-input" />
+            </div>
+          </div>
+
+          <div className="form-grid">
+            <div className="form-group">
+              <label className="form-label">Phone Number</label>
+              <input name="phone" type="tel" placeholder="+1 (555) 000-0000" value={form.phone} onChange={set} className="register-input" />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Location</label>
+              <input name="location" type="text" placeholder="City, Country" value={form.location} onChange={set} className="register-input" />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Create Password</label>
+            <div className="input-wrapper">
+              <input name="password" type={showPw ? "text" : "password"} placeholder="••••••••" value={form.password} onChange={set} className="register-input" />
+              <button type="button" onClick={() => setShowPw(!showPw)} style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#2c6370", opacity: 0.6 }}>
+                <Icon name={showPw ? "visibility_off" : "visibility"} size={18} />
+              </button>
+            </div>
+            <p style={{ fontSize: 10, color: "#2c6370", marginTop: 6, textTransform: "uppercase", letterSpacing: "1px" }}>Min 8 characters with at least one number.</p>
+          </div>
+
+          <div style={{ display: "flex", gap: 12, cursor: "pointer", marginTop: 24 }} onClick={() => setAgreed(!agreed)}>
+            <div style={{ 
+              width: 20, height: 20, minWidth: 20, borderRadius: 6, border: "2px solid",
+              borderColor: agreed ? "#00656f" : "#cbd5e1",
+              backgroundColor: agreed ? "#00656f" : "transparent",
+              display: "flex", alignItems: "center", justifyCenter: "center",
+              transition: "all 0.2s"
+            }}>
+              {agreed && <Icon name="check" size={14} style={{ color: "#fff" }} />}
+            </div>
+            <p style={{ fontSize: 12, color: "#2c6370", lineHeight: 1.5 }}>
+              I agree to the <span style={{ color: "#00656f", fontWeight: 700 }}>Terms of Service</span> and <span style={{ color: "#00656f", fontWeight: 700 }}>Privacy Policy</span>.
+            </p>
+          </div>
+
+          <button className="register-btn" onClick={handleSubmit} disabled={loading}>
+            {loading ? (
+              <>
+                <span style={{ display: "inline-block", width: 16, height: 16, border: "2px solid #fff", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+                Creating Account…
+              </>
+            ) : (
+              <>Create Account <Icon name="arrow_forward" size={18} /></>
+            )}
+          </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }

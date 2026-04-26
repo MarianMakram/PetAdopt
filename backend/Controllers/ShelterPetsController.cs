@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetAdopt.Data;
 using PetAdopt.Models;
+using PetAdopt.Services;
 using System.Security.Claims;
 
 namespace PetAdopt.Controllers
@@ -69,7 +70,7 @@ namespace PetAdopt.Controllers
             // Notify all Adopters who favorited this pet
             var favoritedBy = await context.Favorites
                 .Where(f => f.PetId == id)
-                .Select(f => f.AdopterId)
+                .Select(f => f.UserId)
                 .ToListAsync();
 
             foreach (var adopterId in favoritedBy)

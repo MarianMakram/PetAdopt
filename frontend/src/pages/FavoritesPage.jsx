@@ -8,7 +8,7 @@ export default function FavoritesPage() {
   useEffect(() => {
     apiClient.get('/favorites')
       .then(response => {
-        setFavorites(response.data);
+        setFavorites(response.data || []);
       })
       .catch(err => console.error("Error fetching favorites:", err));
   }, []);

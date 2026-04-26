@@ -84,8 +84,8 @@ namespace PetAdopt.Controllers
             requestAdopterIds.Add(request.AdopterId);
 
             var favoritedBy = await context.Favorites
-                .Where(f => f.PetId == request.PetId && !requestAdopterIds.Contains(f.AdopterId))
-                .Select(f => f.AdopterId)
+                .Where(f => f.PetId == request.PetId && !requestAdopterIds.Contains(f.UserId))
+                .Select(f => f.UserId)
                 .ToListAsync();
 
             foreach (var adopterId in favoritedBy)

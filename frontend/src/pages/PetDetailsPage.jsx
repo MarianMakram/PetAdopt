@@ -11,6 +11,7 @@ export default function PetDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [isAdoptModalOpen, setIsAdoptModalOpen] = useState(false);
   const [adoptMessage, setAdoptMessage] = useState("");
+  const [whyThisPet, setWhyThisPet] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -27,8 +28,8 @@ export default function PetDetailsPage() {
 
   const fetchPetDetails = async () => {
     try {
-      const data = await apiClient.get(`/pets/${id}`);
-      setPet(data);
+      const response = await apiClient.get(`/pets/${id}`);
+      setPet(response.data);
     } catch (err) {
       console.error("Error fetching pet details:", err);
     } finally {
@@ -38,8 +39,8 @@ export default function PetDetailsPage() {
 
   const fetchReviews = async () => {
     try {
-      const data = await apiClient.get(`/reviews/pet/${id}`);
-      if(Array.isArray(data)) setReviews(data);
+      const response = await apiClient.get(`/reviews/pet/${id}`);
+      if(Array.isArray(response.data)) setReviews(response.data);
     } catch (err) {
       console.error("Error fetching reviews:", err);
     }
@@ -47,7 +48,8 @@ export default function PetDetailsPage() {
 
   const checkFavorite = async () => {
     try {
-      const data = await apiClient.get(`/favorites`);
+      const response = await apiClient.get(`/favorites`);
+      const data = response.data;
       if(Array.isArray(data)) {
         setIsFavorite(data.some(f => f.petId === parseInt(id)));
       }
@@ -64,9 +66,11 @@ export default function PetDetailsPage() {
       await apiClient.post(`/adoption-requests`, {
         petId: parseInt(id),
         message: adoptMessage,
-        whyThisPet: "Interested in adoption"
+        whyThisPet: whyThisPet
       });
       setSuccess(true);
+      setAdoptMessage("");
+      setWhyThisPet("");
       setTimeout(() => {
         setIsAdoptModalOpen(false);
         setSuccess(false);
@@ -98,12 +102,12 @@ export default function PetDetailsPage() {
     if (!user) { navigate('/login'); return; }
     setSubmittingReview(true);
     try {
-      const data = await apiClient.post(`/reviews`, { 
+      const response = await apiClient.post(`/reviews`, { 
         petId: parseInt(id), 
         rating: newReview.rating, 
         comment: newReview.comment 
       });
-      setReviews([data, ...reviews]);
+      setReviews([response.data, ...reviews]);
       setNewReview({ rating: 5, comment: '' });
     } catch (err) {
       alert(err.response?.data || "Only adopters who adopted this pet can leave a review.");
@@ -220,13 +224,28 @@ export default function PetDetailsPage() {
               </div>
             ) : (
               <form onSubmit={handleAdoptSubmit}>
-                <textarea 
-                  required
-                  value={adoptMessage}
-                  onChange={e => setAdoptMessage(e.target.value)}
-                  className="w-full bg-[#f4fbfc] border-none rounded-xl px-4 py-3 min-h-[120px] mb-6"
-                  placeholder="Tell the shelter about yourself..."
-                ></textarea>
+                <div className="space-y-4 mb-8">
+                  <div>
+                    <label className="block text-xs font-bold text-[#00656f] uppercase tracking-wider mb-2">Introduction</label>
+                    <textarea 
+                      required
+                      value={adoptMessage}
+                      onChange={e => setAdoptMessage(e.target.value)}
+                      className="w-full bg-[#f4fbfc] border-none rounded-xl px-4 py-3 min-h-[100px]"
+                      placeholder="Tell the shelter about yourself..."
+                    ></textarea>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#00656f] uppercase tracking-wider mb-2">Why this pet?</label>
+                    <textarea 
+                      required
+                      value={whyThisPet}
+                      onChange={e => setWhyThisPet(e.target.value)}
+                      className="w-full bg-[#f4fbfc] border-none rounded-xl px-4 py-3 min-h-[100px]"
+                      placeholder="What makes you a great match for this pet?"
+                    ></textarea>
+                  </div>
+                </div>
                 <div className="flex gap-4 justify-end">
                   <button type="button" onClick={() => setIsAdoptModalOpen(false)} className="px-6 py-3 font-bold">Cancel</button>
                   <button type="submit" disabled={isSubmitting} className="bg-[#00656f] text-white px-8 py-3 rounded-full font-bold">

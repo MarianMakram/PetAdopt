@@ -47,19 +47,31 @@ export default function ApprovalItem({ pet, onApprove, onReject }) {
         </div>
       </div>
 
-      <div className="flex gap-3 w-full md:w-auto">
-        <button
-          onClick={() => onReject && onReject(id)}
-          className="flex-1 md:flex-none px-6 py-3 bg-surface-container-high text-on-surface-variant rounded-full font-bold hover:bg-error-container hover:text-on-error-container transition-all active:scale-95"
-        >
-          Reject
-        </button>
-        <button
-          onClick={() => onApprove && onApprove(id)}
-          className="flex-1 md:flex-none px-8 py-3 bg-gradient-to-br from-primary to-primary-dim text-on-primary rounded-full font-bold shadow-md hover:shadow-lg transition-all active:scale-95"
-        >
-          Approve
-        </button>
+      <div className="flex gap-3 w-full md:w-auto min-w-[200px] justify-center md:justify-end">
+        {pet.status === "PendingReview" ? (
+          <>
+            <button
+              onClick={() => onReject && onReject(id)}
+              className="flex-1 md:flex-none px-6 py-3 bg-surface-container-high text-on-surface-variant rounded-full font-bold hover:bg-error-container hover:text-on-error-container transition-all active:scale-95"
+            >
+              Reject
+            </button>
+            <button
+              onClick={() => onApprove && onApprove(id)}
+              className="flex-1 md:flex-none px-8 py-3 bg-gradient-to-br from-primary to-primary-dim text-on-primary rounded-full font-bold shadow-md hover:shadow-lg transition-all active:scale-95"
+            >
+              Approve
+            </button>
+          </>
+        ) : (
+          <span className={`px-8 py-3 rounded-full font-bold border-2 ${
+            pet.status === "Approved" 
+              ? "border-success text-success bg-success/5" 
+              : "border-error text-error bg-error/5"
+          }`}>
+            {pet.status}
+          </span>
+        )}
       </div>
     </div>
   );
