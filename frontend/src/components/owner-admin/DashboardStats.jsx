@@ -4,7 +4,7 @@ export default function DashboardStats({ pets = [] }) {
   const totalListed = pets.length;
   const adopted = pets.filter(p => p.isAdopted).length;
   const pending = pets.filter(p => p.isPending).length;
-  const active = pets.filter(p => p.status === 'Approved' || p.status === 'Draft').length;
+  const active = pets.filter(p => p.status === 'Active' || p.status === 'Draft').length;
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16">

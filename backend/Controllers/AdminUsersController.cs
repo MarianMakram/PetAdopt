@@ -9,7 +9,7 @@ namespace PetAdopt.Controllers
     [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/admin/users")]
-    public class AdminUsersController(AppDbContext context) : ControllerBase
+    public class AdminUsersController(AppDbContext context, INotificationService notificationService) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetDefaultPending()
@@ -37,6 +37,16 @@ namespace PetAdopt.Controllers
             if (user == null) return NotFound();
             user.account_status = Status.Approved;
             await context.SaveChangesAsync();
+
+            await notificationService.SendNotificationAsync(
+                user.id,
+                "Account Approved!",
+                "Your sanctuary account has been approved. You can now log in and post pets.",
+                "Success",
+                user.id.ToString(),
+                "User"
+            );
+
             return Ok(new { message = "User approved" });
         }
 
@@ -47,6 +57,16 @@ namespace PetAdopt.Controllers
             if (user == null) return NotFound();
             user.account_status = Status.Rejected;
             await context.SaveChangesAsync();
+
+            await notificationService.SendNotificationAsync(
+                user.id,
+                "Account Update",
+                "Unfortunately, your sanctuary account was not approved. Please contact support for more details.",
+                "Warning",
+                user.id.ToString(),
+                "User"
+            );
+
             return Ok(new { message = "User rejected" });
         }
 
@@ -57,6 +77,16 @@ namespace PetAdopt.Controllers
             if (user == null) return NotFound();
             user.account_status = Status.Suspended;
             await context.SaveChangesAsync();
+
+            await notificationService.SendNotificationAsync(
+                user.id,
+                "Account Suspended",
+                "Your account has been suspended by the administrator.",
+                "Error",
+                user.id.ToString(),
+                "User"
+            );
+
             return Ok(new { message = "User suspended" });
         }
     }

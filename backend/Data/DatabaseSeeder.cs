@@ -162,7 +162,7 @@ namespace PetAdopt.Data
                         AgeUnit = 0,
                         Species = Species.Dog,
                         Gender = Gender.Male,
-                        Status = PetStatus.PendingReview,
+                        Status = PetStatus.Approved,
                         HealthStatus = "Initial checkup done",
                         Description = "A tiny puppy looking for a warm home.",
                         Location = "Giza",

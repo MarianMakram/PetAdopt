@@ -44,9 +44,9 @@ export default function Sidebar({ activeTab = 'Dashboard' }) {
           </>
         )}
         
-        <Link to="/profile" className={`${activeTab === 'Settings' ? 'bg-gradient-to-r from-cyan-600 to-cyan-400 text-white shadow-md' : 'text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100/50 dark:hover:bg-cyan-800/50'} rounded-full mx-2 flex items-center px-4 py-3 gap-3 transition-transform hover:translate-x-1`}>
-          <span className="material-symbols-outlined">settings</span>
-          <span className="font-medium">Settings</span>
+        <Link to="/profile" className={`${activeTab === 'Profile' ? 'bg-gradient-to-r from-cyan-600 to-cyan-400 text-white shadow-md' : 'text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100/50 dark:hover:bg-cyan-800/50'} rounded-full mx-2 flex items-center px-4 py-3 gap-3 transition-transform hover:translate-x-1`}>
+          <span className="material-symbols-outlined">person</span>
+          <span className="font-medium">Profile</span>
         </Link>
       </nav>
       

@@ -10,7 +10,7 @@ namespace PetAdopt.Controllers
     [Authorize(Roles = "Shelter")]
     [ApiController]
     [Route("api/shelter/pets")]
-    public class ShelterPetsController(AppDbContext context) : ControllerBase
+    public class ShelterPetsController(AppDbContext context, INotificationService notificationService) : ControllerBase
     {
         private int GetCurrentUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
@@ -30,6 +30,21 @@ namespace PetAdopt.Controllers
             pet.CreatedAt = DateTime.UtcNow;
             context.Pets.Add(pet);
             await context.SaveChangesAsync();
+
+            // Notify Admins
+            var admins = await context.Users.Where(u => u.role == Role.Admin).ToListAsync();
+            foreach (var admin in admins)
+            {
+                await notificationService.SendNotificationAsync(
+                    admin.id,
+                    "New Pet Post",
+                    $"A new pet '{pet.Name}' has been posted and needs approval.",
+                    "Warning",
+                    pet.Id.ToString(),
+                    "Pet"
+                );
+            }
+
             return CreatedAtAction(nameof(GetMyPets), new { id = pet.Id }, pet);
         }
 
@@ -50,6 +65,25 @@ namespace PetAdopt.Controllers
             existingPet.ImageUrls = pet.ImageUrls;
             
             await context.SaveChangesAsync();
+
+            // Notify all Adopters who favorited this pet
+            var favoritedBy = await context.Favorites
+                .Where(f => f.PetId == id)
+                .Select(f => f.AdopterId)
+                .ToListAsync();
+
+            foreach (var adopterId in favoritedBy)
+            {
+                await notificationService.SendNotificationAsync(
+                    adopterId,
+                    "Favorite Pet Updated",
+                    $"The details for {existingPet.Name} have been updated.",
+                    "Info",
+                    existingPet.Id.ToString(),
+                    "Pet"
+                );
+            }
+
             return Ok(existingPet);
         }
 

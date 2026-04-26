@@ -150,6 +150,7 @@ export default function PetAdoptRegister() {
       showSnack(err.response?.data || "Registration failed. Please try again.", "error");
     } finally {
       setLoading(false);
+      setForm(prev => ({ ...prev, password: "" }));
     }
   };
 

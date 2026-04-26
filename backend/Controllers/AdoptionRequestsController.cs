@@ -47,6 +47,16 @@ namespace PetAdopt.Controllers
                 "AdoptionRequest"
             );
 
+            // Notify Adopter (Confirmation)
+            await notificationService.SendNotificationAsync(
+                GetCurrentUserId(),
+                "Request Submitted",
+                $"Your adoption request for {pet.Name} has been submitted successfully.",
+                "Success",
+                request.Id.ToString(),
+                "AdoptionRequest"
+            );
+
             return Ok(request);
         }
 

@@ -127,6 +127,7 @@ export default function LoginForm() {
       }
     } finally {
       setLoading(false);
+      setForm(prev => ({ ...prev, password: "" }));
     }
   };
 

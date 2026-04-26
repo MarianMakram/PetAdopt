@@ -17,10 +17,8 @@ export default function HomePage() {
   useEffect(() => {
     apiClient.get('/pets', { params: { pageSize: 3 } })
       .then(response => {
-        const data = response.data;
-        if (data && data.data) {
-          setFeaturedPets(data.data);
-        } else if (Array.isArray(data)) {
+        const data = response.data?.data || response.data;
+        if (Array.isArray(data)) {
           setFeaturedPets(data.slice(0, 3));
         }
       })
@@ -80,6 +78,24 @@ export default function HomePage() {
               <p className="text-xl text-[#2c6370] max-w-lg leading-relaxed">
                 Discover your new best friend through our high-end, editorial sanctuary. We treat every animal with the dignity of a cover story.
               </p>
+
+              {/* Role-Based Portal Access */}
+              {user && (user.role === 'Admin' || user.role === 'Shelter') && (
+                <div className="flex flex-wrap gap-3 pt-2">
+                  {user.role === 'Admin' ? (
+                    <>
+                      <button onClick={() => navigate('/admin/pets')} className="px-6 py-3 bg-[#00656f] text-white rounded-full font-bold text-sm shadow-lg hover:shadow-xl transition-all">Pet Approvals</button>
+                      <button onClick={() => navigate('/admin/users')} className="px-6 py-3 bg-[#ffc4b3] text-[#9b3e20] rounded-full font-bold text-sm shadow-lg hover:shadow-xl transition-all">User Approvals</button>
+                    </>
+                  ) : (
+                    <>
+                      <button onClick={() => navigate('/shelter/pets')} className="px-6 py-3 bg-[#00656f] text-white rounded-full font-bold text-sm shadow-lg hover:shadow-xl transition-all">Dashboard</button>
+                      <button onClick={() => navigate('/shelter/pets#pets-grid')} className="px-6 py-3 bg-[#89e9f6] text-[#00555d] rounded-full font-bold text-sm shadow-lg hover:shadow-xl transition-all">My Pets</button>
+                      <button onClick={() => navigate('/shelter/requests')} className="px-6 py-3 bg-[#ffc4b3] text-[#9b3e20] rounded-full font-bold text-sm shadow-lg hover:shadow-xl transition-all">Requests</button>
+                    </>
+                  )}
+                </div>
+              )}
               
               <div className="bg-[#adecff] p-4 rounded-xl shadow-sm border border-[#81b5c5]/10">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

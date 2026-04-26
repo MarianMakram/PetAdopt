@@ -16,12 +16,14 @@ namespace PetAdopt.Services
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly EncryptionService _encryptionService;
+        private readonly INotificationService _notificationService;
 
-        public AuthService(AppDbContext context, IConfiguration configuration, EncryptionService encryptionService)
+        public AuthService(AppDbContext context, IConfiguration configuration, EncryptionService encryptionService, INotificationService notificationService)
         {
             _context = context;
             _configuration = configuration;
             _encryptionService = encryptionService;
+            _notificationService = notificationService;
         }
 
         public async Task<AuthResponseDto?> LoginAsync(UserDto request)
@@ -153,6 +155,23 @@ namespace PetAdopt.Services
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
+
+            // Notify Admins if it's a Shelter registration
+            if (user.role == Role.Shelter)
+            {
+                var admins = await _context.Users.Where(u => u.role == Role.Admin).ToListAsync();
+                foreach (var admin in admins)
+                {
+                    await _notificationService.SendNotificationAsync(
+                        admin.id,
+                        "New Shelter Registration",
+                        $"A new shelter '{user.first_name} {user.last_name}' has registered and is pending approval.",
+                        "Warning",
+                        user.id.ToString(),
+                        "User"
+                    );
+                }
+            }
 
             return new AuthenticatedUserDto
             {
