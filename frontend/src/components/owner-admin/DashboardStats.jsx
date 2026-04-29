@@ -4,7 +4,7 @@ export default function DashboardStats({ pets = [] }) {
   const totalListed = pets.length;
   const adopted = pets.filter(p => p.isAdopted).length;
   const pending = pets.filter(p => p.isPending).length;
-  const active = pets.filter(p => p.status === 'Active' || p.status === 'Draft').length;
+  const approved = pets.filter(p => p.status === 'Approved' || p.status === 'Draft').length;
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
@@ -28,9 +28,9 @@ export default function DashboardStats({ pets = [] }) {
       </div>
       <div className="bg-surface-container-low p-6 rounded-xl border border-outline-variant/15">
         <span className="text-tertiary block mb-2 font-bold text-3xl">
-          {active.toString().padStart(2, '0')}
+          {approved.toString().padStart(2, '0')}
         </span>
-        <span className="text-on-surface-variant text-sm font-medium uppercase tracking-wider">Active</span>
+        <span className="text-on-surface-variant text-sm font-medium uppercase tracking-wider">Approved</span>
       </div>
     </div>
   );

@@ -157,6 +157,24 @@ export default function PetDetailsPage() {
           <div className="flex flex-col justify-center">
             <h1 className="text-6xl font-headline font-extrabold text-[#00343e] mb-2">{pet.name}</h1>
             <p className="text-2xl text-[#00656f] font-medium mb-8">{pet.breed || 'Mixed Breed'}</p>
+            
+            <div className="flex flex-col gap-4 mb-8 bg-white p-6 rounded-2xl shadow-sm border border-[#bff0ff]/50">
+              <div className="flex items-center gap-3 text-[#2c6370]">
+                <span className="material-symbols-outlined text-[#00656f]">calendar_month</span>
+                <span className="text-lg font-medium">
+                  {pet.age} {pet.ageUnit === 0 || pet.ageUnit === 'Months' ? (pet.age === 1 ? 'Month' : 'Months') : (pet.age === 1 ? 'Year' : 'Years')} old
+                </span>
+              </div>
+              <div className="flex items-center gap-3 text-[#2c6370]">
+                <span className="material-symbols-outlined text-[#00656f]">medical_services</span>
+                <span className="text-lg font-medium">{pet.healthStatus || 'Health status not provided'}</span>
+              </div>
+              <div className="flex items-center gap-3 text-[#2c6370]">
+                <span className="material-symbols-outlined text-[#00656f]">location_on</span>
+                <span className="text-lg font-medium">{pet.location || 'Location not specified'}</span>
+              </div>
+            </div>
+
             <p className="text-[#2c6370] text-lg leading-relaxed mb-10">{pet.description}</p>
 
             {user?.role === 'Admin' || user?.role === 'Shelter' ? (

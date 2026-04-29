@@ -43,7 +43,12 @@ export default function RequestsDashboard() {
     }
   };
 
-  const filteredRequests = requests.filter(r => r.status === filter);
+  const filteredRequests = requests.filter(r => {
+    if (filter === "Pending") return r.status === 0 || r.status === "Pending";
+    if (filter === "Accepted") return r.status === 1 || r.status === "Accepted";
+    if (filter === "Rejected") return r.status === 2 || r.status === "Rejected";
+    return false;
+  });
 
   return (
     <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen flex overflow-hidden font-body">
@@ -97,58 +102,63 @@ export default function RequestsDashboard() {
               const age = req.pet?.age ? `${req.pet.age} ${req.pet.ageUnit === 0 ? 'Months' : 'Years'}` : '';
               const adopterName = req.adopter?.name || `User ID: ${req.adopterId}`;
               const date = new Date(req.requestedAt).toLocaleDateString();
-              const time = new Date(req.requestedAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-              const statusStr = req.status === 0 ? 'Pending Review' : req.status === 1 ? 'Accepted' : 'Rejected';
+              const time = new Date(req.requestedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              
+              const isPending = req.status === 0 || req.status === "Pending";
+              const isAccepted = req.status === 1 || req.status === "Accepted";
+              
+              const statusStr = isPending ? 'Pending Review' : isAccepted ? 'Accepted' : 'Rejected';
               const imgUrl = req.pet?.imageUrls ? req.pet.imageUrls.split(',')[0] : "https://lh3.googleusercontent.com/aida-public/AB6AXuBahk49U5cTrFQLAZlaKJz07niP63W0Az4g4aSygWFt9IomZ63gBQR3-qtnEHh9epvwUmpJdCG2jI-xtSRXOcmLenY17D1JMo3mWSTWkQ5gypTwccqYnL6cg3EKa4HZL9jfdYqdcFtMIlBmKQkHbiiz4zlbtwLyJxT2oki_Ga6S-j01ky6DSa-xAiJh_eCHSdNFwUueLmrAuuHlZP69q-PnNQxHmpOM4JDPI2w5XILA2QawjB4TWAQZl9fEqj-fUoz7zrTZId1MlSI";
 
               return (
-              <div key={req.id} className="bg-[#ffffff] p-6 rounded-xl border border-[#81b5c5]/10 shadow-sm hover:shadow-md transition-shadow group">
-                <div className="flex flex-col md:flex-row md:items-center gap-6">
-                  <div className="relative shrink-0">
-                    <img className="w-24 h-24 rounded-lg object-cover" src={imgUrl} alt={petName} />
-                    {i === 0 && req.status === 0 && <div className="absolute -top-2 -right-2 bg-[#9b3e20] text-white text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-tighter">New</div>}
-                  </div>
-                  <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                      <p className="text-xs text-[#2c6370] font-bold uppercase tracking-widest mb-1">Pet Name</p>
-                      <p className="text-xl font-bold text-[#00343e] font-headline">{petName}</p>
-                      <p className="text-sm text-[#2c6370]">{breed} • {age}</p>
+                <div key={req.id} className="bg-[#ffffff] p-6 rounded-xl border border-[#81b5c5]/10 shadow-sm hover:shadow-md transition-shadow group">
+                  <div className="flex flex-col md:flex-row md:items-center gap-6">
+                    <div className="relative shrink-0">
+                      <img className="w-24 h-24 rounded-lg object-cover" src={imgUrl} alt={petName} />
+                      {i === 0 && isPending && <div className="absolute -top-2 -right-2 bg-[#9b3e20] text-white text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-tighter">New</div>}
                     </div>
-                    <div>
-                      <p className="text-xs text-[#2c6370] font-bold uppercase tracking-widest mb-1">Adopter</p>
-                      <p className="text-lg font-medium text-[#00343e]">{adopterName}</p>
-                      <button className="text-[#00656f] text-xs font-bold hover:underline flex items-center gap-1 mt-1">
-                        View Adopter Profile
-                        <span className="material-symbols-outlined text-[14px]">open_in_new</span>
-                      </button>
-                    </div>
-                    <div>
-                      <p className="text-xs text-[#2c6370] font-bold uppercase tracking-widest mb-1">Date Submitted</p>
-                      <p className="text-lg font-medium text-[#00343e]">{date}</p>
-                      <p className="text-xs text-[#2c6370]">{time}</p>
-                    </div>
-                    <div className="flex items-center">
-                      <span className={`px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 ${req.status === 0 ? 'bg-[#89e9f6]/30 text-[#00555d]' : req.status === 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                        {req.status === 0 && <span className="w-2 h-2 rounded-full bg-[#00656f] animate-pulse"></span>}
-                        {statusStr}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex md:flex-col gap-2 shrink-0">
-                    {req.status === 0 && (
-                      <>
-                        <button onClick={() => handleAccept(req.id)} className="flex-1 md:w-32 bg-gradient-to-r from-[#00656f] to-[#89e9f6] text-white py-2 rounded-full text-sm font-bold hover:shadow-lg active:scale-95 transition-all">
-                          Accept
+                    <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      <div>
+                        <p className="text-xs text-[#2c6370] font-bold uppercase tracking-widest mb-1">Pet Name</p>
+                        <p className="text-xl font-bold text-[#00343e] font-headline">{petName}</p>
+                        <p className="text-sm text-[#2c6370]">{breed} • {age}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-[#2c6370] font-bold uppercase tracking-widest mb-1">Adopter</p>
+                        <p className="text-lg font-medium text-[#00343e]">{adopterName}</p>
+                        <button className="text-[#00656f] text-xs font-bold hover:underline flex items-center gap-1 mt-1">
+                          View Adopter Profile
+                          <span className="material-symbols-outlined text-[14px]">open_in_new</span>
                         </button>
-                        <button onClick={() => handleReject(req.id)} className="flex-1 md:w-32 border border-[#81b5c5]/30 text-[#2c6370] py-2 rounded-full text-sm font-bold hover:bg-[#b31b25]/5 hover:text-[#b31b25] hover:border-[#b31b25] transition-all">
-                          Reject
-                        </button>
-                      </>
-                    )}
+                      </div>
+                      <div>
+                        <p className="text-xs text-[#2c6370] font-bold uppercase tracking-widest mb-1">Date Submitted</p>
+                        <p className="text-lg font-medium text-[#00343e]">{date}</p>
+                        <p className="text-xs text-[#2c6370]">{time}</p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        {isPending ? (
+                          <>
+                            <button onClick={() => handleAccept(req.id)} className="flex items-center justify-center gap-1 bg-[#00656f] text-white py-2 px-5 rounded-full text-sm font-bold hover:bg-[#00555d] shadow-sm active:scale-95 transition-all">
+                              <span className="material-symbols-outlined text-[18px]">check</span>
+                              Approve
+                            </button>
+                            <button onClick={() => handleReject(req.id)} className="flex items-center justify-center gap-1 border border-gray-200 text-gray-600 bg-gray-50 py-2 px-5 rounded-full text-sm font-bold hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-all">
+                              <span className="material-symbols-outlined text-[18px]">close</span>
+                              Reject
+                            </button>
+                          </>
+                        ) : (
+                          <span className={`px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 ${isAccepted ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200'}`}>
+                            {isAccepted ? 'Approved' : 'Rejected'}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )})}
+              )
+            })}
           </div>
 
           <section className="mt-24 bg-[#d9f6ff] rounded-xl p-12 flex flex-col md:flex-row items-center gap-12 overflow-hidden relative">

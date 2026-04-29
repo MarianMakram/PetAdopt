@@ -77,10 +77,7 @@ export default function LoginForm() {
   // Redirect if already logged in
   useEffect(() => {
     if (user && !isLoading) {
-      const roleStr = String(user.role).toLowerCase();
-      if (roleStr === 'admin') navigate('/admin/users');
-      else if (roleStr === 'shelter') navigate('/shelter/pets');
-      else navigate('/');
+      navigate('/');
     }
   }, [user, isLoading, navigate]);
 
@@ -114,9 +111,7 @@ export default function LoginForm() {
       const userData = await login(form.email, form.password);
       showSnack(`Welcome back! 🐾 Logged in as ${userData.role}.`, "success");
 
-      if (userData.role === 'Admin') navigate('/admin/users');
-      else if (userData.role === 'Shelter') navigate('/shelter/pets');
-      else navigate('/');
+      navigate('/');
     } catch (err) {
       console.error("Login Error Details:", err);
       const errMsg = err.response?.data?.message || err.response?.data;
@@ -147,7 +142,7 @@ export default function LoginForm() {
         }
         .login-card {
           width: 100%;
-          max-width: 1000px;
+          max-width: 1170px;
           min-height: 600px;
           display: flex;
           background: #fff;
