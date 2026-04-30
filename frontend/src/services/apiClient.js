@@ -33,20 +33,27 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry && originalRequest.url !== '/auth/login') {
       originalRequest._retry = true;
       try {
-        // Refresh token is in httpOnly cookie — just call the endpoint without body
-        const response = await axios.post(`${BASE_URL}/auth/refresh`, {}, { withCredentials: true });
+        const refreshToken = localStorage.getItem('refreshToken');
+        if (!refreshToken) throw new Error("No refresh token available");
+
+        // Send the refresh token in the body as expected by the backend
+        const response = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken });
         
         const data = response.data?.data || response.data;
         const newAccessToken = data?.accessToken;
+        const newRefreshToken = data?.refreshToken;
         
         if (newAccessToken) {
           localStorage.setItem('accessToken', newAccessToken);
+          if (newRefreshToken) localStorage.setItem('refreshToken', newRefreshToken);
+          
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return apiClient(originalRequest); // retry original request
         }
       } catch (refreshError) {
         // Refresh failed, clear everything
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
         localStorage.removeItem('user');
         return Promise.reject(refreshError);
       }

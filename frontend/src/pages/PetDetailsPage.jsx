@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import apiClient from '../services/apiClient';
 import { useAuth } from '../context/AuthContext';
+import Header from '../components/owner-admin/Header';
 
 export default function PetDetailsPage() {
   const { id } = useParams();
@@ -21,6 +22,7 @@ export default function PetDetailsPage() {
   const [submittingReview, setSubmittingReview] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchPetDetails();
     fetchReviews();
     if (user) checkFavorite();
@@ -122,23 +124,10 @@ export default function PetDetailsPage() {
   const images = pet.imageUrls ? pet.imageUrls.split(',') : ["https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80"];
 
   return (
-    <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body">
-      <nav className="fixed top-0 w-full z-50 bg-cyan-50/70 backdrop-blur-xl flex items-center justify-between px-8 py-4 border-b border-[#bff0ff]/50">
-        <Link to="/" className="text-2xl font-bold text-cyan-900">PetAdopt</Link>
-        <div className="flex gap-6">
-          <Link to="/pets" className="text-cyan-700 font-medium">Browse</Link>
-          {user ? (
-            <>
-              <Link to="/favorites" className="text-cyan-700 font-medium">Favorites</Link>
-              <Link to="/my-requests" className="text-cyan-700 font-medium">My Requests</Link>
-            </>
-          ) : (
-            <Link to="/login" className="text-cyan-700 font-medium">Login</Link>
-          )}
-        </div>
-      </nav>
+    <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body flex flex-col">
+      <Header />
 
-      <main className="pt-32 pb-24 px-8 max-w-7xl mx-auto">
+      <main className="flex-1 pt-24 pb-24 px-8 max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div className="space-y-6">
             <div className="relative h-[600px] rounded-3xl overflow-hidden shadow-sm">

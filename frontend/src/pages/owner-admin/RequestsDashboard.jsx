@@ -55,24 +55,8 @@ export default function RequestsDashboard() {
       <Sidebar activeTab="Requests" />
 
       <main className="flex-1 overflow-y-auto relative h-screen bg-[#e9f9ff]">
-        <header className="fixed top-0 right-0 left-0 md:left-64 z-50 bg-cyan-50/70 dark:bg-cyan-950/70 backdrop-blur-xl flex items-center justify-between px-8 py-4 max-w-full">
-          <h1 className="text-2xl font-bold tracking-tighter text-cyan-900 dark:text-cyan-50 font-headline">PetAdopt</h1>
-          <div className="flex items-center gap-6">
-            <div className="hidden lg:flex items-center gap-8 font-headline text-sm tracking-tight">
-              <Link className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200" to="/pets">Browse</Link>
-              <Link className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200" to="/shelter/pets">My Pets</Link>
-              <Link className="text-cyan-700/70 dark:text-cyan-300/70 hover:text-cyan-900 dark:hover:text-cyan-50 transition-colors scale-95 active:scale-90 duration-200" to="/">Home</Link>
-            </div>
-            <div className="flex items-center gap-4 text-cyan-800 dark:text-cyan-100">
-              <span className="material-symbols-outlined cursor-pointer hover:scale-110 duration-200">notifications</span>
-              <span className="material-symbols-outlined cursor-pointer hover:scale-110 duration-200">favorite</span>
-              <div className="flex items-center gap-2 pl-4 border-l border-cyan-200/50">
-                <img className="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIfohqwvv6uC5tx-WYqqegSGX8ywuxbJ054PEKUchyK_uQtFD2zUXcFUpqPz8Jll2om-1zE7QKWwibM1ckfPfO8KxMX4VNBfjBOu-OqqjYetNZXS0fru53QGO2xmzivAVwT9gD1bdggjPq_brK-S6gIsXgWH8D1vFFvPLC3ZwZCJbNQv4m6v3AAMKCQ4xDN7zVwOXRmGLi5LEtab2PbGVVycEgbCK7GPFYxLJCzsFXg9evLB7-JKm8CmEvKhcM-_WXMPAayy9Dlq4" alt="Profile" />
-                <span className="text-sm font-bold">Profile</span>
-              </div>
-            </div>
-          </div>
-        </header>
+
+
 
         <div className="pt-24 pb-32 px-8 max-w-7xl mx-auto">
           <div className="flex justify-between items-end mb-12">
@@ -103,10 +87,10 @@ export default function RequestsDashboard() {
               const adopterName = req.adopter?.name || `User ID: ${req.adopterId}`;
               const date = new Date(req.requestedAt).toLocaleDateString();
               const time = new Date(req.requestedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-              
+
               const isPending = req.status === 0 || req.status === "Pending";
               const isAccepted = req.status === 1 || req.status === "Accepted";
-              
+
               const statusStr = isPending ? 'Pending Review' : isAccepted ? 'Accepted' : 'Rejected';
               const imgUrl = req.pet?.imageUrls ? req.pet.imageUrls.split(',')[0] : "https://lh3.googleusercontent.com/aida-public/AB6AXuBahk49U5cTrFQLAZlaKJz07niP63W0Az4g4aSygWFt9IomZ63gBQR3-qtnEHh9epvwUmpJdCG2jI-xtSRXOcmLenY17D1JMo3mWSTWkQ5gypTwccqYnL6cg3EKa4HZL9jfdYqdcFtMIlBmKQkHbiiz4zlbtwLyJxT2oki_Ga6S-j01ky6DSa-xAiJh_eCHSdNFwUueLmrAuuHlZP69q-PnNQxHmpOM4JDPI2w5XILA2QawjB4TWAQZl9fEqj-fUoz7zrTZId1MlSI";
 
@@ -136,15 +120,15 @@ export default function RequestsDashboard() {
                         <p className="text-lg font-medium text-[#00343e]">{date}</p>
                         <p className="text-xs text-[#2c6370]">{time}</p>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-wrap items-center gap-2">
                         {isPending ? (
                           <>
-                            <button onClick={() => handleAccept(req.id)} className="flex items-center justify-center gap-1 bg-[#00656f] text-white py-2 px-5 rounded-full text-sm font-bold hover:bg-[#00555d] shadow-sm active:scale-95 transition-all">
-                              <span className="material-symbols-outlined text-[18px]">check</span>
+                            <button onClick={() => handleAccept(req.id)} className="flex-1 flex items-center justify-center gap-1 bg-[#00656f] text-white py-2 px-3 rounded-full text-sm font-bold hover:bg-[#00555d] shadow-sm active:scale-95 transition-all whitespace-nowrap">
+                              <span className="material-symbols-outlined text-[16px]">check</span>
                               Approve
                             </button>
-                            <button onClick={() => handleReject(req.id)} className="flex items-center justify-center gap-1 border border-gray-200 text-gray-600 bg-gray-50 py-2 px-5 rounded-full text-sm font-bold hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-all">
-                              <span className="material-symbols-outlined text-[18px]">close</span>
+                            <button onClick={() => handleReject(req.id)} className="flex-1 flex items-center justify-center gap-1 border border-gray-200 text-gray-600 bg-gray-50 py-2 px-3 rounded-full text-sm font-bold hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-all whitespace-nowrap">
+                              <span className="material-symbols-outlined text-[16px]">close</span>
                               Reject
                             </button>
                           </>
