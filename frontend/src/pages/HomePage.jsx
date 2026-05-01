@@ -15,11 +15,11 @@ export default function HomePage() {
   const { user } = useAuth();
 
   useEffect(() => {
-    apiClient.get('/pets', { params: { pageSize: 3 } })
+    apiClient.get('/pets')
       .then(response => {
         const data = response.data?.data || response.data;
         if (Array.isArray(data)) {
-          setFeaturedPets(data.slice(0, 3));
+          setFeaturedPets(data);
         }
       })
       .catch(err => console.error("Error fetching pets:", err));
@@ -175,7 +175,7 @@ export default function HomePage() {
               {featuredPets.length > 0 ? featuredPets.map((pet, idx) => {
                 const imgUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : "https://lh3.googleusercontent.com/aida-public/AB6AXuAFHUw8mCyhci96uVgVCrX-e9o0tXywR6WPfE9o4HGtWPxB9xaCf5iuxqdEHNbxOU4ewk0Fsw1U1GW5xLJ_QrLRfOowund1a_r5evXnA0NqZ7nMpF4SoKXClwx47Wk0EBFauekxSeWxW2Xeohze4pSfVWIKeZlTII09crZvpvMrxsCkCnj6Lx0KPrY_38axaITQSprbE90LDng_e5cEcVy_jMtpCpbOI6LqPRS20RxYlrs1iouGXzlq3uH9_CcPRfTlLBk3sJfL5wQ";
                 return (
-                  <div className={`group ${idx === 1 ? 'mt-8' : ''}`} key={pet.id}>
+                  <div className="group" key={pet.id}>
                     <div className="relative overflow-hidden rounded-t-xl rounded-b-md">
                       <img className="w-full h-96 object-cover transition-transform duration-700 group-hover:scale-110" src={imgUrl} alt={pet.name} />
                       {user?.role !== 'Admin' && user?.role !== 'Shelter' && (

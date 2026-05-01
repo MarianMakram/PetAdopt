@@ -15,8 +15,7 @@ namespace PetAdopt.Controllers
             [FromQuery] string? breed,
             [FromQuery] int? ageMin,
             [FromQuery] int? ageMax,
-            [FromQuery] string? location,
-            [FromQuery] int? pageSize)
+            [FromQuery] string? location)
         {
             var query = context.Pets.Where(p => p.Status == PetStatus.Approved).AsQueryable();
 
@@ -31,9 +30,6 @@ namespace PetAdopt.Controllers
             
             if (!string.IsNullOrEmpty(location))
                 query = query.Where(p => p.Location != null && p.Location.Contains(location));
-
-            if (pageSize.HasValue)
-                query = query.Take(pageSize.Value);
                 
             return Ok(await query.ToListAsync());
         }
