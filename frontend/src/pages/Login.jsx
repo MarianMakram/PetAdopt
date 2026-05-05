@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-
+import dog from"../assets/images/dog-login.png"
+import Sarah from"../assets/images/Sarah .png"
 // ── Icons ──────────────────────────────────────────────────────────────────
 const HeartIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
@@ -304,7 +305,7 @@ export default function LoginForm() {
 
       <div className="login-card">
         <div className="login-left">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIG163-enqIkreC06CdNSBaUC9WmjDHc4LnCSkFPB8zmIDwEotU0r9JvgAtgffIbF_auFnmVBHuPGjTmvr6r6EnUTY8yUuAU41rUL8SSa8gRgP6c-PfD--UQYfecucxmJvIqjDiKUNBlQa7T6CbiwZ6jKkHZCLNWuwoupBk6tAuAVYThO9LTUgBv6HdyQC91aZ1m2baKFv7L3MsZs8yQMT8I1rCAOWLO3HfhG4jyuI2kqukm-dygFley_oLIrXPVilLuOc0_JcUno" className="login-left-img" alt="Dog" />
+          <img src={dog} className="login-left-img" alt="Dog" />
           <div style={{ position: "relative", zIndex: 1 }}>
             <p style={{ fontFamily: "'Plus Jakarta Sans'", fontSize: 28, fontWeight: 900, margin: 0 }}>PetAdopt</p>
             <p style={{ fontSize: 13, opacity: 0.8, marginTop: 6 }}>Helping every animal find their way back home.</p>
@@ -314,7 +315,7 @@ export default function LoginForm() {
               "Finding Max was the best thing that ever happened to our family. The process was seamless and heartfelt."
             </p>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 16 }}>
-              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzFBP5HTgRYWhmsAYzfUNLOMNU1LVwIkyXTWoeyT39RBrvtNGwgr03V_ufw5l3gZor-tcZDsrLKE2WHpavX-qI_8DMS46rfiSRDGdvZ4ARFyM-6URTSEOzeJ74STe6WEEvERH_RyeHFyn-zD13MUCImrk-41idZy-_iKpAMkAAWJy9G-j8hO8RQud4rjvmJp9M0Lee3bIa6LXWLkSpvzlKUmVGWqvlCo-yxSA4T3oX76CcBgTM_IwVBxR_WsEzICafDmJ4gk0zWAM" style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(255,255,255,0.25)" }} alt="Sarah" />
+              <img src={Sarah} style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(255,255,255,0.25)" }} alt="Sarah" />
               <div>
                 <p style={{ fontSize: 13, fontWeight: 700, margin: 0 }}>Sarah Jenkins</p>
                 <p style={{ fontSize: 11, opacity: 0.6, margin: 0 }}>Golden Retriever Adopter</p>

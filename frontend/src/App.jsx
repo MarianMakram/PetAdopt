@@ -22,7 +22,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Navbar />
-      <div className="pt-20"> {/* Add padding to account for fixed navbar */}
+      <div className="pt-20 w-full overflow-x-hidden"> {/* Add padding to account for fixed navbar */}
         <Routes>
         {/* PUBLIC ROUTES */}
         <Route path="/login" element={<LoginForm />} />
