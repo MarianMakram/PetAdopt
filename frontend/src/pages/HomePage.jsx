@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import apiClient from '../services/apiClient';
 import { useAuth } from '../context/AuthContext';
-
+import dog from "../assets/images/dog.png";
+import cat from "../assets/images/cat.png";
+import Hand from "../assets/images/unnamed (4).png";
+import Walking from "../assets/images/Walking .png";
 export default function HomePage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useState({
@@ -152,7 +155,7 @@ export default function HomePage() {
 
             <div className="relative">
               <div className="absolute -top-12 -left-12 w-64 h-64 bg-[#ffc4b3]/30 rounded-full blur-3xl -z-10"></div>
-              <img alt="Elegant Golden Retriever" className="w-full h-[600px] object-cover rounded-xl shadow-2xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgZ-u68QbiDsSM_1pxRoAWKhlVJWhLX3OJkYlPyjPC7oGtWTePFDzAnnOHkLWCIHCLzdB12oDcca18QjgfL0zwPtKncJMxpcQQ_PQoev-LvkwCezsdfpVkLOiGi7_bFYlbgeI1yNMy34Cct8JCGlQadbuaMXBLawNbJo_lW-TUytHmwvp_uyxiUoH5OMt1bwzZpAfhYYryxtPUu-GDRtlDvJuG14Otjrlqnz858PevRx0YrXmUgJmR9qgLkTX1JSpm0g-h-c6WnZ8" />
+              <img alt="Elegant Golden Retriever" className="w-full h-[600px] object-cover rounded-xl shadow-2xl" src={dog} />
               <div className="absolute -bottom-6 -right-6 bg-[#ffffff] p-6 rounded-lg shadow-xl max-w-xs border border-[#81b5c5]/10">
                 <p className="text-[#9b3e20] font-headline font-bold text-lg leading-tight mb-2">"Adopting Luna was the best decision of our lives."</p>
                 <p className="text-[#2c6370] text-sm">— The Thompson Family</p>
@@ -173,7 +176,7 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               {featuredPets.length > 0 ? featuredPets.map((pet, idx) => {
-                const imgUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : "https://lh3.googleusercontent.com/aida-public/AB6AXuAFHUw8mCyhci96uVgVCrX-e9o0tXywR6WPfE9o4HGtWPxB9xaCf5iuxqdEHNbxOU4ewk0Fsw1U1GW5xLJ_QrLRfOowund1a_r5evXnA0NqZ7nMpF4SoKXClwx47Wk0EBFauekxSeWxW2Xeohze4pSfVWIKeZlTII09crZvpvMrxsCkCnj6Lx0KPrY_38axaITQSprbE90LDng_e5cEcVy_jMtpCpbOI6LqPRS20RxYlrs1iouGXzlq3uH9_CcPRfTlLBk3sJfL5wQ";
+                const imgUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : {cat};
                 return (
                   <div className="group" key={pet.id}>
                     <div className="relative overflow-hidden rounded-t-xl rounded-b-md">
@@ -216,7 +219,7 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto bg-[#00656f] rounded-xl relative p-12 md:p-24 overflow-hidden shadow-2xl">
             <div className="absolute -right-24 -bottom-24 w-[600px] h-[600px] bg-[#89e9f6] opacity-10 rounded-full"></div>
             <div className="absolute right-0 top-0 h-full w-1/2 hidden lg:block">
-              <img className="h-full w-full object-cover mix-blend-overlay opacity-50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwvdhEYBbuK552BYCMQf4E4CnRIIHUCqa79TS-gfh7ByD_RZNJ4daGo8Coakxy0t7dOkwcydxvfIwlpXwn_KggfyvBQP_f1DyzeANDTS09STIIryqGsZS306YwJkBJoyclgJs9n4Y_cJ7JmCAtAiKoOsbvhhyFudfL8qcUd5m0iyWpnEbjFz-frglp7K-bTzkNwBkPr3oEbqLtbjvPU41uvGBdWjmtjmgQNEdFG8RIJ0XThUTgDVEypY1moSJ515Ao-DCebYToxSo" alt="Hand holding paw" />
+              <img className="h-full w-full object-cover mix-blend-overlay opacity-50" src={Hand} alt="Hand holding paw" />
             </div>
             <div className="relative z-10 max-w-2xl">
               <h2 className="text-5xl font-headline font-extrabold text-[#d4f9ff] leading-tight mb-8">
@@ -240,7 +243,7 @@ export default function HomePage() {
           </div>
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="relative">
-              <img className="rounded-xl shadow-lg w-full h-[500px] object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrx75qyqk5KOjSbsTHhCIzLLoHPkPt1ezopcLleNo1RrBbZ3o_VZhWtAV7Bfl79H2PKDVpWO_WS2LLie3_x9ThjSkd6JgZmZ-TkOtGI5a0FVcjliCa1ExYRhKi4BXFo_MoQnRBIzAL9a5ty4kgcLqZEHgYk-UoqtlJQS78qENVBZp7GL7QPrazZBmy_7bORvCURD-vm_lPqORcidNcAWmpX2ZFzP8y0Jx1TGnaF12vWajifEP_l3TaxnMzSQeGsMDfNE_gAqRuvpo" alt="Walking dogs" />
+              <img className="rounded-xl shadow-lg w-full h-[500px] object-cover" src={Walking} alt="Walking dogs" />
               <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-[#fdd34d] rounded-full flex items-center justify-center p-8 text-center -rotate-12 shadow-xl border-4 border-[#e9f9ff]">
                 <p className="font-headline font-bold text-[#5c4900] text-sm">Read the "Adopted Together" Series</p>
               </div>
