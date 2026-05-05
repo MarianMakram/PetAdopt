@@ -28,6 +28,7 @@ namespace PetAdopt.Controllers
             {
                 PetId = dto.PetId,
                 AdopterId = GetCurrentUserId(),
+                OwnerId = pet.OwnerId,
                 Message = dto.Message,
                 WhyThisPet = dto.WhyThisPet,
                 Status = RequestStatus.Pending,
@@ -42,6 +43,16 @@ namespace PetAdopt.Controllers
                 pet.OwnerId,
                 "New Adoption Request",
                 $"You have a new adoption request for {pet.Name}!",
+                "Success",
+                request.Id.ToString(),
+                "AdoptionRequest"
+            );
+
+            // Notify Adopter (Confirmation)
+            await notificationService.SendNotificationAsync(
+                GetCurrentUserId(),
+                "Request Submitted",
+                $"Your adoption request for {pet.Name} has been submitted successfully.",
                 "Success",
                 request.Id.ToString(),
                 "AdoptionRequest"

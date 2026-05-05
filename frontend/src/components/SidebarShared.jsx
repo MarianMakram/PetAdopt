@@ -108,19 +108,21 @@ export default function Sidebar({ activePage, setActivePage, sidebarBottom, titl
         })}
 
         {(() => {
-          const isActive = activePage === "settings";
+          const isActive = activePage === "profile";
           return (
             <button
-              onClick={() => setActivePage("settings")}
+              onClick={() => window.location.href = "/profile"}
               onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = "#bee3ef" }}
               onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = "transparent" }}
               className="flex items-center gap-2.5 px-3 py-[9px] rounded-full text-[12px] w-full text-left transition-all"
               style={navButtonStyle(isActive)}
             >
               <div className="flex items-center justify-center w-[24px] h-[24px] rounded-full shrink-0">
-                <SettingsIcon color={isActive ? "white" : "#00818d"} isActive={isActive} />
+                <svg width="15" height="15" viewBox="0 0 24 24" fill={isActive ? "white" : "#00818d"}>
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
               </div>
-              Settings
+              Profile
             </button>
           );
         })()}

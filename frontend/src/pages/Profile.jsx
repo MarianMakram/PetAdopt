@@ -89,13 +89,6 @@ export default function ProfilePage() {
         const response = await apiClient.get('/auth/me');
         const userData = response.data.data || response.data; // Handle wrapped or unwrapped
         setUser(userData);
-        
-        // Role-based redirection
-        if (userData.role === 'Admin') {
-          navigate('/admin/users');
-        } else if (userData.role === 'Shelter') {
-          navigate('/shelter/pets');
-        }
       } catch (err) {
         console.error("Profile fetch failed", err);
         navigate("/login");
@@ -121,7 +114,7 @@ export default function ProfilePage() {
     );
   }
   const initials =
-  `${user?.firstName?.charAt(0) || ""}${user?.lastName?.charAt(0) || ""}`.toUpperCase();
+  `${user?.first_name?.charAt(0) || ""}${user?.last_name?.charAt(0) || ""}`.toUpperCase();
 
   return (
     <div
@@ -185,12 +178,12 @@ export default function ProfilePage() {
 
             {/* Fields Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
-              <ProfileField label="First Name"     value={user.firstName} />
-              <ProfileField label="Last Name"      value={user.lastName}  />
-              <ProfileField label="Email Address"  value={user.email}     />
-              <ProfileField label="Phone Number"   value={user.phone}     />
-              <ProfileField label="City"           value={user.city}      />
-              <ProfileField label="Country"        value={user.country}   />
+              <ProfileField label="First Name"     value={user.first_name} />
+              <ProfileField label="Last Name"      value={user.last_name}  />
+              <ProfileField label="Email Address"  value={user.email}      />
+              <ProfileField label="Phone Number"   value={user.phone}      />
+              <ProfileField label="City"           value={user.city}       />
+              <ProfileField label="Country"        value={user.country}    />
             </div>
 
             {/* Footer Row */}

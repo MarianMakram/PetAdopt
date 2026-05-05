@@ -30,7 +30,7 @@ namespace PetAdopt.Controllers
             
             if (!string.IsNullOrEmpty(location))
                 query = query.Where(p => p.Location != null && p.Location.Contains(location));
-
+                
             return Ok(await query.ToListAsync());
         }
 

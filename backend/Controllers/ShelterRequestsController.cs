@@ -79,6 +79,27 @@ namespace PetAdopt.Controllers
                 );
             }
 
+            // Notify all other Adopters who favorited this pet but didn't submit a request
+            var requestAdopterIds = others.Select(o => o.AdopterId).ToList();
+            requestAdopterIds.Add(request.AdopterId);
+
+            var favoritedBy = await context.Favorites
+                .Where(f => f.PetId == request.PetId && !requestAdopterIds.Contains(f.UserId))
+                .Select(f => f.UserId)
+                .ToListAsync();
+
+            foreach (var adopterId in favoritedBy)
+            {
+                await notificationService.SendNotificationAsync(
+                    adopterId,
+                    "Favorite Pet Adopted",
+                    $"The pet {request.Pet?.Name} you favorited has been adopted.",
+                    "Info",
+                    request.Pet?.Id.ToString(),
+                    "Pet"
+                );
+            }
+
             return Ok(request);
         }
 

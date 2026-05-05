@@ -1,6 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import { LogoButton, NavLinks, BellButton, HeartButton, navWrapperStyle } from "./NavbarShared";
 
 export default function FavoriteNavbar({ activePage, setActivePage }) {
+  const navigate = useNavigate();
   return (
     <nav className="w-full fixed top-0 left-0 z-50 relative">
       <div style={navWrapperStyle}>
@@ -17,7 +19,7 @@ export default function FavoriteNavbar({ activePage, setActivePage }) {
             <HeartButton />
 
             <button
-              onClick={() => setActivePage("auth")}
+              onClick={() => navigate("/profile")}
               className="flex items-center gap-1.5 text-[13px] font-semibold px-4 py-1.5 rounded-full"
               style={{
                 color: "#006770",

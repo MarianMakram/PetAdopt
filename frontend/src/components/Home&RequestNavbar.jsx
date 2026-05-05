@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { LogoButton, NavLinks, BellButton, HeartButton, navWrapperStyle } from "./NavbarShared";
 
 export default function HomeNavbar({ activePage, setActivePage }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <nav className="w-full fixed top-0 left-0 z-50">
@@ -21,7 +22,7 @@ export default function HomeNavbar({ activePage, setActivePage }) {
             <HeartButton />
 
             <button
-              onClick={() => setActivePage("auth")}
+              onClick={() => navigate("/profile")}
               className="text-[13px] font-semibold text-white px-5 py-1.5 rounded-full mr-4"
               style={{
                 background: "linear-gradient(90deg, #00838F 0%, #00BCD4 100%)",

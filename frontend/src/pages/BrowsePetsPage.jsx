@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import apiClient from '../services/apiClient';
 import { useAuth } from '../context/AuthContext';
+import Header from '../components/owner-admin/Header';
 
 export default function BrowsePetsPage() {
   const [searchParams] = useSearchParams();
@@ -11,9 +12,13 @@ export default function BrowsePetsPage() {
   const [favoriteIds, setFavoriteIds] = useState([]);
   
   const [filters, setFilters] = useState({
-    search: searchParams.get('search') || '',
+    search: searchParams.get('breed') || searchParams.get('search') || '',
     species: searchParams.get('species') || 'All Species',
-    ageRange: 'Any Age'
+    location: searchParams.get('location') || '',
+    ageRange: searchParams.get('ageMin') === '1' && searchParams.get('ageMax') === '5' ? 'Adult' 
+            : searchParams.get('ageMax') === '1' ? 'Puppy/Kitten'
+            : searchParams.get('ageMin') === '6' ? 'Senior'
+            : 'Any Age'
   });
 
   useEffect(() => {
@@ -56,13 +61,14 @@ export default function BrowsePetsPage() {
 
   const fetchPets = async () => {
     const params = {};
-    if (filters.search) params.breed = filters.search; // Assuming search maps to breed for now or update backend
+    if (filters.search) params.breed = filters.search;
+    if (filters.location) params.location = filters.location;
     if (filters.species && filters.species !== 'All Species') params.species = filters.species;
     
     if (filters.ageRange !== 'Any Age') {
-      if (filters.ageRange === '0 - 1 Years') params.ageMax = 1;
-      else if (filters.ageRange === '1 - 5 Years') { params.ageMin = 1; params.ageMax = 5; }
-      else if (filters.ageRange === '5+ Years') params.ageMin = 6;
+      if (filters.ageRange === 'Puppy/Kitten') params.ageMax = 1;
+      else if (filters.ageRange === 'Adult') { params.ageMin = 1; params.ageMax = 5; }
+      else if (filters.ageRange === 'Senior') params.ageMin = 6;
     }
 
     try {
@@ -74,8 +80,9 @@ export default function BrowsePetsPage() {
   };
 
   return (
-    <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body selection:bg-[#89e9f6] selection:text-[#00555d]">
-      <main className="pb-24 px-8 max-w-7xl mx-auto">
+    <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body selection:bg-[#89e9f6] selection:text-[#00555d] flex flex-col">
+      <Header />
+      <main className="flex-1 pb-24 px-8 max-w-7xl mx-auto w-full pt-12">
         <header className="mb-16">
           <h1 className="text-5xl md:text-6xl font-headline font-extrabold text-[#00343e] mb-4">
             Meet the <span className="text-[#00656f] italic">Residents</span>
@@ -85,10 +92,10 @@ export default function BrowsePetsPage() {
           </p>
         </header>
 
-        <div className="flex flex-col md:flex-row items-center gap-4 mb-16 bg-white p-2 rounded-[2rem] shadow-[0_10px_30px_rgba(0,0,0,0.04)] border border-[#eefcff]">
-          <div className="flex-1 flex items-center px-6 py-2 w-full">
+        <div className="flex flex-col md:flex-row items-center gap-4 mb-16 bg-white p-2 rounded-[2rem] shadow-[0_10px_30px_rgba(0,0,0,0.04)] border border-[#eefcff] flex-wrap">
+          <div className="flex-1 min-w-[200px] flex items-center px-6 py-2">
             <div className="w-full">
-              <label className="block text-[9px] font-black uppercase tracking-[0.2em] text-[#5c8a95] mb-1">Search</label>
+              <label className="block text-[9px] font-black uppercase tracking-[0.2em] text-[#5c8a95] mb-1">Breed</label>
               <input 
                 type="text" 
                 placeholder="Search by breed..." 
@@ -99,7 +106,20 @@ export default function BrowsePetsPage() {
             </div>
           </div>
           <div className="hidden md:block w-px h-10 bg-gray-100"></div>
-          <div className="w-full md:w-56 px-6 py-2">
+          <div className="flex-1 min-w-[200px] flex items-center px-6 py-2">
+            <div className="w-full">
+              <label className="block text-[9px] font-black uppercase tracking-[0.2em] text-[#5c8a95] mb-1">Location</label>
+              <input 
+                type="text" 
+                placeholder="City or region..." 
+                className="w-full bg-transparent border-none p-0 text-sm font-bold text-[#00343e] focus:ring-0 placeholder:text-[#5c8a95]/40" 
+                value={filters.location}
+                onChange={e => setFilters({...filters, location: e.target.value})}
+              />
+            </div>
+          </div>
+          <div className="hidden md:block w-px h-10 bg-gray-100"></div>
+          <div className="w-full md:w-48 px-6 py-2">
             <label className="block text-[9px] font-black uppercase tracking-[0.2em] text-[#5c8a95] mb-1">Species</label>
             <select 
               className="w-full bg-transparent border-none p-0 text-sm font-bold text-[#00343e] focus:ring-0 appearance-none cursor-pointer"
@@ -114,7 +134,7 @@ export default function BrowsePetsPage() {
             </select>
           </div>
           <div className="hidden md:block w-px h-10 bg-gray-100"></div>
-          <div className="w-full md:w-56 px-6 py-2">
+          <div className="w-full md:w-48 px-6 py-2">
             <label className="block text-[9px] font-black uppercase tracking-[0.2em] text-[#5c8a95] mb-1">Age Range</label>
             <select 
               className="w-full bg-transparent border-none p-0 text-sm font-bold text-[#00343e] focus:ring-0 appearance-none cursor-pointer"
@@ -122,9 +142,9 @@ export default function BrowsePetsPage() {
               onChange={e => setFilters({...filters, ageRange: e.target.value})}
             >
               <option>Any Age</option>
-              <option value="0 - 1 Years">0 - 1 Years</option>
-              <option value="1 - 5 Years">1 - 5 Years</option>
-              <option value="5+ Years">5+ Years</option>
+              <option value="Puppy/Kitten">Puppy/Kitten</option>
+              <option value="Adult">Adult</option>
+              <option value="Senior">Senior</option>
             </select>
           </div>
         </div>

@@ -21,8 +21,8 @@ namespace PetAdopt.Models
         public string? phone { get ; set ;}
         public string? city { get ; set ;}
         public string? country { get ; set ;}
-        public DateTime created_at { get; set; }
-        public DateTime updated_at { get; set; }
+        public DateTime created_at { get; set; } = DateTime.UtcNow;
+        public DateTime updated_at { get; set; } = DateTime.UtcNow;
 
         [JsonIgnore]
         public List<RefreshToken> RefreshTokens { get; set; } = new();

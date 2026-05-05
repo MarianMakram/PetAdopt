@@ -94,9 +94,9 @@ const UserRow = ({ user, onApprove, onReject }) => {
               <Button variant="error" onClick={() => onReject(user.id)}>Reject</Button>
             </>
           ) : user.status === "Approved" ? (
-             <span className="text-[#257F86] font-bold text-[13px]">Approved</span>
+            <span className="text-[#257F86] font-bold text-[13px]">Approved</span>
           ) : (
-             <span className="text-[#FF6B6B] font-bold text-[13px]">Rejected</span>
+            <span className="text-[#FF6B6B] font-bold text-[13px]">Rejected</span>
           )}
         </div>
       </td>
@@ -107,7 +107,7 @@ const UserRow = ({ user, onApprove, onReject }) => {
 const UserTable = ({ users, onApprove, onReject, loading }) => {
   if (loading) {
     return (
-      <div className="flex justify-center items-center p-20 bg-white rounded-3xl shadow-sm">
+      <div className="flex flex-1 justify-center items-center p-20 bg-white rounded-[32px] shadow-sm">
         <div className="w-10 h-10 border-4 border-[#E3F6F8] border-t-[#004D56] rounded-full animate-spin"></div>
       </div>
     );
@@ -115,31 +115,35 @@ const UserTable = ({ users, onApprove, onReject, loading }) => {
 
   if (users.length === 0) {
     return (
-      <div className="text-center p-20 text-[#5A8C98] bg-white rounded-3xl shadow-sm">
-        <p className="font-bold text-xl text-[#004D56]">No users found</p>
-        <p className="text-[14px] mt-2">There are no pending registrations matching your criteria.</p>
+      <div className="flex flex-1 justify-center items-center p-20 text-[#5A8C98] bg-white rounded-[32px] shadow-sm">
+        <div className="text-center">
+          <p className="font-bold text-xl text-[#004D56]">No users found</p>
+          <p className="text-[14px] mt-2">There are no pending registrations matching your criteria.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-[32px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.02)] mb-8">
-      <table className="w-full text-left border-collapse">
-        <thead>
-          <tr className="text-[#5A8C98] font-bold text-[11px] uppercase tracking-widest border-b border-gray-100">
-            <th className="px-6 py-5">Full Name</th>
-            <th className="px-6 py-5">Contact Information</th>
-            <th className="px-6 py-5">Location</th>
-            <th className="px-6 py-5">Role</th>
-            <th className="px-6 py-5 text-right pr-10">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <UserRow key={user.id} user={user} onApprove={onApprove} onReject={onReject} />
-          ))}
-        </tbody>
-      </table>
+    <div className="flex-1 bg-white rounded-[32px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col min-h-0">
+      <div className="overflow-y-auto flex-1">
+        <table className="w-full text-left border-collapse">
+          <thead className="sticky top-0 bg-white z-10">
+            <tr className="text-[#5A8C98] font-bold text-[11px] uppercase tracking-widest border-b border-gray-100">
+              <th className="px-6 py-5">Full Name</th>
+              <th className="px-6 py-5">Contact Information</th>
+              <th className="px-6 py-5">Location</th>
+              <th className="px-6 py-5">Role</th>
+              <th className="px-6 py-5 text-right pr-10">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <UserRow key={user.id} user={user} onApprove={onApprove} onReject={onReject} />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
@@ -212,42 +216,42 @@ export default function UserApprovalsPage() {
   });
 
   return (
-    <div className="flex">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#F4FBFC]">
       <Sidebar activeTab="User Approvals" />
-      <main className="flex-1 min-h-screen pb-24 md:pb-12 overflow-y-auto bg-[#F4FBFC] font-[Be_Vietnam_Pro] w-full relative">
+      <main className="flex-1 flex flex-col h-full bg-[#F4FBFC] font-[Be_Vietnam_Pro] relative overflow-hidden min-w-0">
         <Header />
-        <div className="max-w-[1200px] mx-auto px-6 md:px-10 py-12">
-        {toast && (
-          <div className={`fixed top-8 right-8 px-5 py-3 rounded-xl shadow-lg z-50 text-white font-bold text-[14px] transition-all duration-300 animate-fade-in-down ${toast.type === "success" ? "bg-[#257F86]" : "bg-[#FF6B6B]"}`}>
-            {toast.message}
+        <div className="flex-1 w-full flex flex-col px-6 md:px-10 py-8 min-h-0">
+          {toast && (
+            <div className={`fixed top-8 right-8 px-5 py-3 rounded-xl shadow-lg z-50 text-white font-bold text-[14px] transition-all duration-300 animate-fade-in-down ${toast.type === "success" ? "bg-[#257F86]" : "bg-[#FF6B6B]"}`}>
+              {toast.message}
+            </div>
+          )}
+          <div className="flex justify-between items-start mb-8 shrink-0">
+            <div className="max-w-2xl">
+              <h1 className="text-[36px] font-[Plus_Jakarta_Sans] font-bold text-[#004D56] tracking-tight mb-3">User Approvals</h1>
+              <p className="text-[15px] text-[#5A8C98] font-medium leading-relaxed max-w-[480px]">
+                Verify and manage registrations for shelters and independent pet owners joining the sanctuary ecosystem.
+              </p>
+            </div>
+            <div className="flex gap-4">
+              <StatCard title="CURRENT VIEW" count={users.length} countColor="text-[#004D56]" />
+            </div>
           </div>
-        )}
-        <div className="flex justify-between items-start mb-12">
-          <div className="max-w-2xl">
-            <h1 className="text-[36px] font-[Plus_Jakarta_Sans] font-bold text-[#004D56] tracking-tight mb-3">User Approvals</h1>
-            <p className="text-[15px] text-[#5A8C98] font-medium leading-relaxed max-w-[480px]">
-              Verify and manage registrations for shelters and independent pet owners joining the sanctuary ecosystem.
-            </p>
+          <div className="flex justify-between items-center mb-6 gap-4 shrink-0">
+            <SearchBar search={search} setSearch={setSearch} />
+            <div className="flex bg-white rounded-full p-1 shadow-sm border border-[#A7EAEF]/30">
+              {['Pending', 'Approved', 'Rejected'].map(t => (
+                <button
+                  key={t}
+                  onClick={() => setFilter(t)}
+                  className={`px-6 py-2 rounded-full text-xs font-bold transition-all ${filter === t ? 'bg-[#257F86] text-white shadow-md' : 'text-[#257F86] hover:bg-[#F4FBFC]'}`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="flex gap-4">
-            <StatCard title="CURRENT VIEW" count={users.length} countColor="text-[#004D56]" />
-          </div>
-        </div>
-        <div className="flex justify-between items-center mb-8 gap-4">
-          <SearchBar search={search} setSearch={setSearch} />
-          <div className="flex bg-white rounded-full p-1 shadow-sm border border-[#A7EAEF]/30">
-            {['Pending', 'Approved', 'Rejected'].map(t => (
-              <button
-                key={t}
-                onClick={() => setFilter(t)}
-                className={`px-6 py-2 rounded-full text-xs font-bold transition-all ${filter === t ? 'bg-[#257F86] text-white shadow-md' : 'text-[#257F86] hover:bg-[#F4FBFC]'}`}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
-        </div>
-        <UserTable users={filteredUsers} onApprove={handleApprove} onReject={handleReject} loading={loading} />
+          <UserTable users={filteredUsers} onApprove={handleApprove} onReject={handleReject} loading={loading} />
         </div>
       </main>
       <BottomNav activeTab="Approvals" />

@@ -18,13 +18,11 @@ export default function HomePage() {
   const { user } = useAuth();
 
   useEffect(() => {
-    apiClient.get('/pets', { params: { pageSize: 3 } })
+    apiClient.get('/pets')
       .then(response => {
-        const data = response.data;
-        if (data && data.data) {
-          setFeaturedPets(data.data);
-        } else if (Array.isArray(data)) {
-          setFeaturedPets(data.slice(0, 3));
+        const data = response.data?.data || response.data;
+        if (Array.isArray(data)) {
+          setFeaturedPets(data);
         }
       })
       .catch(err => console.error("Error fetching pets:", err));
@@ -83,15 +81,38 @@ export default function HomePage() {
               <p className="text-xl text-[#2c6370] max-w-lg leading-relaxed">
                 Discover your new best friend through our high-end, editorial sanctuary. We treat every animal with the dignity of a cover story.
               </p>
-              
+
+              {/* Role-Based Portal Access */}
+              {user && (
+                <div className="flex flex-wrap gap-3 pt-2">
+                  {user.role === 'Admin' ? (
+                    <>
+                      <button onClick={() => navigate('/admin/pets')} className="px-6 py-3 bg-[#00656f] text-white rounded-full font-bold text-sm shadow-lg hover:shadow-xl transition-all">Pet Approvals</button>
+                      <button onClick={() => navigate('/admin/users')} className="px-6 py-3 bg-[#ffc4b3] text-[#9b3e20] rounded-full font-bold text-sm shadow-lg hover:shadow-xl transition-all">User Approvals</button>
+                    </>
+                  ) : user.role === 'Shelter' ? (
+                    <>
+                      <button onClick={() => navigate('/shelter/pets')} className="px-6 py-3 bg-[#00656f] text-white rounded-full font-bold text-sm shadow-lg hover:shadow-xl transition-all">Dashboard</button>
+                      <button onClick={() => navigate('/shelter/pets#pets-grid')} className="px-6 py-3 bg-[#89e9f6] text-[#00555d] rounded-full font-bold text-sm shadow-lg hover:shadow-xl transition-all">My Pets</button>
+                      <button onClick={() => navigate('/shelter/requests')} className="px-6 py-3 bg-[#ffc4b3] text-[#9b3e20] rounded-full font-bold text-sm shadow-lg hover:shadow-xl transition-all">Requests</button>
+                    </>
+                  ) : user.role === 'Adopter' ? (
+                    <>
+                      <button onClick={() => navigate('/my-requests')} className="px-6 py-3 bg-[#ffc4b3] text-[#9b3e20] rounded-full font-bold text-sm shadow-lg hover:shadow-xl transition-all">My Applications</button>
+                      <button onClick={() => navigate('/favorites')} className="px-6 py-3 bg-[#89e9f6] text-[#00555d] rounded-full font-bold text-sm shadow-lg hover:shadow-xl transition-all">Favorites</button>
+                    </>
+                  ) : null}
+                </div>
+              )}
+
               <div className="bg-[#adecff] p-4 rounded-xl shadow-sm border border-[#81b5c5]/10">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="flex flex-col gap-1">
                     <label className="text-[10px] font-bold uppercase tracking-widest text-[#2c6370] px-1">Type</label>
-                    <select 
+                    <select
                       className="bg-[#ffffff] border-none rounded-sm text-sm focus:ring-2 focus:ring-[#00656f]/40"
                       value={searchParams.species}
-                      onChange={e => setSearchParams({...searchParams, species: e.target.value})}
+                      onChange={e => setSearchParams({ ...searchParams, species: e.target.value })}
                     >
                       <option>All Animals</option>
                       <option value="0">Dogs</option>
@@ -102,19 +123,19 @@ export default function HomePage() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-[10px] font-bold uppercase tracking-widest text-[#2c6370] px-1">Breed</label>
-                    <input 
-                      className="bg-[#ffffff] border-none rounded-sm text-sm focus:ring-2 focus:ring-[#00656f]/40 placeholder:text-[#2c6370]/40" 
-                      placeholder="e.g. Golden" type="text" 
+                    <input
+                      className="bg-[#ffffff] border-none rounded-sm text-sm focus:ring-2 focus:ring-[#00656f]/40 placeholder:text-[#2c6370]/40"
+                      placeholder="e.g. Golden" type="text"
                       value={searchParams.breed}
-                      onChange={e => setSearchParams({...searchParams, breed: e.target.value})}
+                      onChange={e => setSearchParams({ ...searchParams, breed: e.target.value })}
                     />
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-[10px] font-bold uppercase tracking-widest text-[#2c6370] px-1">Age</label>
-                    <select 
+                    <select
                       className="bg-[#ffffff] border-none rounded-sm text-sm focus:ring-2 focus:ring-[#00656f]/40"
                       value={searchParams.age}
-                      onChange={e => setSearchParams({...searchParams, age: e.target.value})}
+                      onChange={e => setSearchParams({ ...searchParams, age: e.target.value })}
                     >
                       <option>Any Age</option>
                       <option>Puppy/Kitten</option>
@@ -131,7 +152,7 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-            
+
             <div className="relative">
               <div className="absolute -top-12 -left-12 w-64 h-64 bg-[#ffc4b3]/30 rounded-full blur-3xl -z-10"></div>
               <img alt="Elegant Golden Retriever" className="w-full h-[600px] object-cover rounded-xl shadow-2xl" src={dog} />
@@ -152,41 +173,42 @@ export default function HomePage() {
               </div>
               <Link to="/pets" className="text-[#00656f] font-bold border-b-2 border-[#00656f]/20 hover:border-[#00656f] transition-all pb-1">View All Arrivals</Link>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               {featuredPets.length > 0 ? featuredPets.map((pet, idx) => {
                 const imgUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : {cat};
                 return (
-                <div className={`group ${idx === 1 ? 'mt-8' : ''}`} key={pet.id}>
-                  <div className="relative overflow-hidden rounded-t-xl rounded-b-md">
-                    <img className="w-full h-96 object-cover transition-transform duration-700 group-hover:scale-110" src={imgUrl} alt={pet.name} />
-                    {user?.role !== 'Admin' && user?.role !== 'Shelter' && (
-                      <button 
-                        onClick={() => toggleFavorite(pet.id)}
-                        className="absolute top-4 right-4 w-12 h-12 bg-[#ffffff]/80 backdrop-blur-md rounded-full flex items-center justify-center text-[#9b3e20] shadow-lg hover:scale-110 active:scale-95 transition-all"
-                      >
-                        <span className="material-symbols-outlined" style={{ fontVariationSettings: favoriteIds.includes(pet.id) ? "'FILL' 1" : "'FILL' 0" }}>
-                          favorite
-                        </span>
-                      </button>
-                    )}
-                  </div>
-                  <div className="bg-[#ffffff] p-8 rounded-b-md shadow-sm mt-0.5">
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 className="text-2xl font-headline font-bold text-[#00343e]">{pet.name}</h3>
-                        <p className="text-[#2c6370] flex items-center gap-1 mt-1">
-                          <span className="material-symbols-outlined text-sm">location_on</span>
-                          {pet.location || 'Sanctuary'}
-                        </p>
-                      </div>
-                      <span className="bg-[#89e9f6] text-[#00555d] px-3 py-1 rounded-full text-xs font-bold">{pet.age} {pet.ageUnit === 0 ? 'Months' : 'Years'}</span>
+                  <div className="group" key={pet.id}>
+                    <div className="relative overflow-hidden rounded-t-xl rounded-b-md">
+                      <img className="w-full h-96 object-cover transition-transform duration-700 group-hover:scale-110" src={imgUrl} alt={pet.name} />
+                      {user?.role !== 'Admin' && user?.role !== 'Shelter' && (
+                        <button
+                          onClick={() => toggleFavorite(pet.id)}
+                          className="absolute top-4 right-4 w-12 h-12 bg-[#ffffff]/80 backdrop-blur-md rounded-full flex items-center justify-center text-[#9b3e20] shadow-lg hover:scale-110 active:scale-95 transition-all"
+                        >
+                          <span className="material-symbols-outlined" style={{ fontVariationSettings: favoriteIds.includes(pet.id) ? "'FILL' 1" : "'FILL' 0" }}>
+                            favorite
+                          </span>
+                        </button>
+                      )}
                     </div>
-                    <p className="text-[#2c6370] line-clamp-2 text-sm leading-relaxed mb-6">{pet.description}</p>
-                    <Link to={`/pets/${pet.id}`}><button className="w-full py-4 bg-[#d9f6ff] text-[#00656f] font-bold rounded-full hover:bg-[#00656f] hover:text-[#d4f9ff] transition-all active:scale-95">Meet {pet.name}</button></Link>
+                    <div className="bg-[#ffffff] p-8 rounded-b-md shadow-sm mt-0.5">
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h3 className="text-2xl font-headline font-bold text-[#00343e]">{pet.name}</h3>
+                          <p className="text-[#2c6370] flex items-center gap-1 mt-1">
+                            <span className="material-symbols-outlined text-sm">location_on</span>
+                            {pet.location || 'Sanctuary'}
+                          </p>
+                        </div>
+                        <span className="bg-[#89e9f6] text-[#00555d] px-3 py-1 rounded-full text-xs font-bold">{pet.age} {pet.ageUnit === 0 ? 'Months' : 'Years'}</span>
+                      </div>
+                      <p className="text-[#2c6370] line-clamp-2 text-sm leading-relaxed mb-6">{pet.description}</p>
+                      <Link to={`/pets/${pet.id}`}><button className="w-full py-4 bg-[#d9f6ff] text-[#00656f] font-bold rounded-full hover:bg-[#00656f] hover:text-[#d4f9ff] transition-all active:scale-95">Meet {pet.name}</button></Link>
+                    </div>
                   </div>
-                </div>
-              )}) : (
+                )
+              }) : (
                 <div className="col-span-3 text-center text-[#2c6370] py-12">No featured pets available at the moment.</div>
               )}
             </div>

@@ -78,10 +78,7 @@ export default function LoginForm() {
   // Redirect if already logged in
   useEffect(() => {
     if (user && !isLoading) {
-      const roleStr = String(user.role).toLowerCase();
-      if (roleStr === 'admin') navigate('/admin/users');
-      else if (roleStr === 'shelter') navigate('/shelter/pets');
-      else navigate('/');
+      navigate('/');
     }
   }, [user, isLoading, navigate]);
 
@@ -115,13 +112,18 @@ export default function LoginForm() {
       const userData = await login(form.email, form.password);
       showSnack(`Welcome back! 🐾 Logged in as ${userData.role}.`, "success");
 
-      if (userData.role === 'Admin') navigate('/admin/users');
-      else if (userData.role === 'Shelter') navigate('/shelter/pets');
-      else navigate('/');
+      navigate('/');
     } catch (err) {
-      showSnack(err.response?.data?.message || err.response?.data || "Invalid credentials or account pending approval.", "error");
+      console.error("Login Error Details:", err);
+      const errMsg = err.response?.data?.message || err.response?.data;
+      if (err.code === "ERR_NETWORK") {
+        showSnack("Server unreachable. Please ensure the backend is running.", "error");
+      } else {
+        showSnack(errMsg || "Invalid credentials or account pending approval.", "error");
+      }
     } finally {
       setLoading(false);
+      setForm(prev => ({ ...prev, password: "" }));
     }
   };
 
@@ -129,27 +131,40 @@ export default function LoginForm() {
     <div className="login-page">
       <style>{`
         .login-page {
-          position: relative;
-          min-height: 100vh;
+          min-height: calc(100vh - 80px);
           width: 100%;
           background: linear-gradient(135deg, #d9f6ff 0%, #e9f9ff 100%);
           display: flex;
           align-items: center;
           justify-content: center;
           font-family: 'Be Vietnam Pro', sans-serif;
-          margin: 0;
-          padding: 0;
+          padding: 40px 20px;
           box-sizing: border-box;
         }
         .login-card {
           width: 100%;
-          max-width: 1000px;
-          height: 600px;
+          max-width: 1170px;
+          min-height: 600px;
           display: flex;
           background: #fff;
           border-radius: 32px;
           overflow: hidden;
-          box-shadow: 0 20px 50px rgba(0, 101, 111, 0.1);
+          box-shadow: 0 20px 60px rgba(0, 52, 62, 0.08);
+          transition: transform 0.3s ease;
+        }
+        @media (max-width: 900px) {
+          .login-card {
+            flex-direction: column;
+            max-width: 500px;
+            min-height: auto;
+          }
+          .login-left {
+            padding: 40px !important;
+            min-height: 200px;
+          }
+          .login-right {
+            padding: 40px !important;
+          }
         }
         .login-left {
           flex: 1;

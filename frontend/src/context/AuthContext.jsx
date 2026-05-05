@@ -17,12 +17,14 @@ export const AuthProvider = ({ children }) => {
   const validateSession = useCallback(async () => {
     try {
       const response = await apiClient.get('/auth/me');
-      if (response.data?.data) {
-        setUser(response.data.data);
+      const userData = response.data?.data || response.data;
+      if (userData) {
+        setUser(userData);
       }
     } catch (err) {
       console.warn("Session validation failed:", err.message);
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
       setUser(null);
     } finally {
@@ -36,10 +38,12 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const response = await apiClient.post('/auth/login', { email, password });
-    // VendorHub response structure: response.data.data
-    const { accessToken, user: userData } = response.data.data;
+    // Handle both wrapped { data: { ... } } and direct { ... } responses
+    const data = response.data?.data || response.data;
+    const { accessToken, refreshToken, user: userData } = data;
     
     localStorage.setItem('accessToken', accessToken);
+    if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
     localStorage.setItem('user', JSON.stringify(userData));
     
     setUser(userData);
@@ -48,11 +52,13 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await apiClient.post('/auth/logout');
+      const refreshToken = localStorage.getItem('refreshToken');
+      await apiClient.post('/auth/logout', { refreshToken });
     } catch (err) {
       console.error("Logout API failed", err);
     } finally {
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
       setUser(null);
     }

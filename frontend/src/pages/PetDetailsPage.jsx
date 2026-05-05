@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import apiClient from '../services/apiClient';
 import { useAuth } from '../context/AuthContext';
+import Header from '../components/owner-admin/Header';
 
 export default function PetDetailsPage() {
   const { id } = useParams();
@@ -11,6 +12,7 @@ export default function PetDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [isAdoptModalOpen, setIsAdoptModalOpen] = useState(false);
   const [adoptMessage, setAdoptMessage] = useState("");
+  const [whyThisPet, setWhyThisPet] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -20,6 +22,7 @@ export default function PetDetailsPage() {
   const [submittingReview, setSubmittingReview] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchPetDetails();
     fetchReviews();
     if (user) checkFavorite();
@@ -27,8 +30,8 @@ export default function PetDetailsPage() {
 
   const fetchPetDetails = async () => {
     try {
-      const data = await apiClient.get(`/pets/${id}`);
-      setPet(data);
+      const response = await apiClient.get(`/pets/${id}`);
+      setPet(response.data);
     } catch (err) {
       console.error("Error fetching pet details:", err);
     } finally {
@@ -38,8 +41,8 @@ export default function PetDetailsPage() {
 
   const fetchReviews = async () => {
     try {
-      const data = await apiClient.get(`/reviews/pet/${id}`);
-      if(Array.isArray(data)) setReviews(data);
+      const response = await apiClient.get(`/reviews/pet/${id}`);
+      if(Array.isArray(response.data)) setReviews(response.data);
     } catch (err) {
       console.error("Error fetching reviews:", err);
     }
@@ -47,7 +50,8 @@ export default function PetDetailsPage() {
 
   const checkFavorite = async () => {
     try {
-      const data = await apiClient.get(`/favorites`);
+      const response = await apiClient.get(`/favorites`);
+      const data = response.data;
       if(Array.isArray(data)) {
         setIsFavorite(data.some(f => f.petId === parseInt(id)));
       }
@@ -64,9 +68,11 @@ export default function PetDetailsPage() {
       await apiClient.post(`/adoption-requests`, {
         petId: parseInt(id),
         message: adoptMessage,
-        whyThisPet: "Interested in adoption"
+        whyThisPet: whyThisPet
       });
       setSuccess(true);
+      setAdoptMessage("");
+      setWhyThisPet("");
       setTimeout(() => {
         setIsAdoptModalOpen(false);
         setSuccess(false);
@@ -98,12 +104,12 @@ export default function PetDetailsPage() {
     if (!user) { navigate('/login'); return; }
     setSubmittingReview(true);
     try {
-      const data = await apiClient.post(`/reviews`, { 
+      const response = await apiClient.post(`/reviews`, { 
         petId: parseInt(id), 
         rating: newReview.rating, 
         comment: newReview.comment 
       });
-      setReviews([data, ...reviews]);
+      setReviews([response.data, ...reviews]);
       setNewReview({ rating: 5, comment: '' });
     } catch (err) {
       alert(err.response?.data || "Only adopters who adopted this pet can leave a review.");
@@ -118,23 +124,10 @@ export default function PetDetailsPage() {
   const images = pet.imageUrls ? pet.imageUrls.split(',') : ["https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80"];
 
   return (
-    <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body">
-      <nav className="fixed top-0 w-full z-50 bg-cyan-50/70 backdrop-blur-xl flex items-center justify-between px-8 py-4 border-b border-[#bff0ff]/50">
-        <Link to="/" className="text-2xl font-bold text-cyan-900">PetAdopt</Link>
-        <div className="flex gap-6">
-          <Link to="/pets" className="text-cyan-700 font-medium">Browse</Link>
-          {user ? (
-            <>
-              <Link to="/favorites" className="text-cyan-700 font-medium">Favorites</Link>
-              <Link to="/my-requests" className="text-cyan-700 font-medium">My Requests</Link>
-            </>
-          ) : (
-            <Link to="/login" className="text-cyan-700 font-medium">Login</Link>
-          )}
-        </div>
-      </nav>
+    <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body flex flex-col">
+      <Header />
 
-      <main className="pt-32 pb-24 px-8 max-w-7xl mx-auto">
+      <main className="flex-1 pt-24 pb-24 px-8 max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div className="space-y-6">
             <div className="relative h-[600px] rounded-3xl overflow-hidden shadow-sm">
@@ -153,6 +146,24 @@ export default function PetDetailsPage() {
           <div className="flex flex-col justify-center">
             <h1 className="text-6xl font-headline font-extrabold text-[#00343e] mb-2">{pet.name}</h1>
             <p className="text-2xl text-[#00656f] font-medium mb-8">{pet.breed || 'Mixed Breed'}</p>
+            
+            <div className="flex flex-col gap-4 mb-8 bg-white p-6 rounded-2xl shadow-sm border border-[#bff0ff]/50">
+              <div className="flex items-center gap-3 text-[#2c6370]">
+                <span className="material-symbols-outlined text-[#00656f]">calendar_month</span>
+                <span className="text-lg font-medium">
+                  {pet.age} {pet.ageUnit === 0 || pet.ageUnit === 'Months' ? (pet.age === 1 ? 'Month' : 'Months') : (pet.age === 1 ? 'Year' : 'Years')} old
+                </span>
+              </div>
+              <div className="flex items-center gap-3 text-[#2c6370]">
+                <span className="material-symbols-outlined text-[#00656f]">medical_services</span>
+                <span className="text-lg font-medium">{pet.healthStatus || 'Health status not provided'}</span>
+              </div>
+              <div className="flex items-center gap-3 text-[#2c6370]">
+                <span className="material-symbols-outlined text-[#00656f]">location_on</span>
+                <span className="text-lg font-medium">{pet.location || 'Location not specified'}</span>
+              </div>
+            </div>
+
             <p className="text-[#2c6370] text-lg leading-relaxed mb-10">{pet.description}</p>
 
             {user?.role === 'Admin' || user?.role === 'Shelter' ? (
@@ -220,13 +231,28 @@ export default function PetDetailsPage() {
               </div>
             ) : (
               <form onSubmit={handleAdoptSubmit}>
-                <textarea 
-                  required
-                  value={adoptMessage}
-                  onChange={e => setAdoptMessage(e.target.value)}
-                  className="w-full bg-[#f4fbfc] border-none rounded-xl px-4 py-3 min-h-[120px] mb-6"
-                  placeholder="Tell the shelter about yourself..."
-                ></textarea>
+                <div className="space-y-4 mb-8">
+                  <div>
+                    <label className="block text-xs font-bold text-[#00656f] uppercase tracking-wider mb-2">Introduction</label>
+                    <textarea 
+                      required
+                      value={adoptMessage}
+                      onChange={e => setAdoptMessage(e.target.value)}
+                      className="w-full bg-[#f4fbfc] border-none rounded-xl px-4 py-3 min-h-[100px]"
+                      placeholder="Tell the shelter about yourself..."
+                    ></textarea>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#00656f] uppercase tracking-wider mb-2">Why this pet?</label>
+                    <textarea 
+                      required
+                      value={whyThisPet}
+                      onChange={e => setWhyThisPet(e.target.value)}
+                      className="w-full bg-[#f4fbfc] border-none rounded-xl px-4 py-3 min-h-[100px]"
+                      placeholder="What makes you a great match for this pet?"
+                    ></textarea>
+                  </div>
+                </div>
                 <div className="flex gap-4 justify-end">
                   <button type="button" onClick={() => setIsAdoptModalOpen(false)} className="px-6 py-3 font-bold">Cancel</button>
                   <button type="submit" disabled={isSubmitting} className="bg-[#00656f] text-white px-8 py-3 rounded-full font-bold">

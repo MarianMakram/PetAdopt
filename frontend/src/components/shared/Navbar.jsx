@@ -41,7 +41,7 @@ export default function Navbar() {
         {user ? (
           <div className="flex items-center gap-3">
             <Link 
-              to={user.role === 'Admin' ? '/admin/users' : user.role === 'Shelter' ? '/shelter/pets' : '/profile'} 
+              to="/profile" 
               className="bg-[#00656f] text-white px-7 py-2.5 rounded-full text-sm font-bold shadow-md hover:bg-[#00525a] transition-all"
             >
               Profile
