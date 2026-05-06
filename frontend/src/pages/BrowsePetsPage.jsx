@@ -3,6 +3,7 @@ import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import apiClient from '../services/apiClient';
 import { useAuth } from '../context/AuthContext';
 import Header from '../components/owner-admin/Header';
+import dog from "../assets/images/dog1.jpg";
 
 export default function BrowsePetsPage() {
   const [searchParams] = useSearchParams();
@@ -151,7 +152,7 @@ export default function BrowsePetsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {pets.length > 0 ? pets.map((pet) => {
-            const imgUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80";
+            const imgUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : {dog};
             return (
             <Link to={`/pets/${pet.id}`} key={pet.id} className="group">
               <div className="relative overflow-hidden rounded-t-xl rounded-b-md h-80">

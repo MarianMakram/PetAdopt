@@ -1,13 +1,14 @@
 import { useState } from "react";
 import Layout, { SearchIcon, BellIcon, HeartIcon } from "./Layout";
 import { NavLinks } from "./NavbarShared";
+import profile from "../assets/images/profile.png";
 
 export default function AddPetPage({ activePage, setActivePage, children }) {
   const [search, setSearch] = useState("");
   const sidebarBottom = (
     <div className="flex items-center gap-2 px-1 mt-2 py-1">
       <img
-        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzJJN_uXhQWoDsvZyNEx9yFSEE9ZwaJNrxpCa1dR_28YaC5y1pG-VZ6fi8NoPdm8cu4Nw3Szqa-kNa0MknxISWYv6PUVrWK18fetYy07pxqSb26tlrHOBRm4VJaMcH8G_edy6KGwRgeE1f-vTfDO8XMx-WgkfQNOg0wgoJldIMGClNI0_eVx2vWPYmfamk3Jv9p7LyjIH_jFNuzX44GBtUMPANBw9eXtko0mALDiQbTkR67sbfn27NIAdhQ_kFbgqVJsiKbya9Atg"
+        src={profile}
         alt="Admin"
         className="w-[30px] h-[30px] rounded-full object-cover shrink-0"
         style={{ border: "2px solid #00A8B5" }}

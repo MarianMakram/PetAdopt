@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import apiClient from '../services/apiClient';
 import { useAuth } from '../context/AuthContext';
 import Header from '../components/owner-admin/Header';
+import dog from "../assets/images/dog1.jpg";
 
 export default function PetDetailsPage() {
   const { id } = useParams();
@@ -121,7 +122,7 @@ export default function PetDetailsPage() {
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-[#e9f9ff]">Loading...</div>;
   if (!pet) return <div className="min-h-screen flex items-center justify-center bg-[#e9f9ff]">Pet not found</div>;
 
-  const images = pet.imageUrls ? pet.imageUrls.split(',') : ["https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80"];
+  const images = pet.imageUrls ? pet.imageUrls.split(',') : [{dog}];
 
   return (
     <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body flex flex-col">

@@ -1,13 +1,12 @@
 import { useState } from "react";
 import Sidebar from "./SidebarAdd";
+import USER_IMG from "../../assets/images/user.png";
+import PET_IMG from "../../assets/images/dog1.jpg";
 
-// ── Images ──────────────────────────────────────────────────────────────────
 
-const USER_IMG =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuCllqjBLUU_YVcBJwMclBXg2UWYjfHrFB_kaHtuQtt7ZGkYC2I3WcIe8QZupa9yyjtcorIblDvtYla67QLP_3IIRmC9G8sMT03DJz1n9oS9_3REIn1CXqnftHBgrP4s1QCheWhFDYQfZ1WHZS7KRpmaapw-B0tEkJnJj82N8BLmI5KsgK_tuTmbLUody6_1D8pj3UBhwvYHvXY9CBp0ylNWt_DhCci2bfiQVYpbcZ3vkBXHvpo8JhGTnTMKzae20duva3tbuCPLkiA";
 
-const PET_IMG =
-  "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80";
+
+
 
 // ── Shared Icon ──────────────────────────────────────────────────────────────
 const Icon = ({ name, size = 20, fill = 0, className = "" }) => (

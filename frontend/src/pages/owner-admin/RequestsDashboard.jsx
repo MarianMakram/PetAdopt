@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../../components/owner-admin/Sidebar';
 import apiClient from '../../services/apiClient';
+import dog from "../../assets/images/dog2.png";
+import pow from "../../assets/images/paw.png";
 
 export default function RequestsDashboard() {
   const [requests, setRequests] = useState([]);
@@ -92,7 +94,7 @@ export default function RequestsDashboard() {
               const isAccepted = req.status === 1 || req.status === "Accepted";
 
               const statusStr = isPending ? 'Pending Review' : isAccepted ? 'Accepted' : 'Rejected';
-              const imgUrl = req.pet?.imageUrls ? req.pet.imageUrls.split(',')[0] : "https://lh3.googleusercontent.com/aida-public/AB6AXuBahk49U5cTrFQLAZlaKJz07niP63W0Az4g4aSygWFt9IomZ63gBQR3-qtnEHh9epvwUmpJdCG2jI-xtSRXOcmLenY17D1JMo3mWSTWkQ5gypTwccqYnL6cg3EKa4HZL9jfdYqdcFtMIlBmKQkHbiiz4zlbtwLyJxT2oki_Ga6S-j01ky6DSa-xAiJh_eCHSdNFwUueLmrAuuHlZP69q-PnNQxHmpOM4JDPI2w5XILA2QawjB4TWAQZl9fEqj-fUoz7zrTZId1MlSI";
+              const imgUrl = req.pet?.imageUrls ? req.pet.imageUrls.split(',')[0] : {dog};
 
               return (
                 <div key={req.id} className="bg-[#ffffff] p-6 rounded-xl border border-[#81b5c5]/10 shadow-sm hover:shadow-md transition-shadow group">
@@ -156,7 +158,7 @@ export default function RequestsDashboard() {
               </p>
             </div>
             <div className="md:w-1/2 relative">
-              <img className="rounded-xl shadow-2xl relative z-10 transform md:rotate-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXRXZKHvBl95z20DMEN_rk1mZ1D8jrIARlXuSVchilviTrMUQyurAwMJ1UcqiYk-D-aRhqw8hS4C66gtz8cSrPsB-3jmr8gNc66AZo_1CrPHuP4UqLTD1wQ8Vnndx4eMAUEH69C2d85Z4zLGn5nOBi5kOFl9nG-I_4Gr6qwXXM8sUSbelJOTmrv21OXjGXbRkWxSotd0BQf8iZrDj8-lVvuQwbwq4HAYYQvT-ao8MMYu3IjYLID-ggnc0WcCzlyhI2j0S8cTB4P2c" alt="Paw" />
+              <img className="rounded-xl shadow-2xl relative z-10 transform md:rotate-2" src={paw} alt="Paw" />
             </div>
           </section>
         </div>

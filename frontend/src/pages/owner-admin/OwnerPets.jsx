@@ -7,6 +7,7 @@ import PetGrid from '../../components/owner-admin/PetGrid';
 import PullQuote from '../../components/owner-admin/PullQuote';
 import BottomNav from '../../components/owner-admin/BottomNav';
 import apiClient from '../../services/apiClient';
+import dog from  "../../assets/images/dog1.jpg";
 
 export default function OwnerPets() {
   const [pets, setPets] = useState([]);
@@ -65,7 +66,7 @@ export default function OwnerPets() {
             statusText = s?.toString() || "Unknown";
           }
 
-          const imageUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80';
+          const imageUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : {dog};
           const ageUnitText = pet.ageUnit === 0 || pet.ageUnit === "Months" ? (pet.age === 1 ? 'month' : 'months') : (pet.age === 1 ? 'year' : 'years');
 
           return {

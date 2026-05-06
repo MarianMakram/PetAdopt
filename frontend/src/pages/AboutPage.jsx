@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import cat from "../assets/images/cat.jpg";
+import dog from "../assets/images/dog.jpg";
 
 export default function AboutPage() {
   return (
@@ -8,7 +10,7 @@ export default function AboutPage() {
         {/* Hero Section */}
         <section className="relative h-[60vh] overflow-hidden">
           <img 
-            src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=2000&q=80" 
+            src={cat} 
             alt="Dogs and cats playing" 
             className="w-full h-full object-cover grayscale-[20%] brightness-75"
           />
@@ -56,7 +58,7 @@ export default function AboutPage() {
             <div className="relative">
               <div className="aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=1000&q=80" 
+                  src={dog} 
                   alt="A person hugging a dog" 
                   className="w-full h-full object-cover"
                 />

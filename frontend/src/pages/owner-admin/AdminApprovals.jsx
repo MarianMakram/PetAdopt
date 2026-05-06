@@ -5,12 +5,14 @@ import ApprovalHeader from '../../components/owner-admin/ApprovalHeader';
 import ApprovalList from '../../components/owner-admin/ApprovalList';
 import BottomNav from '../../components/owner-admin/BottomNav';
 import apiClient from '../../services/apiClient';
+import dog from "../../assets/images/dog1.jpg";
 
 export default function AdminApprovals() {
   const [approvals, setApprovals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('PendingReview');
+  
 
   useEffect(() => {
     fetchPets();
@@ -28,7 +30,7 @@ export default function AdminApprovals() {
         submitter: `Shelter ID: ${pet.ownerId}`,
         submitterType: 'Verified Shelter',
         dateSubmitted: new Date(pet.createdAt).toLocaleDateString(),
-        imageUrl: pet.imageUrls ? pet.imageUrls.split(',')[0] : 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80',
+        imageUrl: pet.imageUrls ? pet.imageUrls.split(',')[0] : {dog},
         badgeColor: pet.status === "PendingReview" ? 'primary' : pet.status === "Approved" ? 'success' : 'error',
         status: pet.status
       }));

@@ -6,6 +6,7 @@ import dog from "../assets/images/dog.png";
 import cat from "../assets/images/cat.png";
 import Hand from "../assets/images/unnamed (4).png";
 import Walking from "../assets/images/Walking .png";
+
 export default function HomePage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useState({

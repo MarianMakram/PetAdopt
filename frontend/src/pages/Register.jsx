@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import apiClient from "../services/apiClient";
+import DOG from "../assets/images/dogs.png";
+import AVA from "../assets/images/ava.png";
 
-const DOG = "https://lh3.googleusercontent.com/aida-public/AB6AXuCYrBgva3qz5JP6OvDs5-xnorvTdlZtHezyO3tS4E99_jOIqztOQeXOjnuVs5Z1ukbLD_Pbtcdqd6B5Ayk5m5vr3r7n2A5KtuNZy0eyhu1Hw2394Avd1IYWfo5EAappZlVoC45t7PcNfGQ_nHuawGTJrD8CYSEVdlGuYtYo9vGwCtqm4cff1E3tu-kTc4hy27ICVKkq0Vu7qXfoVMKxKlDFmZhGfhW3WusR4TcuIcZIZh_9sj_ZxkaMTBfLNMp-ZIH4CmQJzClEqWQ";
-const AVA = "https://lh3.googleusercontent.com/aida-public/AB6AXuBTiaJGy13lMMVJaoDrDbspWrjIrXbpfvwufVAG8H5HIpw4XbATaosT_Umdkhdi_pVXoojgvOWPVQzqsXNXb6IaU3QSTVG9W5Dnkghsp1ta89op4VVlRqYg5Bmc0oprELM7ShQkPsIt2urxKw6KW23Y9ERAOAPA37BqKm9yeIFYx1uHrEHzOR9zOJmEqnwOve7s2VkoiKYk1_u7V714CZ20RR3qdTtWa00BLFopb2wnbgkTC2MamcYyed8IBoAjBCN9RzhPyX6yzbQ";
 
 const Icon = ({ name, size = 20, fill = 0, className = "" }) => (
   <span

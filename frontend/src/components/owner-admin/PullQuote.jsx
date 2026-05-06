@@ -1,4 +1,5 @@
 import React from 'react';
+import hand from "../../assets/images/hand.png";
 
 export default function PullQuote() {
   return (
@@ -15,7 +16,7 @@ export default function PullQuote() {
         <img 
           alt="Human hand holding dog paw" 
           className="w-full h-full object-cover" 
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmNDbr7kagk_VAE6u8_81yjP252N_y8SYyGyTmwphSnmIizldAZff1zT1VKldQMrdOu1-mIQau1m5ka6KrCI8b6Q9Dm1-tD3tiDJ65xWXGEUCiLvM5OysCXNHGSlaH9D521gwTukws9WItRG_m1hCOSQVWnOfzYRay_wwm5oH-4TqeHuCy9w196HecGaZPLpWPNrjN3AMlAARNcE5vVXrWHbO6sNI0oOmpdNDHwJgnYZ9EjwHtKN_CSDCrf28kdl9K0s2086cvJoA"
+          src={hand}
         />
       </div>
     </section>
