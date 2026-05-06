@@ -155,18 +155,35 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
                 <Field label="Image URL">
                   <div className="flex gap-2 mb-4">
                     <input
-                      className={`${inputCls}`}
-                      placeholder="https://..."
-                      type="text"
-                      value={newImageUrl}
-                      onChange={(e) => setNewImageUrl(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault();
-                          handleAddImage();
-                        }
-                      }}
-                    />
+  className={`${inputCls}`}
+  placeholder="https://..."
+  type="text"
+  value={newImageUrl}
+  onChange={(e) => setNewImageUrl(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddImage();
+    }
+  }}
+/>
+
+<label className="cursor-pointer flex items-center gap-2 text-sm text-teal-600 hover:text-teal-800 mt-1">
+  <input
+    type="file"
+    accept="image/*"
+    className="hidden"
+    onChange={(e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewImageUrl(reader.result); 
+      };
+      reader.readAsDataURL(file);
+    }}
+  />
+</label>
                     <button
                       type="button"
                       onClick={handleAddImage}
