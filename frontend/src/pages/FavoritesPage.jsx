@@ -6,7 +6,6 @@ import Header from '../components/owner-admin/Header';
 import BottomNav from '../components/owner-admin/BottomNav';
 import { useNotifications } from '../context/NotificationContext';
 
-import cat from "../assets/images/cat.png";
 
 
 export default function FavoritesPage() {

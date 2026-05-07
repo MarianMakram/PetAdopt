@@ -23,20 +23,6 @@ namespace PetAdopt.Controllers
                 .ToListAsync();
             return Ok(reviews);
         }
-        
-        [Authorize(Roles = "Shelter")]
-        [HttpGet("shelter")]
-        public async Task<IActionResult> GetShelterReviews()
-        {
-            var userId = GetCurrentUserId();
-            var reviews = await context.Reviews
-                .Include(r => r.Adopter)
-                .Include(r => r.Pet)
-                .Where(r => r.Pet!.OwnerId == userId)
-                .OrderByDescending(r => r.CreatedAt)
-                .ToListAsync();
-            return Ok(reviews);
-        }
 
         [Authorize(Roles = "Adopter")]
         [HttpPost]

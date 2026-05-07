@@ -45,7 +45,7 @@ public string Decrypt(string cipherTextBase64)
     {
         var fullCipher = Convert.FromBase64String(cipherTextBase64);
         using var aes = Aes.Create();
-        aes.Key = (byte[])_key.Clone();
+        aes.Key = (byte[])_key.Clone(); // ← same fix here
         
         var iv = new byte[16];
         var cipher = new byte[fullCipher.Length - 16];
