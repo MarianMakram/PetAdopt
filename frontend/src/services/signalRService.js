@@ -8,7 +8,7 @@ class SignalRService {
     if (!token) return;
 
     this.connection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:7001/hubs/notifications', {
+      .withUrl('/hubs/notifications', {
         accessTokenFactory: () => token
       })
       .withAutomaticReconnect()

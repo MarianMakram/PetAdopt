@@ -16,8 +16,8 @@ export default function AddEditPet() {
     const fetchPet = async () => {
       if (!isEditMode) return;
       try {
-        const data = await apiClient.get(`/shelter/pets/${id}`);
-        setInitialData(data);
+        const response = await apiClient.get(`/pets/${id}`);
+        setInitialData(response.data?.data || response.data);
       } catch (err) {
         console.error("Failed to fetch pet", err);
         setError("Failed to load pet details.");

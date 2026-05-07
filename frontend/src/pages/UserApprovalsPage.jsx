@@ -3,6 +3,7 @@ import Sidebar from "../components/owner-admin/Sidebar";
 import Header from "../components/owner-admin/Header";
 import BottomNav from "../components/owner-admin/BottomNav";
 import apiClient from "../services/apiClient";
+import { useNotifications } from "../context/NotificationContext";
 
 const Badge = ({ children, colorClass }) => (
   <span className={`px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-full ${colorClass}`}>
@@ -154,10 +155,11 @@ export default function UserApprovalsPage() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
+  const { lastDataUpdate } = useNotifications();
 
   useEffect(() => {
     fetchUsers();
-  }, [filter]);
+  }, [filter, lastDataUpdate]);
 
   const fetchUsers = async () => {
     setLoading(true);

@@ -5,13 +5,14 @@ import Header from '../components/owner-admin/Header';
 import BottomNav from '../components/owner-admin/BottomNav';
 import PullQuote from '../components/owner-admin/PullQuote';
 import apiClient from '../services/apiClient';
-import * as signalR from '@microsoft/signalr';
+import { useNotifications } from '../context/NotificationContext';
 
 export default function AdopterRequestsPage() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('Total');
   const { hash } = useLocation();
+  const { lastDataUpdate } = useNotifications();
 
   useEffect(() => {
     if (loading) return;
@@ -44,28 +45,7 @@ export default function AdopterRequestsPage() {
 
   useEffect(() => {
     fetchRequests();
-
-    const connection = new signalR.HubConnectionBuilder()
-      .withUrl("http://localhost:5251/hub/notifications", {
-        accessTokenFactory: () => localStorage.getItem("accessToken")
-      })
-      .withAutomaticReconnect()
-      .build();
-
-    connection.start()
-      .then(() => {
-        connection.on("ReceiveNotification", () => {
-          // Whenever the owner updates the status, the backend sends a notification.
-          // We instantly refetch the data to make it real-time.
-          fetchRequests();
-        });
-      })
-      .catch(e => console.error("SignalR Connection Error: ", e));
-
-    return () => {
-      connection.stop();
-    };
-  }, []);
+  }, [lastDataUpdate]);
 
   const totalCount = requests.length;
   const pendingCount = requests.filter(r => r.status === 0 || r.status === "Pending").length;
@@ -81,10 +61,10 @@ export default function AdopterRequestsPage() {
   });
 
   return (
-    <div className="flex bg-surface text-on-surface">
+    <div className="flex bg-surface text-on-surface h-screen overflow-hidden">
       <Sidebar activeTab="My Requests" />
 
-      <main className="flex-1 min-h-screen pb-24 md:pb-12 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto pb-24 md:pb-12">
         <Header />
 
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">

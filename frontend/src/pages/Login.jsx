@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import dog from"../assets/images/dog-login.png"
-import Sarah from"../assets/images/Sarah .png"
+import dog from "../assets/images/dog-login.png"
+import Sarah from "../assets/images/Sarah .png"
 // ── Icons ──────────────────────────────────────────────────────────────────
 const HeartIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">

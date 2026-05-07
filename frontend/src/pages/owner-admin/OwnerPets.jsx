@@ -7,6 +7,7 @@ import PetGrid from '../../components/owner-admin/PetGrid';
 import PullQuote from '../../components/owner-admin/PullQuote';
 import BottomNav from '../../components/owner-admin/BottomNav';
 import apiClient from '../../services/apiClient';
+import { useNotifications } from '../../context/NotificationContext';
 
 export default function OwnerPets() {
   const [pets, setPets] = useState([]);
@@ -14,6 +15,7 @@ export default function OwnerPets() {
   const [error, setError] = useState(null);
   const [activeFilter, setActiveFilter] = useState('Total');
   const { hash } = useLocation();
+  const { lastDataUpdate } = useNotifications();
 
   useEffect(() => {
     if (loading) return;
@@ -92,7 +94,7 @@ export default function OwnerPets() {
     };
 
     fetchPets();
-  }, []);
+  }, [lastDataUpdate]);
 
   const filteredPets = pets.filter(p => {
     if (activeFilter === 'Total') return true;
@@ -102,10 +104,10 @@ export default function OwnerPets() {
   const activePetsCount = pets.filter(p => p.status === 'Approved').length;
 
   return (
-    <div className="flex">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar activeTab={activeTab} />
 
-      <main className={`flex-1 min-h-screen pb-24 md:pb-12 ${activeTab === 'Dashboard' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+      <main className="flex-1 overflow-y-auto pb-24 md:pb-12">
         <Header />
 
         <div className={`${activeTab === 'Dashboard' ? 'w-full' : 'max-w-7xl mx-auto'} px-6 md:px-12 py-12`}>
@@ -131,14 +133,14 @@ export default function OwnerPets() {
             {['Total', 'Pending', 'Approved', 'Adopted', 'Rejected'].map((filter) => {
               const isActive = activeFilter === filter;
               let btnClass = "px-6 py-2.5 rounded-full text-sm font-bold transition-all whitespace-nowrap ";
-              
+
               if (filter === 'Rejected') {
-                btnClass += isActive 
-                  ? 'bg-red-100 text-red-700 shadow-md border border-red-200' 
+                btnClass += isActive
+                  ? 'bg-red-100 text-red-700 shadow-md border border-red-200'
                   : 'bg-surface-container-low text-on-surface-variant hover:bg-red-50 hover:text-red-600';
               } else {
-                btnClass += isActive 
-                  ? 'bg-secondary text-on-secondary shadow-md' 
+                btnClass += isActive
+                  ? 'bg-secondary text-on-secondary shadow-md'
                   : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high';
               }
 

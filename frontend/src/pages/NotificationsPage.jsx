@@ -42,10 +42,10 @@ export default function NotificationsPage() {
   };
 
   return (
-    <div className="flex bg-[#e9f9ff] text-[#00343e] min-h-screen font-body">
+    <div className="flex h-screen overflow-hidden bg-[#e9f9ff] text-[#00343e] font-body">
       <Sidebar activeTab="Notifications" />
 
-      <main className="flex-1 min-h-screen pb-24 md:pb-12 relative">
+      <main className="flex-1 overflow-y-auto pb-24 md:pb-12 relative">
         <Header />
 
         <div className="pt-24 pb-32 px-4 w-full">

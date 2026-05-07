@@ -5,16 +5,18 @@ import ApprovalHeader from '../../components/owner-admin/ApprovalHeader';
 import ApprovalList from '../../components/owner-admin/ApprovalList';
 import BottomNav from '../../components/owner-admin/BottomNav';
 import apiClient from '../../services/apiClient';
+import { useNotifications } from '../../context/NotificationContext';
 
 export default function AdminApprovals() {
   const [approvals, setApprovals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('PendingReview');
+  const { lastDataUpdate } = useNotifications();
 
   useEffect(() => {
     fetchPets();
-  }, [filter]);
+  }, [filter, lastDataUpdate]);
 
   const fetchPets = async () => {
     try {
@@ -61,9 +63,9 @@ export default function AdminApprovals() {
   };
 
   return (
-    <div className="flex">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar activeTab="Pet Approvals" />
-      <main className="flex-1 flex flex-col h-screen overflow-hidden bg-cyan-50/30">
+      <main className="flex-1 flex flex-col overflow-hidden bg-cyan-50/30">
         <Header />
         <div className="flex-1 overflow-y-auto p-4 md:p-12 pb-32">
           <div className="flex justify-between items-center mb-8">

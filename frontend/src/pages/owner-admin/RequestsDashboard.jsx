@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../../components/owner-admin/Sidebar';
 import apiClient from '../../services/apiClient';
+import { useNotifications } from '../../context/NotificationContext';
 
 export default function RequestsDashboard() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("Pending"); // "Pending", "Accepted", "Rejected"
+  const { lastDataUpdate } = useNotifications();
 
   const fetchRequests = async () => {
     try {
@@ -21,7 +23,7 @@ export default function RequestsDashboard() {
 
   useEffect(() => {
     fetchRequests();
-  }, []);
+  }, [lastDataUpdate]);
 
   const handleAccept = async (id) => {
     try {

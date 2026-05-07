@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import apiClient from '../services/apiClient';
 import { useAuth } from '../context/AuthContext';
+import { useNotifications } from '../context/NotificationContext';
 import dog from "../assets/images/dog.png";
 import cat from "../assets/images/cat.png";
 import Hand from "../assets/images/unnamed (4).png";
@@ -16,6 +17,7 @@ export default function HomePage() {
   const [featuredPets, setFeaturedPets] = useState([]);
   const [favoriteIds, setFavoriteIds] = useState([]);
   const { user } = useAuth();
+  const { lastDataUpdate } = useNotifications();
 
   useEffect(() => {
     apiClient.get('/pets')
@@ -34,7 +36,7 @@ export default function HomePage() {
         })
         .catch(err => console.error("Error fetching favorites:", err));
     }
-  }, [user]);
+  }, [user, lastDataUpdate]);
 
   const toggleFavorite = async (petId) => {
     if (!user) {
@@ -176,7 +178,7 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               {featuredPets.length > 0 ? featuredPets.map((pet, idx) => {
-                const imgUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : {cat};
+                const imgUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : cat;
                 return (
                   <div className="group" key={pet.id}>
                     <div className="relative overflow-hidden rounded-t-xl rounded-b-md">

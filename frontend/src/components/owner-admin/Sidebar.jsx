@@ -31,6 +31,10 @@ export default function Sidebar({ activeTab = 'Dashboard' }) {
               <span className="material-symbols-outlined">description</span>
               <span className="font-medium">Requests</span>
             </Link>
+            <Link to="/shelter/reviews" className={`${activeTab === 'Reviews' ? 'bg-gradient-to-r from-cyan-600 to-cyan-400 text-white shadow-md' : 'text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100/50 dark:hover:bg-cyan-800/50'} rounded-full mx-2 flex items-center px-4 py-3 gap-3 transition-transform hover:translate-x-1`}>
+              <span className="material-symbols-outlined">reviews</span>
+              <span className="font-medium">Reviews</span>
+            </Link>
           </>
         ) : isAdmin ? (
           <>

@@ -4,9 +4,12 @@ import apiClient from '../services/apiClient';
 import Sidebar from '../components/owner-admin/Sidebar';
 import Header from '../components/owner-admin/Header';
 import BottomNav from '../components/owner-admin/BottomNav';
+import { useNotifications } from '../context/NotificationContext';
 
 export default function FavoritesPage() {
   const [favorites, setFavorites] = useState([]);
+
+  const { lastDataUpdate } = useNotifications();
 
   useEffect(() => {
     apiClient.get('/favorites')
@@ -14,7 +17,7 @@ export default function FavoritesPage() {
         setFavorites(response.data || []);
       })
       .catch(err => console.error("Error fetching favorites:", err));
-  }, []);
+  }, [lastDataUpdate]);
 
   const removeFavorite = async (petId) => {
     try {
@@ -26,10 +29,10 @@ export default function FavoritesPage() {
   };
 
   return (
-    <div className="flex bg-[#e9f9ff] text-[#00343e] min-h-screen font-body selection:bg-[#89e9f6] selection:text-[#00555d]">
+    <div className="flex bg-[#e9f9ff] text-[#00343e] h-screen overflow-hidden font-body selection:bg-[#89e9f6] selection:text-[#00555d]">
       <Sidebar activeTab="Favorites" />
 
-      <main className="flex-1 min-h-screen pb-24 md:pb-12 overflow-y-auto relative h-screen">
+      <main className="flex-1 overflow-y-auto pb-24 md:pb-12 relative">
         <Header />
 
         <div className="pt-24 pb-32 px-6 md:px-12 max-w-7xl mx-auto">

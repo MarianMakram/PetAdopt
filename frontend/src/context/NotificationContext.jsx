@@ -12,6 +12,7 @@ export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [connection, setConnection] = useState(null);
+  const [lastDataUpdate, setLastDataUpdate] = useState(Date.now());
 
   // Fetch initial notifications
   useEffect(() => {
@@ -37,7 +38,7 @@ export const NotificationProvider = ({ children }) => {
   useEffect(() => {
     if (user) {
       const newConnection = new signalR.HubConnectionBuilder()
-        .withUrl('http://localhost:5251/hubs/notifications', {
+        .withUrl('/hubs/notifications', {
           accessTokenFactory: () => localStorage.getItem('accessToken')
         })
         .withAutomaticReconnect()
@@ -57,20 +58,29 @@ export const NotificationProvider = ({ children }) => {
       connection.start()
         .then(() => {
           console.log('Connected to SignalR Notification Hub');
+          
           connection.on('ReceiveNotification', (notification) => {
             setNotifications(prev => [notification, ...prev]);
             setUnreadCount(prev => prev + 1);
             
-            // Optional: Browser Notification
+            // Trigger a data refresh for components listening to real-time changes
+            setLastDataUpdate(Date.now());
+
             if (Notification.permission === 'granted') {
               new Notification(notification.title, { body: notification.message });
             }
+          });
+
+          // Specific data-change events if the backend supports them separately
+          connection.on('DataChanged', () => {
+            setLastDataUpdate(Date.now());
           });
         })
         .catch(error => console.error('SignalR Connection Error: ', error));
 
       return () => {
         connection.off('ReceiveNotification');
+        connection.off('DataChanged');
         connection.stop();
       };
     }
@@ -79,7 +89,7 @@ export const NotificationProvider = ({ children }) => {
   const markAsRead = async (id) => {
     try {
       await apiClient.put(`/notifications/${id}/read`);
-      setNotifications(prev => 
+      setNotifications(prev =>
         prev.map(n => n.id === id ? { ...n, is_read: true } : n)
       );
       setUnreadCount(prev => Math.max(0, prev - 1));
@@ -99,14 +109,16 @@ export const NotificationProvider = ({ children }) => {
   };
 
   return (
-    <NotificationContext.Provider value={{ 
-      notifications, 
-      unreadCount, 
-      markAsRead, 
+    <NotificationContext.Provider value={{
+      notifications,
+      unreadCount,
+      markAsRead,
       markAllAsRead,
-      fetchNotifications 
+      fetchNotifications,
+      lastDataUpdate
     }}>
       {children}
     </NotificationContext.Provider>
   );
+
 };

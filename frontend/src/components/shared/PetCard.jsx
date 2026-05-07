@@ -36,27 +36,28 @@ export default function PetCard({ pet, onDelete }) {
           <p className="text-on-surface-variant text-sm">{breed} • {age}</p>
         </div>
         <div className="flex gap-2">
-          {isAdopted ? (
-            <button className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
-              <span className="material-symbols-outlined text-[20px]">visibility</span>
-            </button>
-          ) : isRejected ? (
+          <Link to={`/pets/${id}`} className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors" title="View Details">
+            <span className="material-symbols-outlined text-[20px]">visibility</span>
+          </Link>
+          
+          {isAdopted ? null : isRejected ? (
             <>
               <button className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors" title="Check Feedback">
                 <span className="material-symbols-outlined text-[20px]">info</span>
               </button>
-              <Link to={`/shelter/pets/${id}/edit`} className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
+              <Link to={`/shelter/pets/${id}/edit`} className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors" title="Edit">
                 <span className="material-symbols-outlined text-[20px]">edit</span>
               </Link>
             </>
           ) : (
             <>
-              <Link to={`/shelter/pets/${id}/edit`} className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
+              <Link to={`/shelter/pets/${id}/edit`} className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors" title="Edit">
                 <span className="material-symbols-outlined text-[20px]">edit</span>
               </Link>
               <button
                 onClick={() => onDelete && onDelete(id)}
                 className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-error hover:bg-error hover:text-white transition-colors"
+                title="Delete"
               >
                 <span className="material-symbols-outlined text-[20px]">delete</span>
               </button>

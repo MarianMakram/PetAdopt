@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:5251/api';
+const BASE_URL = '/api';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -38,15 +38,15 @@ apiClient.interceptors.response.use(
 
         // Send the refresh token in the body as expected by the backend
         const response = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken });
-        
+
         const data = response.data?.data || response.data;
         const newAccessToken = data?.accessToken;
         const newRefreshToken = data?.refreshToken;
-        
+
         if (newAccessToken) {
           localStorage.setItem('accessToken', newAccessToken);
           if (newRefreshToken) localStorage.setItem('refreshToken', newRefreshToken);
-          
+
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return apiClient(originalRequest); // retry original request
         }
