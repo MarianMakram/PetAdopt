@@ -5,11 +5,9 @@ import ApprovalHeader from '../../components/owner-admin/ApprovalHeader';
 import ApprovalList from '../../components/owner-admin/ApprovalList';
 import BottomNav from '../../components/owner-admin/BottomNav';
 import apiClient from '../../services/apiClient';
-<<<<<<< HEAD
 import { useNotifications } from '../../context/NotificationContext';
-=======
 import dog from "../../assets/images/dog1.jpg";
->>>>>>> 5d00015 (update files)
+
 
 export default function AdminApprovals() {
   const [approvals, setApprovals] = useState([]);
