@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import dog from "../assets/images/dog-login.png";
-import Sarah from "../assets/images/Sarah .png";
 
 import dog from "../assets/images/dog-login.png"
 import Sarah from "../assets/images/Sarah .png"

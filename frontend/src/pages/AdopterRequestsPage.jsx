@@ -50,15 +50,16 @@ export default function AdopterRequestsPage() {
   }, [lastDataUpdate]);
 
   const totalCount = requests.length;
-  const pendingCount = requests.filter(r => r.status === 0 || r.status === "Pending").length;
-  const approvedCount = requests.filter(r => r.status === 1 || r.status === "Accepted").length;
-  const rejectedCount = requests.filter(r => r.status === 2 || r.status === "Rejected").length;
+  const pendingCount = requests.filter(r => { const s = (r.status || "").toString().toLowerCase(); return s === "0" || s === "pending"; }).length;
+  const approvedCount = requests.filter(r => { const s = (r.status || "").toString().toLowerCase(); return s === "1" || s === "accepted"; }).length;
+  const rejectedCount = requests.filter(r => { const s = (r.status || "").toString().toLowerCase(); return s === "2" || s === "rejected"; }).length;
 
   const filteredRequests = requests.filter(r => {
+    const status = (r.status || "").toString().toLowerCase();
     if (activeFilter === 'Total') return true;
-    if (activeFilter === 'Pending') return r.status === 0 || r.status === "Pending";
-    if (activeFilter === 'Approved') return r.status === 1 || r.status === "Accepted";
-    if (activeFilter === 'Rejected') return r.status === 2 || r.status === "Rejected";
+    if (activeFilter === 'Pending') return status === "0" || status === "pending";
+    if (activeFilter === 'Approved') return status === "1" || status === "accepted";
+    if (activeFilter === 'Rejected') return status === "2" || status === "rejected";
     return true;
   });
 
@@ -151,12 +152,13 @@ export default function AdopterRequestsPage() {
             ) : (
               filteredRequests.map((req) => {
                 const pet = req.pet;
-                const imgUrl = pet?.imageUrls ? pet.imageUrls.split(',')[0] : {dog};
+                const imgUrl = pet?.imageUrls ? pet.imageUrls.split(',')[0] : dog;
 
+                const status = (req.status || "").toString().toLowerCase();
                 let badgeClass = "bg-surface-container-high text-on-surface border-outline-variant/30";
                 let badgeText = "Pending";
-                if (req.status === 1 || req.status === "Accepted") { badgeClass = "bg-secondary text-on-secondary border-secondary"; badgeText = "Approved"; }
-                else if (req.status === 2 || req.status === "Rejected") { badgeClass = "bg-red-100 text-red-800 border-red-200"; badgeText = "Rejected"; }
+                if (status === "1" || status === "accepted") { badgeClass = "bg-secondary text-on-secondary border-secondary"; badgeText = "Approved"; }
+                else if (status === "2" || status === "rejected") { badgeClass = "bg-red-100 text-red-800 border-red-200"; badgeText = "Rejected"; }
 
                 return (
                   <div key={req.id} className="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm border border-outline-variant/15 hover:shadow-md transition-all group flex flex-col">

@@ -22,7 +22,8 @@ namespace PetAdopt.Controllers
             var requests = await context.AdoptionRequests
                 .Include(r => r.Pet)
                 .Include(r => r.Adopter)
-                .Where(r => r.Pet != null && r.Pet.OwnerId == userId)
+                .Where(r => r.OwnerId == userId)
+                .OrderByDescending(r => r.RequestedAt)
                 .ToListAsync();
             return Ok(requests);
         }

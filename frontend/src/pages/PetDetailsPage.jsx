@@ -137,7 +137,6 @@ export default function PetDetailsPage() {
     </div>
   );
 
-
   if (!pet || !pet.name) return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center gap-6 text-center px-4">
       <span className="material-symbols-outlined text-6xl text-cyan-200">sentiment_dissatisfied</span>

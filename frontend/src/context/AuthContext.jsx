@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }) => {
       const response = await apiClient.get('/auth/me');
       const userData = response.data?.data || response.data;
       if (userData) {
+        localStorage.setItem('user', JSON.stringify(userData));
         setUser(userData);
       }
     } catch (err) {
@@ -41,11 +42,11 @@ export const AuthProvider = ({ children }) => {
     // Handle both wrapped { data: { ... } } and direct { ... } responses
     const data = response.data?.data || response.data;
     const { accessToken, refreshToken, user: userData } = data;
-    
+
     localStorage.setItem('accessToken', accessToken);
     if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
     localStorage.setItem('user', JSON.stringify(userData));
-    
+
     setUser(userData);
     return userData;
   };

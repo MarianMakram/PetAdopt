@@ -14,7 +14,6 @@ export default function AdminApprovals() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('PendingReview');
-  
   const { lastDataUpdate } = useNotifications();
 
   useEffect(() => {

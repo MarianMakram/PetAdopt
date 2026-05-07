@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../../components/owner-admin/Sidebar';
 import apiClient from '../../services/apiClient';
-
 import { useNotifications } from '../../context/NotificationContext';
 import dog from "../../assets/images/dog2.png";
-import pow from "../../assets/images/paw.png";
-
+import paw from "../../assets/images/paw.png";
 
 
 export default function RequestsDashboard() {
@@ -51,9 +49,10 @@ export default function RequestsDashboard() {
   };
 
   const filteredRequests = requests.filter(r => {
-    if (filter === "Pending") return r.status === 0 || r.status === "Pending";
-    if (filter === "Accepted") return r.status === 1 || r.status === "Accepted";
-    if (filter === "Rejected") return r.status === 2 || r.status === "Rejected";
+    const status = (r.status || "").toString().toLowerCase();
+    if (filter === "Pending") return status === "0" || status === "pending";
+    if (filter === "Accepted") return status === "1" || status === "accepted";
+    if (filter === "Rejected") return status === "2" || status === "rejected";
     return false;
   });
 
@@ -91,15 +90,16 @@ export default function RequestsDashboard() {
               const petName = req.pet?.name || 'Unknown Pet';
               const breed = req.pet?.breed || 'Unknown';
               const age = req.pet?.age ? `${req.pet.age} ${req.pet.ageUnit === 0 ? 'Months' : 'Years'}` : '';
-              const adopterName = req.adopter?.name || `User ID: ${req.adopterId}`;
+              const adopterName = req.adopter ? `${req.adopter.first_name || req.adopter.firstName} ${req.adopter.last_name || req.adopter.lastName}` : `User ID: ${req.adopterId}`;
               const date = new Date(req.requestedAt).toLocaleDateString();
               const time = new Date(req.requestedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-              const isPending = req.status === 0 || req.status === "Pending";
-              const isAccepted = req.status === 1 || req.status === "Accepted";
+              const status = (req.status || "").toString().toLowerCase();
+              const isPending = status === "0" || status === "pending";
+              const isAccepted = status === "1" || status === "accepted";
 
               const statusStr = isPending ? 'Pending Review' : isAccepted ? 'Accepted' : 'Rejected';
-              const imgUrl = req.pet?.imageUrls ? req.pet.imageUrls.split(',')[0] : {dog};
+              const imgUrl = req.pet?.imageUrls ? req.pet.imageUrls.split(',')[0] : dog;
 
               return (
                 <div key={req.id} className="bg-[#ffffff] p-6 rounded-xl border border-[#81b5c5]/10 shadow-sm hover:shadow-md transition-shadow group">

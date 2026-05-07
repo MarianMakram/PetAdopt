@@ -34,7 +34,6 @@ namespace PetAdopt.Services
 
             if (user is null) throw new Exception("INVALID_CREDENTIALS");
 
-            // Only shelters need admin approval — adopters can log in freely
             if (user.role == Role.Shelter)
             {
                 if (user.account_status == Status.Pending)
@@ -44,7 +43,7 @@ namespace PetAdopt.Services
                     throw new Exception("ACCOUNT_DISABLED");
             }
 
-            // Adopters can still be suspended/rejected by admin if needed
+          
             if (user.role == Role.Adopter && 
                 (user.account_status == Status.Suspended || user.account_status == Status.Rejected))
                 throw new Exception("ACCOUNT_DISABLED");
@@ -70,8 +69,8 @@ namespace PetAdopt.Services
                     LastName = user.last_name,
                     Role = user.role.ToString(),
                     Phone = _encryptionService.Decrypt(user.phone ?? ""),
-                    City = user.city,
-                    Country = user.country
+                    City = user.city ?? string.Empty,
+                    Country = user.country ?? string.Empty
                 }
             };
         }
@@ -87,7 +86,6 @@ namespace PetAdopt.Services
             var refreshToken = user.RefreshTokens.FirstOrDefault(t => t.Token == token);
             if (refreshToken == null || !refreshToken.IsActive) return null;
 
-            // Rotate token (Task 2B)
             refreshToken.Revoked = DateTime.UtcNow;
             var newRefreshToken = GenerateRefreshToken(user.id);
             user.RefreshTokens.Add(newRefreshToken);
@@ -107,8 +105,8 @@ namespace PetAdopt.Services
                     LastName = user.last_name,
                     Role = user.role.ToString(),
                     Phone = _encryptionService.Decrypt(user.phone ?? ""),
-                    City = user.city,
-                    Country = user.country
+                    City = user.city ?? string.Empty,
+                    Country = user.country ?? string.Empty
                 }
             };
         }
@@ -143,7 +141,6 @@ namespace PetAdopt.Services
 
             user.password_hash = new PasswordHasher<User>().HashPassword(user, request.Password);
 
-            // User Permissions Management (Task 2D)
             if (user.role == Role.Shelter)
             {
                 user.account_status = Status.Pending;
@@ -156,7 +153,6 @@ namespace PetAdopt.Services
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            // Notify Admins if it's a Shelter registration
             if (user.role == Role.Shelter)
             {
                 var admins = await _context.Users.Where(u => u.role == Role.Admin).ToListAsync();
@@ -201,8 +197,8 @@ namespace PetAdopt.Services
                 LastName = user.last_name,
                 Email = user.email,
                 Phone = _encryptionService.Decrypt(user.phone ?? ""), // AES Decryption
-                City = user.city,
-                Country = user.country
+                City = user.city ?? string.Empty,
+                Country = user.country ?? string.Empty
             };
         }
 

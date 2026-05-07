@@ -153,22 +153,24 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
                 </p>
 
                 <Field label="Image URL">
-                  <div className="flex gap-2 mb-4">
-                    <input
-  className={`${inputCls}`}
-  placeholder="https://..."
-  type="text"
-  value={newImageUrl}
-  onChange={(e) => setNewImageUrl(e.target.value)}
-  onKeyDown={(e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleAddImage();
-    }
-  }}
-/>
+                    <div className="flex gap-2 mb-4">
+                      
+                      {/* Input URL */}
+                      <input
+                        className={`${inputCls}`}
+                        placeholder="https://..."
+                        type="text"
+                        value={newImageUrl}
+                        onChange={(e) => setNewImageUrl(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddImage();
+                          }
+                        }}
+                      />
 
-<label className="cursor-pointer flex items-center gap-2 text-sm text-teal-600 hover:text-teal-800 mt-1">
+                      <label className="cursor-pointer">
   <input
     type="file"
     accept="image/*"
@@ -176,23 +178,34 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
     onChange={(e) => {
       const file = e.target.files[0];
       if (!file) return;
+
       const reader = new FileReader();
       reader.onloadend = () => {
-        setNewImageUrl(reader.result); 
+        setNewImageUrl(reader.result);
       };
       reader.readAsDataURL(file);
     }}
   />
+
+  <div className="px-4 py-2 rounded-xl border border-[#00656f] text-[#00656f] font-bold text-xs hover:bg-[#00656f]/5 transition-colors whitespace-nowrap flex items-center gap-2">
+    <span className="material-symbols-outlined text-base">
+      upload
+    </span>
+    Upload from device
+  </div>
 </label>
-                    <button
-                      type="button"
-                      onClick={handleAddImage}
-                      className="px-4 py-2 rounded-xl border border-[#00656f] text-[#00656f] font-bold text-xs hover:bg-[#00656f]/5 transition-colors whitespace-nowrap"
-                    >
-                      Add Image
-                    </button>
-                  </div>
-                </Field>
+
+                      {/* Add button */}
+                      <button
+                        type="button"
+                        onClick={handleAddImage}
+                        className="px-4 py-2 rounded-xl border border-[#00656f] text-[#00656f] font-bold text-xs hover:bg-[#00656f]/5 transition-colors whitespace-nowrap"
+                      >
+                        Add Image
+                      </button>
+
+                    </div>
+                  </Field>
 
                 {images.length > 0 ? (
                   <div className="grid grid-cols-2 gap-2.5">
