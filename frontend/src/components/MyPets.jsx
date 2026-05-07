@@ -1,5 +1,9 @@
 import Layout from "./Layout";
 import { SidebarUserCard } from "./MyPetsSidebar";
+import dog1 from "../assets/images/dog3.png";
+import cat1 from "../assets/images/cat1.png";
+import dog2 from "../assets/images/dog4.png";
+import dog3 from "../assets/images/dog5.png";
 
 const PETS = [
   {
@@ -8,7 +12,7 @@ const PETS = [
     breed: "Beagle",
     age: "2 years old",
     status: "approved",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuA7sQNWCjNug-gjgfVgROVfp2Z5EoSdSFBHfJTd9u5MzfP0vl1ZGiAam0rjGnngdabz4LVglMiyudZXxlbGVcGsFjEvi4pOf59DV2vhFR5gt1axM-9dwgBjrE_51KvUzjr-gqNGaObEb4zc20Tm4VmqgbNCX8lWjziaGOTBI_wIETg44mXbJCwwCYCKotgoIxNildk-mRK9vqR2wZWGHTFYEu6rmREa-JFGUIgX_S1KUyN2-h2hpV9IW6z9NXsXWtW2LZEUapYLhD0",
+    img: {dog1},
   },
   {
     id: 2,
@@ -16,7 +20,7 @@ const PETS = [
     breed: "Domestic Shorthair",
     age: "1 year old",
     status: "pending-admin",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDbj6pz-mYfztmV3cHr6dbyA8bh8xGkUjqAMj-lP59u4MHIEYBmtX2T2LTdBOB-Fq_Ts4UMtBb5rD2QWbOA-SbIsvDEPlfGoUV29h8newybqwPvV2j8TvZqTxRFoZWTwC3ohQtsOo8ooNl-K6AL_BuPvNYTUZDKTLyZtK39avXJ5ppSk-rMXkMRPtjTDzShns84Btk4EtpU6U9jnbfEE7OB4c14nAuaDmZ8OgoXAAwRDwhmXWRzM8ZbsRZuF0ZpDui9mdS9PyK26Wk",
+    img: {cat1},
   },
   {
     id: 3,
@@ -24,7 +28,7 @@ const PETS = [
     breed: "Golden Retriever",
     age: "4 years old",
     status: "adopted",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCLKaGlC86iwJykZTgFq6jj3NrmHEyPzNgeWhD3liNbqv9UaoC2yQP4570L_aH4ZZZwe9DoCN_mYy1fRS_m9gIjZggISIZTKmGSwxBxnnJzFoctEiuQw2poGMCGELxsrv8xY04fx6S8Jok1f6M_II5lscg_xfZq_zJ4VS6KhN-zOA_ljaVY2ClSjW-Y5dKJ_yrjgZFJFkktrEk7OfhML8SXAri48Tv2oEUDJD2aT7yqODA7FpH9quX4IWr3sAjUW4jrWfXOYMaysJI",
+    img: {dog2},
     grayscale: true,
   },
   {
@@ -33,7 +37,7 @@ const PETS = [
     breed: "Frenchie",
     age: "3 years old",
     status: "rejected",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDzi_kp-DrA59E4lCKroOtpICMnMhgpp-_4M55NxUTz0cGZIaXra-W1mel3MCzFIr8yDveer62V4ucmjK5tW7a9TPZDJXYR0nQslZgTDDfQT4bAy9ovrm8xOaGdqNsRRsYvBfbg3KPhoWI91gkh8Htvx1qFM-J9UkwbNCz_z6jlwzPrEx5TBTraUepGdORtIr4G34cghQLX1QBi77MrK6zi6pG-Q6TPOD_LFlC1SPVv5fKhvKyWQrIKPGPYS8FofcVdY_ASdRPWfTk",
+    img: {dog3},
   },
 ];
 

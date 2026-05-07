@@ -6,6 +6,8 @@ import BottomNav from '../components/owner-admin/BottomNav';
 import PullQuote from '../components/owner-admin/PullQuote';
 import apiClient from '../services/apiClient';
 import { useNotifications } from '../context/NotificationContext';
+import * as signalR from '@microsoft/signalr';
+import dog from "../assets/images/dog1.jpg";
 
 export default function AdopterRequestsPage() {
   const [requests, setRequests] = useState([]);
@@ -149,7 +151,7 @@ export default function AdopterRequestsPage() {
             ) : (
               filteredRequests.map((req) => {
                 const pet = req.pet;
-                const imgUrl = pet?.imageUrls ? pet.imageUrls.split(',')[0] : "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80";
+                const imgUrl = pet?.imageUrls ? pet.imageUrls.split(',')[0] : {dog};
 
                 let badgeClass = "bg-surface-container-high text-on-surface border-outline-variant/30";
                 let badgeText = "Pending";

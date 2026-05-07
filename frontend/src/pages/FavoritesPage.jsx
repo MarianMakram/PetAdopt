@@ -6,6 +6,9 @@ import Header from '../components/owner-admin/Header';
 import BottomNav from '../components/owner-admin/BottomNav';
 import { useNotifications } from '../context/NotificationContext';
 
+import cat from "../assets/images/cat.png";
+
+
 export default function FavoritesPage() {
   const [favorites, setFavorites] = useState([]);
 
@@ -40,7 +43,7 @@ export default function FavoritesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {favorites.length > 0 ? favorites.map((fav) => {
               const pet = fav.pet;
-              const imgUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : "https://lh3.googleusercontent.com/aida-public/AB6AXuAFHUw8mCyhci96uVgVCrX-e9o0tXywR6WPfE9o4HGtWPxB9xaCf5iuxqdEHNbxOU4ewk0Fsw1U1GW5xLJ_QrLRfOowund1a_r5evXnA0NqZ7nMpF4SoKXClwx47Wk0EBFauekxSeWxW2Xeohze4pSfVWIKeZlTII09crZvpvMrxsCkCnj6Lx0KPrY_38axaITQSprbE90LDng_e5cEcVy_jMtpCpbOI6LqPRS20RxYlrs1iouGXzlq3uH9_CcPRfTlLBk3sJfL5wQ";
+              const imgUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : {cat};
               return (
                 <div key={fav.id} className="group relative">
                   <Link to={`/pets/${pet.id}`} className="block relative overflow-hidden rounded-t-xl rounded-b-md">

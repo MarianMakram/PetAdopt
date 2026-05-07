@@ -1,5 +1,7 @@
 import Layout, { BellIcon, HeartIcon } from "./Layout";
-import { NavLinks } from "./NavbarShared"
+import { NavLinks } from "./NavbarShared";
+import profile from "../assets/images/profile1.png";
+
 
 export default function RequestsPage({ activePage, setActivePage, children }) {
 
@@ -32,7 +34,7 @@ export default function RequestsPage({ activePage, setActivePage, children }) {
       >
         <div className="w-7 h-7 rounded-full overflow-hidden">
           <img
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIfohqwvv6uC5tx-WYqqegSGX8ywuxbJ054PEKUchyK_uQtFD2zUXcFUpqPz8Jll2om-1zE7QKWwibM1ckfPfO8KxMX4VNBfjBOu-OqqjYetNZXS0fru53QGO2xmzivAVwT9gD1bdggjPq_brK-S6gIsXgWH8D1vFFvPLC3ZwZCJbNQv4m6v3AAMKCQ4xDN7zVwOXRmGLi5LEtab2PbGVVycEgbCK7GPFYxLJCzsFXg9evLB7-JKm8CmEvKhcM-_WXMPAayy9Dlq4"
+            src={profile}
             alt="Profile"
             className="w-full h-full object-cover"
           />

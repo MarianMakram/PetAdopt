@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import apiClient from '../services/apiClient';
 import { useAuth } from '../context/AuthContext';
+
 import { formatDistanceToNow } from 'date-fns';
+import Header from '../components/owner-admin/Header';
+import dog from "../assets/images/dog1.jpg";
 
 export default function PetDetailsPage() {
   const { id } = useParams();
@@ -145,7 +148,7 @@ export default function PetDetailsPage() {
     </div>
   );
 
-  const images = pet.imageUrls ? pet.imageUrls.split(',') : ["https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80"];
+  const images = pet.imageUrls ? pet.imageUrls.split(',') : [{dog}];
 
   return (
     <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body selection:bg-cyan-100">
