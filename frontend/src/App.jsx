@@ -6,7 +6,7 @@ import AddEditPet from './pages/owner-admin/AddEditPet';
 import UserApprovalsPage from './pages/UserApprovalsPage';
 import HomePage from './pages/HomePage/HomePage';
 import BrowsePetsPage from './pages/BrowsePetsPage';
-import PetDetailsPage from './pages/PetDetailsPage';
+import PetDetailsPage from './pages/PetDetailsPage/PetDetailsPage';
 import FavoritesPage from './pages/FavoritesPage';
 import AboutPage from './pages/AboutPage/About Page';
 import NotificationsPage from './pages/NotificationsPage';

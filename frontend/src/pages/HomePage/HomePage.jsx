@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import apiClient from '../services/apiClient';
-import { useAuth } from '../context/AuthContext';
-import dog from "../assets/images/dog.png";
-import cat from "../assets/images/cat.png";
-import Hand from "../assets/images/unnamed (4).png";
-import Walking from "../assets/images/Walking .png";
+import apiClient from "../../services/apiClient";
+import { useAuth } from "../../context/AuthContext";
+import dog from "../../assets/images/dog.png";
+import cat from "../../assets/images/cat.png";
+import Hand from "../../assets/images/unnamed (4).png";
+import Walking from "../../assets/images/Walking .png";
 
 import HomeHero from './HomeHero';
 import HomeFeaturedPets from './HomeFeaturedPets';
