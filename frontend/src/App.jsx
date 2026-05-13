@@ -8,7 +8,7 @@ import HomePage from './pages/HomePage';
 import BrowsePetsPage from './pages/BrowsePetsPage';
 import PetDetailsPage from './pages/PetDetailsPage';
 import FavoritesPage from './pages/FavoritesPage';
-import AboutPage from './pages/AboutPage';
+import AboutPage from './pages/AboutPage/About Page';
 import NotificationsPage from './pages/NotificationsPage';
 import AdopterRequestsPage from './pages/AdopterRequestsPage';
 import RequestsDashboard from './pages/owner-admin/RequestsDashboard';
