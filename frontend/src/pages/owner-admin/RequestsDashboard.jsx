@@ -117,10 +117,6 @@ export default function RequestsDashboard() {
                       <div>
                         <p className="text-xs text-[#2c6370] font-bold uppercase tracking-widest mb-1">Adopter</p>
                         <p className="text-lg font-medium text-[#00343e]">{adopterName}</p>
-                        <button className="text-[#00656f] text-xs font-bold hover:underline flex items-center gap-1 mt-1">
-                          View Adopter Profile
-                          <span className="material-symbols-outlined text-[14px]">open_in_new</span>
-                        </button>
                       </div>
                       <div>
                         <p className="text-xs text-[#2c6370] font-bold uppercase tracking-widest mb-1">Date Submitted</p>

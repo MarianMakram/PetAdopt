@@ -16,6 +16,12 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
 
+// Increase request size for base64 images
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 50 * 1024 * 1024; // 50MB
+});
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -77,6 +83,7 @@ var app = builder.Build();
 DatabaseSeeder.Seed(app.Services);
 
 app.UseCors("AllowFrontend");
+app.UseStaticFiles();
 
 if (app.Environment.IsDevelopment())
 {

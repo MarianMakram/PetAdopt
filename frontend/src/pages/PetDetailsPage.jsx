@@ -148,7 +148,7 @@ export default function PetDetailsPage() {
     </div>
   );
 
-  const images = pet.imageUrls ? pet.imageUrls.split(',') : [{dog}];
+  const images = pet.imageUrls ? pet.imageUrls.split(',') : [dog];
 
   return (
     <div className="w-full bg-[#e9f9ff] text-[#00343e] min-h-screen font-body selection:bg-cyan-100">

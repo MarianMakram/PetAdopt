@@ -811,3 +811,4 @@ C:\Users\marco\Music\PetAdopt\backend\bin\Debug\net10.0\PetAdopt.runtimeconfig.j
 C:\Users\marco\Music\PetAdopt\backend\bin\Debug\net10.0\PetAdopt.pdb
 C:\Users\marco\Music\PetAdopt\backend\obj\Debug\net10.0\PetAdopt.genruntimeconfig.cache
 C:\Users\marco\Music\PetAdopt\backend\obj\Debug\net10.0\ref\PetAdopt.dll
+C:\Users\marco\Music\PetAdopt\backend\bin\Debug\net10.0\PetAdopt.staticwebassets.runtime.json

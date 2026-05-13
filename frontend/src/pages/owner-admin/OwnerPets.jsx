@@ -69,7 +69,7 @@ export default function OwnerPets() {
             statusText = s?.toString() || "Unknown";
           }
 
-          const imageUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : {dog};
+          const imageUrl = pet.imageUrls ? pet.imageUrls.split(',')[0] : dog;
           const ageUnitText = pet.ageUnit === 0 || pet.ageUnit === "Months" ? (pet.age === 1 ? 'month' : 'months') : (pet.age === 1 ? 'year' : 'years');
 
           return {

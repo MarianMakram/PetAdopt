@@ -2,6 +2,7 @@ import { useState } from "react";
 import Sidebar from "./SidebarAdd";
 import USER_IMG from "../../assets/images/user.png";
 import PET_IMG from "../../assets/images/dog1.jpg";
+import apiClient from "../../services/apiClient";
 
 
 
@@ -45,6 +46,7 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
   const [gender, setGender] = useState(initialData?.gender === 1 ? "female" : "male");
   const [images, setImages] = useState(initialData?.imageUrls ? initialData.imageUrls.split(',') : []);
   const [newImageUrl, setNewImageUrl] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   // UI Only State (Not mapped to current backend)
   const [description, setDescription] = useState(initialData?.description || "");
@@ -175,23 +177,34 @@ export default function AddPets({ initialData, onSubmit, onCancel, isEditMode })
     type="file"
     accept="image/*"
     className="hidden"
-    onChange={(e) => {
+    onChange={async (e) => {
       const file = e.target.files[0];
       if (!file) return;
 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewImageUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        setUploadingImage(true);
+        const response = await apiClient.post('/uploads', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        const imageUrl = response.data.url;
+        setImages(prev => [...prev, imageUrl]);
+      } catch (error) {
+        console.error("Upload failed", error);
+        alert("Image upload failed. Please try again.");
+      } finally {
+        setUploadingImage(false);
+      }
     }}
   />
 
-  <div className="px-4 py-2 rounded-xl border border-[#00656f] text-[#00656f] font-bold text-xs hover:bg-[#00656f]/5 transition-colors whitespace-nowrap flex items-center gap-2">
+  <div className={`px-4 py-2 rounded-xl border border-[#00656f] text-[#00656f] font-bold text-xs hover:bg-[#00656f]/5 transition-colors whitespace-nowrap flex items-center gap-2 ${uploadingImage ? 'opacity-50 cursor-not-allowed' : ''}`}>
     <span className="material-symbols-outlined text-base">
-      upload
+      {uploadingImage ? 'sync' : 'upload'}
     </span>
-    Upload from device
+    {uploadingImage ? 'Uploading...' : 'Upload from device'}
   </div>
 </label>
 
