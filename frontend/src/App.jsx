@@ -4,7 +4,7 @@ import OwnerPets from './pages/owner-admin/OwnerPets';
 import AdminApprovals from './pages/owner-admin/AdminApprovals';
 import AddEditPet from './pages/owner-admin/AddEditPet';
 import UserApprovalsPage from './pages/UserApprovalsPage';
-import HomePage from './pages/HomePage';
+import HomePage from './pages/HomePage/HomePage';
 import BrowsePetsPage from './pages/BrowsePetsPage';
 import PetDetailsPage from './pages/PetDetailsPage';
 import FavoritesPage from './pages/FavoritesPage';
