@@ -55,9 +55,10 @@ export default function HomePage() {
     if (searchParams.species && searchParams.species !== 'All Animals') params.append('species', searchParams.species);
     if (searchParams.breed) params.append('breed', searchParams.breed);
     if (searchParams.age && searchParams.age !== 'Any Age') {
-      if (searchParams.age === 'Puppy/Kitten') params.append('ageMax', '1');
-      else if (searchParams.age === 'Adult') { params.append('ageMin', '1'); params.append('ageMax', '5'); }
-      else if (searchParams.age === 'Senior') params.append('ageMin', '6');
+      if (searchParams.age === 'Young (0-2 yr)') { params.append('ageMin', '0'); params.append('ageMax', '2'); }
+      else if (searchParams.age === 'Adult (2-5 yr)') { params.append('ageMin', '2'); params.append('ageMax', '5'); }
+      else if (searchParams.age === 'Mature (5-10 yr)') { params.append('ageMin', '5'); params.append('ageMax', '10'); }
+      else if (searchParams.age === 'Senior (10+ yr)') { params.append('ageMin', '10'); }
     }
     navigate(`/pets?${params.toString()}`);
   };

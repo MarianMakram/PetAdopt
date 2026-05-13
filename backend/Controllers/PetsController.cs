@@ -26,8 +26,14 @@ namespace PetAdopt.Controllers
             if (!string.IsNullOrEmpty(breed))
                 query = query.Where(p => p.Breed != null && p.Breed.Contains(breed));
 
-            if (ageMin.HasValue) query = query.Where(p => p.Age >= ageMin.Value);
-            if (ageMax.HasValue) query = query.Where(p => p.Age <= ageMax.Value);
+            if (ageMin.HasValue)
+            {
+                query = query.Where(p => (p.AgeUnit == 1 && p.Age >= ageMin.Value) || (p.AgeUnit == 0 && p.Age >= ageMin.Value * 12));
+            }
+            if (ageMax.HasValue)
+            {
+                query = query.Where(p => (p.AgeUnit == 1 && p.Age <= ageMax.Value) || (p.AgeUnit == 0 && p.Age <= ageMax.Value * 12));
+            }
             
             if (!string.IsNullOrEmpty(location))
                 query = query.Where(p => p.Location != null && p.Location.Contains(location));

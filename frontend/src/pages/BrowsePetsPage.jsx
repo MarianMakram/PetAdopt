@@ -19,10 +19,11 @@ export default function BrowsePetsPage() {
     search: searchParams.get('breed') || searchParams.get('search') || '',
     species: searchParams.get('species') || 'All Species',
     location: searchParams.get('location') || '',
-    ageRange: searchParams.get('ageMin') === '1' && searchParams.get('ageMax') === '5' ? 'Adult'
-      : searchParams.get('ageMax') === '1' ? 'Puppy/Kitten'
-        : searchParams.get('ageMin') === '6' ? 'Senior'
-          : 'Any Age'
+    ageRange: searchParams.get('ageMin') === '0' && searchParams.get('ageMax') === '2' ? 'Young (0-2 yr)'
+      : searchParams.get('ageMin') === '2' && searchParams.get('ageMax') === '5' ? 'Adult (2-5 yr)'
+        : searchParams.get('ageMin') === '5' && searchParams.get('ageMax') === '10' ? 'Mature (5-10 yr)'
+          : searchParams.get('ageMin') === '10' ? 'Senior (10+ yr)'
+            : 'Any Age'
   });
 
   useEffect(() => {
@@ -70,9 +71,10 @@ export default function BrowsePetsPage() {
     if (filters.species && filters.species !== 'All Species') params.species = filters.species;
 
     if (filters.ageRange !== 'Any Age') {
-      if (filters.ageRange === 'Puppy/Kitten') params.ageMax = 1;
-      else if (filters.ageRange === 'Adult') { params.ageMin = 1; params.ageMax = 5; }
-      else if (filters.ageRange === 'Senior') params.ageMin = 6;
+      if (filters.ageRange === 'Young (0-2 yr)') { params.ageMin = 0; params.ageMax = 2; }
+      else if (filters.ageRange === 'Adult (2-5 yr)') { params.ageMin = 2; params.ageMax = 5; }
+      else if (filters.ageRange === 'Mature (5-10 yr)') { params.ageMin = 5; params.ageMax = 10; }
+      else if (filters.ageRange === 'Senior (10+ yr)') { params.ageMin = 10; }
     }
 
     try {
@@ -146,9 +148,10 @@ export default function BrowsePetsPage() {
               onChange={e => setFilters({ ...filters, ageRange: e.target.value })}
             >
               <option>Any Age</option>
-              <option value="Puppy/Kitten">Puppy/Kitten</option>
-              <option value="Adult">Adult</option>
-              <option value="Senior">Senior</option>
+              <option value="Young (0-2 yr)">Young (0-2 years)</option>
+              <option value="Adult (2-5 yr)">Adult (2-5 years)</option>
+              <option value="Mature (5-10 yr)">Mature (5-10 years)</option>
+              <option value="Senior (10+ yr)">Senior (10+ years)</option>
             </select>
           </div>
         </div>

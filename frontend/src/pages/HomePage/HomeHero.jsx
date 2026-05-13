@@ -54,9 +54,10 @@ export default function HomeHero({ user, navigate, searchParams, setSearchParams
                 <label className="text-[10px] font-bold uppercase tracking-widest text-[#2c6370] px-1">Age</label>
                 <select className="bg-[#ffffff] border-none rounded-sm text-sm focus:ring-2 focus:ring-[#00656f]/40" value={searchParams.age} onChange={e => setSearchParams({ ...searchParams, age: e.target.value })}>
                   <option>Any Age</option>
-                  <option>Puppy/Kitten</option>
-                  <option>Adult</option>
-                  <option>Senior</option>
+                  <option value="Young (0-2 yr)">Young (0-2 yr)</option>
+                  <option value="Adult (2-5 yr)">Adult (2-5 yr)</option>
+                  <option value="Mature (5-10 yr)">Mature (5-10 yr)</option>
+                  <option value="Senior (10+ yr)">Senior (10+ yr)</option>
                 </select>
               </div>
               <div className="flex items-end">
