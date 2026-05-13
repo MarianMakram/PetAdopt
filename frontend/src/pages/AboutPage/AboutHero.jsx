@@ -1,5 +1,5 @@
 import React from 'react';
-import cat from "../assets/images/cat.jpg";
+import cat from "../../assets/images/cat.jpg";
 
 export default function HeroSection() {
   return (

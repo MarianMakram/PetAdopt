@@ -1,1 +1,1 @@
-{"ContentRoots":["C:\\Users\\marco\\Music\\PetAdopt\\backend\\wwwroot\\"],"Root":{"Children":null,"Asset":null,"Patterns":[{"ContentRootIndex":0,"Pattern":"**","Depth":0}]}}
+{"ContentRoots":["C:\\Users\\marco\\Music\\PetAdopt\\backend\\wwwroot\\"],"Root":{"Children":{"uploads":{"Children":{"3d34f88b-5422-42c2-9176-29c6baa59624.webp":{"Children":null,"Asset":{"ContentRootIndex":0,"SubPath":"uploads/3d34f88b-5422-42c2-9176-29c6baa59624.webp"},"Patterns":null}},"Asset":null,"Patterns":null}},"Asset":null,"Patterns":[{"ContentRootIndex":0,"Pattern":"**","Depth":0}]}}

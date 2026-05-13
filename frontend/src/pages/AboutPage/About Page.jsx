@@ -1,7 +1,7 @@
 import React from 'react';
-import HeroSection from './HeroSection';
+import HeroSection from './AboutHero';
 import MissionSection from './MissionSection';
-import HowItWorks from './HowItWorks';
+import HowItWorks from './HowItWork';
 import CTASection from './CTASection';
 
 export default function AboutPage() {
