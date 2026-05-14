@@ -55,7 +55,7 @@ export const NotificationProvider = ({ children }) => {
       try {
         if (!connectionRef.current) {
           const newConnection = new signalR.HubConnectionBuilder()
-            .withUrl('http://localhost:5251/hubs/notifications', {
+            .withUrl('/api/hubs/notifications', {
               accessTokenFactory: () => localStorage.getItem('accessToken')
             })
             .withAutomaticReconnect()
