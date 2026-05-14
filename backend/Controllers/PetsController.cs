@@ -28,10 +28,15 @@ namespace PetAdopt.Controllers
 
             if (ageMin.HasValue)
             {
-                query = query.Where(p => (p.AgeUnit == 1 && p.Age >= ageMin.Value) || (p.AgeUnit == 0 && p.Age >= ageMin.Value * 12));
+                // If ageMin is 0, we include 0 (inclusive). For other ranges (2, 5, 10), it's "Greater than" (exclusive).
+                if (ageMin.Value == 0)
+                    query = query.Where(p => (p.AgeUnit == 1 && p.Age >= 0) || (p.AgeUnit == 0 && p.Age >= 0));
+                else
+                    query = query.Where(p => (p.AgeUnit == 1 && p.Age > ageMin.Value) || (p.AgeUnit == 0 && p.Age > ageMin.Value * 12));
             }
             if (ageMax.HasValue)
             {
+                // ageMax is always "up to and including" (inclusive).
                 query = query.Where(p => (p.AgeUnit == 1 && p.Age <= ageMax.Value) || (p.AgeUnit == 0 && p.Age <= ageMax.Value * 12));
             }
             
