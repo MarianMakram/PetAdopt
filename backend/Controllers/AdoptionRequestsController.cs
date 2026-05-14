@@ -54,7 +54,6 @@ namespace PetAdopt.Controllers
             context.AdoptionRequests.Add(request);
             await context.SaveChangesAsync();
 
-            // Send real-time notification to pet owner
             await notificationService.SendNotificationAsync(
                 pet.OwnerId,
                 "New Adoption Request",
