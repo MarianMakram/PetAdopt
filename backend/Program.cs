@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using PetAdopt.Data;
 using PetAdopt.Services;
 using PetAdopt.Hubs;
+using PetAdopt.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,7 @@ builder.Services.AddCors(options =>
                           .AllowCredentials());
 });
 
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddSingleton<EncryptionService>();

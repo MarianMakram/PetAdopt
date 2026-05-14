@@ -71,7 +71,7 @@ export default function ShelterReviews() {
                           <span className="px-2 py-0.5 bg-cyan-50 text-cyan-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-cyan-100">Verified Adopter</span>
                         </div>
                         <p className="text-xs text-[#5c8a95] font-medium">
-                          {formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}
+                          {formatDistanceToNow(new Date(review.createdAt.endsWith('Z') ? review.createdAt : review.createdAt + 'Z'), { addSuffix: true })}
                         </p>
                       </div>
                     </div>
