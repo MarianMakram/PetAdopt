@@ -21,6 +21,8 @@ namespace PetAdopt.Controllers
                 .Where(r => r.PetId == petId)
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
+            foreach (var r in reviews)
+                r.CreatedAt = DateTime.SpecifyKind(r.CreatedAt, DateTimeKind.Utc);
             return Ok(reviews);
         }
         
@@ -35,6 +37,8 @@ namespace PetAdopt.Controllers
                 .Where(r => r.Pet!.OwnerId == userId)
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
+            foreach (var r in reviews)
+                r.CreatedAt = DateTime.SpecifyKind(r.CreatedAt, DateTimeKind.Utc);
             return Ok(reviews);
         }
 
@@ -62,7 +66,13 @@ namespace PetAdopt.Controllers
 
             context.Reviews.Add(review);
             await context.SaveChangesAsync();
-            return Ok(review);
+
+            var createdReview = await context.Reviews
+                .Include(r => r.Adopter)
+                .FirstAsync(r => r.Id == review.Id);
+                
+            review.CreatedAt = DateTime.SpecifyKind(review.CreatedAt, DateTimeKind.Utc);
+            return Ok(createdReview);
         }
     }
 

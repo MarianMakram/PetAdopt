@@ -24,6 +24,22 @@ namespace PetAdopt.Controllers
             if (pet.Status != PetStatus.Approved)
                 return BadRequest(new { message = "Pet is not available for adoption" });
 
+            var adopterId = GetCurrentUserId();
+
+            var existingRequest = await context.AdoptionRequests
+                .AnyAsync(r =>
+                    r.PetId == dto.PetId &&
+                    r.AdopterId == adopterId &&
+                    r.Status == RequestStatus.Pending);
+
+            if (existingRequest)
+            {
+                return BadRequest(new
+                {
+                    message = "You already have a pending adoption request for this pet"
+                });
+            }
+
             var request = new AdoptionRequest
             {
                 PetId = dto.PetId,

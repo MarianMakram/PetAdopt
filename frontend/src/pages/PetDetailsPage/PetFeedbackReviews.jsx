@@ -80,7 +80,7 @@ export default function PetFeedbackReviews({ pet, user, reviews, newReview, setN
                   </div>
                   <div>
                     <p className="font-black text-xl text-[#00343e]">{review.adopter?.first_name || 'Anonymous'}</p>
-                    <p className="text-sm text-[#5c8a95] font-bold uppercase tracking-widest">{formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}</p>
+                    <p className="text-sm text-[#5c8a95] font-bold uppercase tracking-widest">{formatDistanceToNow(new Date(review.createdAt.endsWith('Z') ? review.createdAt : review.createdAt + 'Z'), { addSuffix: true })}</p>
                   </div>
                 </div>
                 <div className="flex text-amber-400 bg-amber-50 px-3 py-1 rounded-full border border-amber-100">

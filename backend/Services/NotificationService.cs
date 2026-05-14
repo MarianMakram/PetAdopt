@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.SignalR;
-using PetAdopt.Data;
 using PetAdopt.Hubs;
 using PetAdopt.Models;
+using PetAdopt.Repositories;
 
 namespace PetAdopt.Services
 {
@@ -12,12 +12,12 @@ namespace PetAdopt.Services
 
     public class NotificationService : INotificationService
     {
-        private readonly AppDbContext _context;
+        private readonly INotificationRepository _repository;
         private readonly IHubContext<NotificationHub> _hubContext;
 
-        public NotificationService(AppDbContext context, IHubContext<NotificationHub> hubContext)
+        public NotificationService(INotificationRepository repository, IHubContext<NotificationHub> hubContext)
         {
-            _context = context;
+            _repository = repository;
             _hubContext = hubContext;
         }
 
@@ -36,8 +36,8 @@ namespace PetAdopt.Services
                 related_entity_type = relatedType
             };
 
-            _context.Notifications.Add(notification);
-            await _context.SaveChangesAsync();
+            await _repository.AddAsync(notification);
+            await _repository.SaveChangesAsync();
 
             // 2. Send real-time (SignalR)
             await _hubContext.Clients.User(userId.ToString()).SendAsync("ReceiveNotification", notification);
