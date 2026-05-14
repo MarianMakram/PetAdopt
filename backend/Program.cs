@@ -6,11 +6,9 @@ using PetAdopt.Data;
 using PetAdopt.Services;
 using PetAdopt.Hubs;
 using PetAdopt.Repositories;
-using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -23,29 +21,25 @@ builder.Services.AddControllers()
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.Limits.MaxRequestBodySize = 50 * 1024 * 1024; // 50MB
+    
+    // Bind to PORT environment variable if present (Render)
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+    options.ListenAnyIP(int.Parse(port));
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    if (string.IsNullOrEmpty(connectionString))
-    {
-        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-    }
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
-// Production CORS Configuration
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:5173", "https://pet-adopt-frontend.vercel.app") // Replace with actual Vercel URL
-                  .AllowAnyMethod()
-                  .AllowAnyHeader()
-                  .AllowCredentials();
-        });
+        policy => policy.SetIsOriginAllowed(_ => true) // Allow any origin in production if using rewrites/proxies
+                          .AllowAnyMethod()
+                          .AllowAnyHeader()
+                          .AllowCredentials());
 });
 
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
@@ -54,15 +48,10 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddSingleton<EncryptionService>();
 builder.Services.AddSignalR();
 
-// JWT Configuration with support for JWT__Key env var
-var jwtKey = builder.Configuration["JWT:Key"] ?? builder.Configuration["AppSettings:Token"];
-var jwtIssuer = builder.Configuration["AppSettings:Issuer"];
-var jwtAudience = builder.Configuration["AppSettings:Audience"];
-
-if (string.IsNullOrEmpty(jwtKey))
-{
-    throw new InvalidOperationException("JWT Key not configured.");
-}
+// Get JWT Key from env or appsettings
+var jwtKey = builder.Configuration["JWT:Key"] ?? builder.Configuration["JWT__Key"] ?? builder.Configuration["AppSettings:Token"];
+var issuer = builder.Configuration["AppSettings:Issuer"];
+var audience = builder.Configuration["AppSettings:Audience"];
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -70,11 +59,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = jwtIssuer,
+            ValidIssuer = issuer,
             ValidateAudience = true,
-            ValidAudience = jwtAudience,
+            ValidAudience = audience,
             ValidateLifetime = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!)),
             ValidateIssuerSigningKey = true,
             ClockSkew = TimeSpan.Zero
         };
@@ -86,7 +75,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             {
                 var accessToken = context.Request.Query["access_token"];
                 var path = context.HttpContext.Request.Path;
-                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/api/hubs"))
+                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
                 {
                     context.Token = accessToken;
                 }
@@ -100,28 +89,17 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-});
-
 // Seed database
-try 
-{
-    DatabaseSeeder.Seed(app.Services);
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"Database seeding failed: {ex.Message}");
-}
+DatabaseSeeder.Seed(app.Services);
 
 app.UseCors("AllowFrontend");
 app.UseStaticFiles();
 
-// Enable Swagger in production if needed, or keep for testing
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 
@@ -129,9 +107,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<NotificationHub>("/api/hubs/notifications");
+app.MapHub<NotificationHub>("/hubs/notifications");
 
-app.MapGet("/", () => "PetAdopt API is running...");
-app.MapGet("/health", () => Results.Ok(new { status = "Healthy" }));
+app.MapGet("/weatherforecast", () => "API is working");
 
 app.Run();

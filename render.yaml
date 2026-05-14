@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: petadopt-backend
+    env: docker # Or static, but since it's .NET, we can use the native .NET environment or docker.
+    # The user asked for specific publish and start commands, so we'll use 'web' with 'runtime: dotnet' if available,
+    # but Render's native .NET support uses the following:
+    plan: free
+    runtime: dotnet
+    buildCommand: dotnet publish backend/PetAdopt.csproj -c Release -o out
+    startCommand: dotnet out/PetAdopt.dll
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ConnectionStrings__DefaultConnection
+        sync: false # User will provide this in Render dashboard
+      - key: JWT__Key
+        sync: false # User will provide this in Render dashboard
+      - key: AppSettings__Issuer
+        value: MyAwesomeApp
+      - key: AppSettings__Audience
+        value: MyAwesomeAudience
